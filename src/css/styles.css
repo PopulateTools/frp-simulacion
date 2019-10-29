@@ -10458,7 +10458,9 @@ code,
   --black: #4A4A4A;
   --green: #5BAB90;
   --fluor: #82F5CF;
-  --olive: #006D63;
+  --olive: #006C61;
+  --olive10: rgba(0, 108, 97, .1);
+  --olive75: rgba(0, 108, 97, .75);
   --blue: #19A1CD;
   --turquoise: #87A8AD;
 }
@@ -10498,6 +10500,9 @@ code,
 }
 .olive-txt {
   color: var(--olive);
+}
+.olive75-txt {
+  color: var(--olive75);
 }
 .blue-txt {
   color: var(--blue);
@@ -10546,6 +10551,9 @@ code,
 .olive-bgc {
   background-color: var(--olive);
 }
+.olive10-bgc {
+  background-color: var(--olive10);
+}
 .blue-bgc {
   background-color: var(--blue);
 }
@@ -10556,6 +10564,7 @@ code,
 html {
   font-family: 'Libre Franklin', sans-serif;
   color: var(--black);
+  box-sizing: border-box;
 }
 
 .info-circle {

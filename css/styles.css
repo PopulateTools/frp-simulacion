@@ -10458,7 +10458,9 @@ code,
   --black: #4A4A4A;
   --green: #5BAB90;
   --fluor: #82F5CF;
-  --olive: #006D63;
+  --olive: #006C61;
+  --olive10: rgba(0, 108, 97, .1);
+  --olive75: rgba(0, 108, 97, .75);
   --blue: #19A1CD;
   --turquoise: #87A8AD;
 }
@@ -10508,8 +10510,12 @@ code,
   color: var(--fluor);
 }
 .olive-txt {
-  color: #006D63;
+  color: #006C61;
   color: var(--olive);
+}
+.olive75-txt {
+  color: rgba(0, 108, 97, .75);
+  color: var(--olive75);
 }
 .blue-txt {
   color: #19A1CD;
@@ -10569,8 +10575,12 @@ code,
   background-color: var(--fluor);
 }
 .olive-bgc {
-  background-color: #006D63;
+  background-color: #006C61;
   background-color: var(--olive);
+}
+.olive10-bgc {
+  background-color: rgba(0, 108, 97, .1);
+  background-color: var(--olive10);
 }
 .blue-bgc {
   background-color: #19A1CD;
@@ -10585,6 +10595,7 @@ html {
   font-family: 'Libre Franklin', sans-serif;
   color: #4A4A4A;
   color: var(--black);
+  box-sizing: border-box;
 }
 
 .info-circle {
