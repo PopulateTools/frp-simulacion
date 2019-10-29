@@ -10524,6 +10524,10 @@ code,
   background-color: #D8D8D8;
   background-color: var(--grey);
 }
+
+.grey-bgc-radio {
+  background-color: rgba(216, 216, 216, .2);
+}
 .greydark-bgc {
   background-color: #979797;
   background-color: var(--greydark);
@@ -10579,6 +10583,13 @@ code,
 
 html {
   font-family: 'Libre Franklin', sans-serif;
+  color: #4A4A4A;
+  color: var(--black);
+}
+
+.info-circle {
+  width: 18px;
+  height: 18px;
 }
 
 
