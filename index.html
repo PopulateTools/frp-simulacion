@@ -1,27 +1,39 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="node_modules/tachyons/css/tachyons.min.css" type="text/css" media="screen" title="Tachyons Widths" charset="utf-8">
 
-    </head>
-    <body>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Libre+Franklin:300,400,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css" type="text/css" media="screen" title="Tachyons Widths" charset="utf-8">
+</head>
 
-        <section>
-          <h2>Simulador de política fiscales</h2>
-          <h4>¿cómo evolucionará la economía española al modificar determinados parámetros?</h4>
-          <p></p>
-        </section>
+<body>
+  <section class="pa4">
+    <article class="fl w-50">
+      <h2 class="f-3 fw8">Simulador de política fiscales</h2>
+      <h4 class="f-2 fw1 mv3">¿Cómo evolucionará la economía española al modificar determinados parámetros?</h4>
+    </article>
+    <article class="fl w-50">
+      <img src="img/frp-logo.png">
+    </article>
+    <article class="fl w-100 mt4">
+      <p class="fl w-50 f-1 fw4 mt0">
+        El Programa de Estabilidad 2019-2022 del Ministerio de Economía realiza una previsión sobre la evolución del PIB y el empleo. Hemos construido esta herramienta para simular la evolución de las dos variables según se modifique la política fiscal, el instrumento de consolidación y su velocidad.
+      </p>
+      <div class="fl w-50 tr">
+        <a href="">Metodolgía</a>
+        <a href="">Créditos</a>
+      </div>
+    </article>
+  </section>
+  <footer>
+  </footer>
+  <script src="js/d3.min.js"></script>
+  <script src="js/index.js"></script>
+</body>
 
-        <footer>
-
-
-        </footer>
-        <script src="js/d3.min.js"></script>
-        <script src="js/index.js"></script>
-    </body>
 </html>
