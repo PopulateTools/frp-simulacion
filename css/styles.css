@@ -10449,6 +10449,7 @@ code,
 :root {
   --grey: #D8D8D8;
   --greydark: #979797;
+  --greydark50: rgba(151, 151, 151, .5);
   --greyligth: #EDEDED;
   --greymedium: #DADADA;
   --greymedium2: #ADADAD;
@@ -10456,13 +10457,18 @@ code,
   --greyF6: #F3F6F6;
   --white: #fff;
   --black: #4A4A4A;
+  --black50: rgba(74, 74, 74, .5);
   --green: #5BAB90;
+  --greenlight: #B8DF22;
   --fluor: #82F5CF;
   --olive: #006C61;
+  --olivedark: #006D63;
   --olive10: rgba(0, 108, 97, .1);
+  --olive20: rgba(0, 109, 99, .2);
   --olive75: rgba(0, 108, 97, .75);
   --blue: #19A1CD;
   --turquoise: #87A8AD;
+  --turquoise20: rgba(135, 168, 173, .2);
 }
 
 .grey-txt {
@@ -10501,6 +10507,10 @@ code,
   color: #4A4A4A;
   color: var(--black);
 }
+.black50-txt {
+  color: rgba(74, 74, 74, .5);
+  color: var(--black50);
+}
 .green-txt {
   color: #5BAB90;
   color: var(--green);
@@ -10512,6 +10522,10 @@ code,
 .olive-txt {
   color: #006C61;
   color: var(--olive);
+}
+.olivedark-txt {
+  color: #006D63;
+  color: var(--olivedark);
 }
 .olive75-txt {
   color: rgba(0, 108, 97, .75);
@@ -10582,6 +10596,10 @@ code,
   background-color: rgba(0, 108, 97, .1);
   background-color: var(--olive10);
 }
+.olive20-bgc {
+  background-color: rgba(0, 109, 99, .2);
+  background-color: var(--olive20);
+}
 .blue-bgc {
   background-color: #19A1CD;
   background-color: var(--blue);
@@ -10590,11 +10608,28 @@ code,
   background-color: #87A8AD;
   background-color: var(--turquoise);
 }
+.turquoise20-bgc {
+  background-color: rgba(135, 168, 173, .2);
+  background-color: var(--turquoise20);
+}
+.greenlight-bgc {
+  background-color: #B8DF22;
+  background-color: var(--greenlight);
+}
+
+
+.greydark-50-bd {
+  border-color: rgba(151, 151, 151, .5);
+  border-color: var(--greydark50);
+}
 
 html {
   font-family: 'Libre Franklin', sans-serif;
   color: #4A4A4A;
   color: var(--black);
+}
+
+* {
   box-sizing: border-box;
 }
 
@@ -10603,5 +10638,31 @@ html {
   height: 18px;
 }
 
+.bd-dotted {
+  height: 100%;
+  border-right: 1px dashed #979797;
+  border-right: 1px dashed var(--greydark);
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.rect-before::before,
+.rect-before-fluor::before {
+  content: '';
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  vertical-align: middle;
+  background-color: #006C61;
+  background-color: var(--olive);
+  margin-right: .5rem;
+  margin-bottom: .25rem;
+}
+
+.rect-before-fluor::before {
+  background-color: #B8DF22;
+  background-color: var(--greenlight);
+}
 
 /*# sourceMappingURL=styles.css.map */
