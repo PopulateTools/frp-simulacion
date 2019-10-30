@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title></title>
+  <title>Simulador de políticas fiscales</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css?family=Libre+Franklin:300,400,700&display=swap" rel="stylesheet">
@@ -14,91 +14,91 @@
 <body>
   <section class="pa4">
     <article class="fl w-50">
-      <h2 class="f1 fw8 mt0">Simulador de política fiscales</h2>
-      <h4 class="f2 fw1 mv3">¿Cómo evolucionará la economía española al modificar determinados parámetros?</h4>
+      <h2 class="f2-0 fw8 mt0 mv3">Simulador de política fiscales</h2>
+      <h4 class="f2-25 fw1 mv0 black50-txt">¿Cómo evolucionará la economía española al modificar determinados parámetros?</h4>
     </article>
     <article class="fl w-50">
       <img class="fr" src="img/frp-logo.png">
     </article>
-    <article class="fl w-100 mt4">
+    <article class="fl w-100 mt3 nested-copy-line-height">
       <p class="fl w-50 fw4 mt0">
         El Programa de Estabilidad 2019-2022 del Ministerio de Economía realiza una previsión sobre la evolución del PIB y el empleo. Hemos construido esta herramienta para simular la evolución de las dos variables según se modifique la política fiscal, el instrumento de consolidación y su velocidad.
       </p>
       <div class="fl w-50 tr olive-txt">
-        <a class="olive-txt" href="">Metodolgía ·</a>
+        <a class="olive-txt" href="">Metodología ·</a>
         <a class="olive-txt" href="">Créditos</a>
       </div>
     </article>
-    <article class="fl w-100 bt b--dark-gray">
-      <div class="fl w-third pa2">
-        <h2 class="f3 fw8 o-50">Haz tu simulación</h2>
-        <article class="fl w-100 mb4">
+    <article class="fl w-100 bt greydark-50-bd pv4 mt4">
+      <div class="fl w-30 relative">
+        <h2 class="f3 fw8 o-50 mt0 h2 mb4">Haz tu simulación</h2>
+        <article id="container-tooltip" class="fl w-100 mb4 relative">
           <div class="fl w-100 grey-bgc-radio">
-            <div class="w-100 pa3 pb0">
+            <div class="w-100 pa2 pb2">
               <h3 class="f5 fw8 mb0 dib v-mid mt0">Política fiscal</h3>
-              <img class="info-circle dib v-mid pointer" src="img/info-circle-solid.svg">
+              <img id="tooltip-pf" class="info-circle dib v-mid pointer" src="img/info-circle-solid.svg">
             </div>
-            <div class="w-100 pa3 pb0 v-mid">
-              <input type="radio" name="reduccion-de-impuestos" id="pf-1">
+            <div class="container-radio w-100 pa2 v-mid">
+              <input class="input-radio" type="radio" name="pf" id="pf-1">
               <label class="pl2 dib v-mid" for="pf-1">Aumento del gasto público</label>
             </div>
-            <div class="w-100 pa3 pb0 v-mid">
-              <input type="radio" name="reduccion-de-impuestos" id="pf-2">
+            <div class="container-radio w-100 pa2 v-mid">
+              <input class="input-radio" type="radio" name="pf" id="pf-2">
               <label class="pl2 dib v-mid" for="pf-2">Reducción de impuestos sobre el consumo</label>
             </div>
-            <div class="w-100 pa3 pb0 v-mid">
-              <input type="radio" name="reduccion-de-impuestos" id="pf-3">
+            <div class="container-radio w-100 pa2 v-mid">
+              <input class="input-radio" type="radio" name="pf" id="pf-3">
               <label class="pl2 dib v-mid" for="pf-3">Reducción de impuestos sobre el trabajo</label>
             </div>
-            <div class="w-100 pa3 v-mid">
-              <input type="radio" name="reduccion-de-impuestos" id="pf-4">
+            <div class="container-radio w-100 pa2 v-mid">
+              <input class="input-radio" type="radio" name="pf" id="pf-4">
               <label class="pl2 dib v-mid" for="pf-4">Reducción de impuestos sobre el capital</label>
             </div>
           </div>
         </article>
-        <article class="fl w-100 mb4">
+        <article class="fl w-100 mb4 relative">
           <div class="fl w-100 grey-bgc-radio">
-            <div class="w-100 pa3 pb0">
+            <div class="w-100 pa2 pb2">
               <h3 class="f5 fw8 mb0 dib v-mid mt0">Instrumento de consolidación</h3>
-              <img class="info-circle dib v-mid pointer" src="img/info-circle-solid.svg">
+              <img id="tooltip-idc" class="info-circle dib v-mid pointer" src="img/info-circle-solid.svg">
             </div>
-            <div class="w-100 pa3 pb0 v-mid">
-              <input type="radio" name="intrusmento-de-consolidacion" id="idc-1">
+            <div class="container-radio w-100 pa2 v-mid">
+              <input class="input-radio" type="radio" name="idc" id="idc-1">
               <label class="pl2 dib v-mid" for="idc-1">Aumento del gasto público</label>
             </div>
-            <div class="w-100 pa3 pb0 v-mid">
-              <input type="radio" name="intrusmento-de-consolidacion" id="idc-2">
+            <div class="container-radio w-100 pa2 v-mid">
+              <input class="input-radio" type="radio" name="idc" id="idc-2">
               <label class="pl2 dib v-mid" for="idc-2">Reducción de impuestos sobre el consumo</label>
             </div>
-            <div class="w-100 pa3 pb0 v-mid">
-              <input type="radio" name="intrusmento-de-consolidacion" id="idc-3">
+            <div class="container-radio w-100 pa2 v-mid">
+              <input class="input-radio" type="radio" name="idc" id="idc-3">
               <label class="pl2 dib v-mid" for="idc-3">Reducción de impuestos sobre el trabajo</label>
             </div>
-            <div class="w-100 pa3 v-mid">
-              <input type="radio" name="intrusmento-de-consolidacion" id="idc-4">
+            <div class="container-radio w-100 pa2 v-mid">
+              <input class="input-radio" type="radio" name="idc" id="idc-4">
               <label class="pl2 dib v-mid" for="idc-4">Reducción de impuestos sobre el capital</label>
             </div>
           </div>
         </article>
         <article class="fl w-100 mb4">
           <div class="fl w-100 grey-bgc-radio">
-            <div class="w-100 pa3 pb0">
+            <div class="w-100 pa2 pb2">
               <h3 class="f5 fw8 mb0 dib v-mid mt0">Velocidad de consolidación</h3>
-              <img class="info-circle dib v-mid pointer" src="img/info-circle-solid.svg">
+              <img id="tooltip-vdc" class="info-circle dib v-mid pointer" src="img/info-circle-solid.svg">
             </div>
-            <div class="w-100 pa3 pb0 v-mid">
-              <input class="w-1 dib" type="radio" name="velocidad de consolidación" id="vdc-1">
+            <div class="container-radio w-100 pa2 v-mid">
+              <input class="input-radio w-1 dib" type="radio" name="vdc" id="vdc-1">
               <label class="pl2 w-90 dib v-mid" for="vdc-1"><span class="fw8">Rápida</span> - se estabiliza deuda transcurridos cuatro trimestres desde el inicio de la política</label>
             </div>
-            <div class="w-100 pa3 v-mid">
-              <input class="w-1 dib" type="radio" name="velocidad de consolidación" id="vdc-2">
+            <div class="container-radio w-100 pa2 v-mid">
+              <input class="input-radio w-1 dib" type="radio" name="vdc" id="vdc-2">
               <label class="pl2 w-90 dib v-mid" for="vdc-2"><span class="fw8">Lenta</span> -  se estabiliza deuda transcurridos cuatro años desde el inicio de la política</label>
             </div>
           </div>
         </article>
       </div>
-      <div class="fl w-two-thirds pa2">
-        <button class="w-auto db pointer olive10-bgc bn f7 underline olive75-txt pa2 br2">Ver todas las simulaciones</button>
+      <div class="fl w-70 pl4">
+        <button class="w-auto db pointer olive10-bgc bn f7 underline olive75-txt pa2 br2 h2 mb4">Ver todas las simulaciones</button>
         <div class="w-70 fl">
           <div class="w-20 fl">
             <span class="f5 dib fw7 h2">PIB</span>
@@ -113,8 +113,8 @@
             <span class="bd-dotted"></span>
             <span class="f5 dib vam rect-before h2">Previsión</span>
             <div class="w-100 h2">
-              <span class="dib w-50 fl olivedark-txt fw7">PIB</span>
-              <span class="dib w-50 fl olivedark-txt fw7">Crecimiento</span>
+              <span class="f7 dib w-50 fl olivedark-txt fw7">PIB</span>
+              <span class="f7 dib w-50 fl olivedark-txt fw7">Crecimiento</span>
             </div>
             <div class="w-100 olive20-bgc fl">
               <span class="dib w-50 fl f7 black-text black-txt pv2 tc">1.169.572</span>
@@ -143,8 +143,8 @@
             <span class="bd-dotted"></span>
             <span class="f5 dib vam rect-before-fluor h2 pl3">Simulacion</span>
             <div class="w-100 h2">
-              <span class="dib w-50 fl olivedark-txt fw7 pl3">PIB</span>
-              <span class="dib w-50 fl olivedark-txt fw7">Crecimiento</span>
+              <span class="f7 dib w-50 fl olivedark-txt fw7 pl3">PIB</span>
+              <span class="f7 dib w-50 fl olivedark-txt fw7">Crecimiento</span>
             </div>
             <div class="w-100 turquoise20-bgc fl">
               <span class="dib w-50 fl f7 black-text black-txt pv2 tc">1.169.572</span>
@@ -183,8 +183,8 @@
             <span class="bd-dotted"></span>
             <span class="f5 dib vam rect-before h2">Previsión</span>
             <div class="w-100 h2">
-              <span class="dib w-50 fl olivedark-txt fw7">Empleo</span>
-              <span class="dib w-50 fl olivedark-txt fw7">Crecimiento</span>
+              <span class="f7 dib w-50 fl olivedark-txt fw7">Empleo</span>
+              <span class="f7 dib w-50 fl olivedark-txt fw7">Crecimiento</span>
             </div>
             <div class="w-100 olive20-bgc fl">
               <span class="dib w-50 fl f7 black-text black-txt pv2 tc">18.400</span>
@@ -213,8 +213,8 @@
             <span class="bd-dotted"></span>
             <span class="f5 dib vam rect-before-fluor h2 pl3">Simulacion</span>
             <div class="w-100 h2">
-              <span class="dib w-50 fl olivedark-txt fw7 pl3">PIB</span>
-              <span class="dib w-50 fl olivedark-txt fw7">Crecimiento</span>
+              <span class="f7 zdib w-50 fl olivedark-txt fw7 pl3">PIB</span>
+              <span class="f7 zdib w-50 fl olivedark-txt fw7">Crecimiento</span>
             </div>
             <div class="w-100 turquoise20-bgc fl">
               <span class="dib w-50 fl f7 black-text black-txt pv2 tc">1.169.572</span>
@@ -243,9 +243,12 @@
       </div>
     </article>
 
+
   </section>
   <footer>
   </footer>
+  <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
+  <script src="https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js"></script>
   <script src="js/d3.min.js"></script>
   <script src="js/index.js"></script>
 </body>

@@ -4561,6 +4561,14 @@ code,
   font-size: 2.25rem;
 }
 
+.f2-0 {
+  font-size: 2rem;
+}
+
+.f2-25 {
+  font-size: 1.875rem;
+}
+
 .f3 {
   font-size: 1.5rem;
 }
@@ -10457,6 +10465,7 @@ code,
   --greyF6: #F3F6F6;
   --white: #fff;
   --black: #4A4A4A;
+  --blackTooltip: #444D5E;
   --black50: rgba(74, 74, 74, .5);
   --green: #5BAB90;
   --greenlight: #B8DF22;
@@ -10475,66 +10484,82 @@ code,
   color: #D8D8D8;
   color: var(--grey);
 }
+
 .greydark-txt {
   color: #979797;
   color: var(--greydark);
 }
+
 .greyligth-txt {
   color: #EDEDED;
   color: var(--greyligth);
 }
+
 .greymedium-txt {
   color: #DADADA;
   color: var(--greymedium);
 }
+
 .greymedium2-txt {
   color: #ADADAD;
   color: var(--greymedium2);
 }
+
 .greyE6-txt {
   color: #E6E6E6;
   color: var(--greyE6);
 }
+
 .greyF6-txt {
   color: #F3F6F6;
   color: var(--greyF6);
 }
+
 .white-txt {
   color: #fff;
   color: var(--white);
 }
+
 .black-txt {
   color: #4A4A4A;
   color: var(--black);
 }
+
 .black50-txt {
   color: rgba(74, 74, 74, .5);
   color: var(--black50);
 }
+
 .green-txt {
   color: #5BAB90;
   color: var(--green);
 }
+
 .fluor-txt {
   color: #82F5CF;
   color: var(--fluor);
 }
+
 .olive-txt {
   color: #006C61;
   color: var(--olive);
 }
+
 .olivedark-txt {
   color: #006D63;
   color: var(--olivedark);
 }
+
 .olive75-txt {
   color: rgba(0, 108, 97, .75);
   color: var(--olive75);
 }
+
 .blue-txt {
   color: #19A1CD;
   color: var(--blue);
 }
+
 .turquoise-txt {
   color: #87A8AD;
   color: var(--turquoise);
@@ -10548,70 +10573,87 @@ code,
 .grey-bgc-radio {
   background-color: rgba(216, 216, 216, .2);
 }
+
 .greydark-bgc {
   background-color: #979797;
   background-color: var(--greydark);
 }
+
 .greyligth-bgc {
   background-color: #EDEDED;
   background-color: var(--greyligth);
 }
+
 .greymedium-bgc {
   background-color: #DADADA;
   background-color: var(--greymedium);
 }
+
 .greymedium2-bgc {
   background-color: #ADADAD;
   background-color: var(--greymedium2);
 }
+
 .greyE6-bgc {
   background-color: #E6E6E6;
   background-color: var(--greyE6);
 }
+
 .greyF6-bgc {
   background-color: #F3F6F6;
   background-color: var(--greyF6);
 }
+
 .white-bgc {
   background-color: #fff;
   background-color: var(--white);
 }
+
 .black-bgc {
   background-color: #4A4A4A;
   background-color: var(--black);
 }
+
 .green-bgc {
   background-color: #5BAB90;
   background-color: var(--green);
 }
+
 .fluor-bgc {
   background-color: #82F5CF;
   background-color: var(--fluor);
 }
+
 .olive-bgc {
   background-color: #006C61;
   background-color: var(--olive);
 }
+
 .olive10-bgc {
   background-color: rgba(0, 108, 97, .1);
   background-color: var(--olive10);
 }
+
 .olive20-bgc {
   background-color: rgba(0, 109, 99, .2);
   background-color: var(--olive20);
 }
+
 .blue-bgc {
   background-color: #19A1CD;
   background-color: var(--blue);
 }
+
 .turquoise-bgc {
   background-color: #87A8AD;
   background-color: var(--turquoise);
 }
+
 .turquoise20-bgc {
   background-color: rgba(135, 168, 173, .2);
   background-color: var(--turquoise20);
 }
+
 .greenlight-bgc {
   background-color: #B8DF22;
   background-color: var(--greenlight);
@@ -10663,6 +10705,47 @@ html {
 .rect-before-fluor::before {
   background-color: #B8DF22;
   background-color: var(--greenlight);
+}
+
+.active-checkbox {
+  background-color: rgba(0, 108, 97, .1);
+  background-color: var(--olive10)
+}
+
+.tooltip {
+  background: #fff;
+  background: var(--white);
+  max-width: 300px;
+  border-radius: 4px;
+  padding: .75rem;
+  font-size: 14px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.4);
+  color: var(----blackTooltip);
+  transition: transform .2s ease-out;
+  transform: translateY(-100%) scale(0);
+  transform-origin: bottom left;
+  z-index: 1;
+  top: -20px !important;
+}
+
+.tooltip:before {
+  content: " ";
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 20px solid #fff;
+  border-top: 20px solid var(--white);
+  position: absolute;
+  bottom: -15px;
+  left: 45%;
+  z-index: 2;
+}
+
+.active-checkbox label {
+  font-weight: 700;
+  color: #006C61;
+  color: var(--olive);
 }
 
 /*# sourceMappingURL=styles.css.map */
