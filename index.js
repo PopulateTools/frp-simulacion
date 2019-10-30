@@ -4,7 +4,7 @@ export { select, selectAll } from 'd3-selection';
 
 export { min, max } from 'd3-array';
 
-export { scaleTime, scaleLinear } from 'd3-scale';
+export { scaleTime, scaleLinear, scaleBand, scaleOrdinal } from 'd3-scale';
 
 export { axisBottom, axisLeft } from 'd3-axis';
 
