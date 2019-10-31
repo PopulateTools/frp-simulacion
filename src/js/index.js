@@ -167,3 +167,18 @@ function checkValues() {
     }
   }
 }
+
+
+function getWidth() {
+
+  const widthSimulation = document.getElementById("empleo-simulacion").offsetWidth
+  const widthChart = document.getElementById("pib-chart").offsetWidth
+  const sumWidth = widthSimulation + widthChart
+  const containerInit = document.getElementsByClassName("container-init");
+
+  for(let i=0; i < containerInit.length; i++){
+      containerInit[i].style.width = `${sumWidth}px`;
+   }
+}
+
+getWidth()

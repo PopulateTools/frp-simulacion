@@ -162,3 +162,16 @@ function checkValues() {
     }
   }
 }
+
+function getWidth() {
+  var widthSimulation = document.getElementById("empleo-simulacion").offsetWidth;
+  var widthChart = document.getElementById("pib-chart").offsetWidth;
+  var sumWidth = widthSimulation + widthChart;
+  var containerInit = document.getElementsByClassName("container-init");
+
+  for (var i = 0; i < containerInit.length; i++) {
+    containerInit[i].style.width = "".concat(sumWidth, "px");
+  }
+}
+
+getWidth();

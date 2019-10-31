@@ -10780,4 +10780,25 @@ html {
   fill: rgba(74, 73, 74, .5);
 }
 
+.container-init {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  background-color: #F3F6F6;
+  height: 100%;
+}
+
+.container-init-text {
+  color: rgba(74, 74, 74, .5);
+  color: var(--black50);
+  font-size: 12px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  max-width: 12rem;
+}
+
 /*# sourceMappingURL=styles.css.map */
