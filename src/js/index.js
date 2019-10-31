@@ -52,7 +52,7 @@ const legendText = ["Miles de M €", "Miles"]
 
 //Chart radio buttons
 const barChart = (id, csv, legend) => {
-  const margin = { top: 16, right: 16, bottom: 16, left: 60 };
+  const margin = { top: 24, right: 16, bottom: 16, left: 60 };
   const width = 370 - margin.left - margin.right;
   const height = 200 - margin.top - margin.bottom;
   const chart = d3.select(id);
@@ -138,11 +138,10 @@ const barChart = (id, csv, legend) => {
         .attr("width", x1.bandwidth())
         .attr("fill", ({ key }) => z(key));
 
-
       const legends = g.append('text')
         .attr('class', 'legend-top')
         .attr("x", -45)
-        .attr("y", 0)
+        .attr("y", -10)
         .text(legend);
 
     });

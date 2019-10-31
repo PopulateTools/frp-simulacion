@@ -64,7 +64,7 @@ var legendText = ["Miles de M €", "Miles"]; //Chart radio buttons
 
 var barChart = function barChart(id, csv, legend) {
   var margin = {
-    top: 16,
+    top: 24,
     right: 16,
     bottom: 16,
     left: 60
@@ -141,7 +141,7 @@ var barChart = function barChart(id, csv, legend) {
       var key = _ref8.key;
       return z(key);
     });
-    var legends = g.append('text').attr('class', 'legend-top').attr("x", -45).attr("y", 0).text(legend);
+    var legends = g.append('text').attr('class', 'legend-top').attr("x", -45).attr("y", -10).text(legend);
   });
 }; //We need store values from radio buttons
 
