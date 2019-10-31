@@ -1,4 +1,5 @@
 document.querySelectorAll(".input-radio").forEach(input => input.addEventListener('click', getName));
+document.querySelectorAll(".input-radio").forEach(input => input.addEventListener('change', checkValues));
 
 function getName() {
   const targetElement = event.target;
@@ -35,25 +36,28 @@ document.addEventListener('DOMContentLoaded', function() {
   for (const args of tooltipInfo) tooltips(...args);
 });
 
+const idPib = document.getElementById('pib-chart')
+const idEmpleo = document.getElementById('empleo-chart')
+const csvTest = "test-frp"
+const legendText = ["Miles de M €", "Miles"]
 
-const barChart = () => {
-  const margin = { top: 16, right: 16, bottom: 16, left: 56 };
-  const width = 300 - margin.left - margin.right;
-  const height = 300 - margin.top - margin.bottom;
-
-  const chart = d3.select('#pib-chart');
+const barChart = (id, csv, legend) => {
+  const margin = { top: 16, right: 16, bottom: 16, left: 60 };
+  const width = 370 - margin.left - margin.right;
+  const height = 200 - margin.top - margin.bottom;
+  const chart = d3.select(id);
   const svg = chart.select('svg');
+  const g = svg.append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`)
 
-  const g = d3.select("svg")
-    .append("g")
-    .attr("transform", `translate(${margin.left},${margin.top})`);
+  svg.attr('width', "100%")
+  .attr('height', 250);
 
   const x0 = d3.scaleBand()
-    .rangeRound([0, width])
-    .paddingInner(0.2);
+    .rangeRound([10, width])
+    .paddingInner(0.3);
 
   const x1 = d3.scaleBand()
-    .padding(0.1);
 
   const y = d3.scaleLinear()
     .rangeRound([height, 0]);
@@ -61,52 +65,80 @@ const barChart = () => {
   const z = d3.scaleOrdinal()
     .range(["#006D63", "#B8DF22"]);
 
-
-  d3.csv("csv/test-frp.csv", function(d, i, columns) {
+  d3.csv(`csv/${csv}.csv`, function(d, i, columns) {
       for (var i = 1, n = columns.length; i < n; ++i) d[columns[i]] = +d[columns[i]];
       return d;
     },
     function(error, data) {
       if (error) throw error;
-      var keys = data.columns.slice(1);
-      x0.domain(data.map(({type}) => type));
+
+      const locale = d3.formatDefaultLocale({
+          decimal: ',',
+          thousands: '.',
+          grouping: [3]
+      });
+
+      const keys = data.columns.slice(1);
+      x0.domain(data.map(({ type }) => type));
       x1.domain(keys).rangeRound([0, x0.bandwidth()]);
-      y.domain([
-               d3.min(data, d => d3.min(keys, key => d[key] * 14)),
-               d3.max(data, d => d3.max(keys, key => d[key]))]).nice();
+      y.domain([d3.min(data, d => d3.min(keys, key => d[key])), d3.max(data, d => d3.max(keys, key => d[key]))]).nice();
+
+      g.append("g")
+        .attr("class", "axis axis-x")
+        .attr("transform", `translate(0,${height})`)
+        .call(d3.axisBottom(x0));
+
+      g.append("g")
+        .attr("class", "axis axis-y")
+        .call(d3.axisLeft(y).tickFormat(locale.format('~s')).ticks(6).tickSizeInner(-width))
 
       g.append("g")
         .selectAll("g")
         .data(data)
         .enter().append("g")
-        .attr("transform", ({type}) => `translate(${x0(type)},0)`)
+        .attr("transform", ({ type }) => `translate(${x0(type)},0)`)
         .selectAll("rect")
         .data(d => keys.map(key => ({
           key,
           value: d[key]
         })))
-        .enter().append("rect").attr("class", "rect")
-        .attr("x", d => x1(d.key))
-        .attr('y', (d) => {
-            if (d.value > 0) {
-                return y(d.value);
-            } else {
-                return y(0);
-            }
-        })
+        .enter()
+        .append("rect")
+        .attr("x", ({ key }) => x1(key))
+        .attr("y", ({ value }) => value > 0 ? y(value) : y(0))
+        .attr("height", ({ value }) => value > 0 ? y(0) - y(value) : y(value) - y(0))
         .attr("width", x1.bandwidth())
-        .attr('height', d => Math.abs(y(d.value) - y(0)))
-        .attr("fill", d => z(d.key))
+        .attr("fill", ({ key }) => z(key));
 
-      g.append("g")
-        .attr("class", "axis")
-        .attr("transform", `translate(0,${height/2.5})`)
-        .call(d3.axisBottom(x0))
+      g.append('text')
+        .attr('class', 'legend-top')
+        .attr("x", -45)
+        .attr("y", 0)
+        .text(legend);
 
-      g.append("g")
-          .attr("class", "axis")
-          .call(d3.axisLeft(y).ticks())
     });
 };
 
-barChart();
+barChart(idPib, csvTest, legendText[0]);
+barChart(idEmpleo, csvTest, legendText[1]);
+
+function checkValues() {
+  let arrayCheckedValues = []
+
+  const checkbox = document.getElementsByTagName('input');
+  let checkboxChecked = 0;
+  for (let i = 0; i < checkbox.length; i++) {
+
+      if(checkbox[i].checked) {
+        checkboxChecked++
+        let checkedValue = checkbox[i].id;
+        arrayCheckedValues.push(checkedValue)
+      }
+
+      if (checkboxChecked === 3) {
+        const fileName = arrayCheckedValues.join('-');
+        console.log(fileName)
+        barChart(idPib, fileName, legendText[0]);
+      }
+  }
+}

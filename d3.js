@@ -5090,6 +5090,7 @@
   exports.axisLeft = axisLeft;
   exports.csv = csv$1;
   exports.easeLinear = linear$1;
+  exports.formatDefaultLocale = defaultLocale;
   exports.max = max;
   exports.min = min;
   exports.scaleBand = band;

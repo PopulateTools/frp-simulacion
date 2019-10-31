@@ -10705,3 +10705,32 @@ html {
   font-weight: 700;
   color: var(--olive);
 }
+
+.axis .domain {
+  stroke: none;
+}
+
+.axis-y line {
+  stroke: #BFBFBF;
+  stroke-dasharray: 2px;
+}
+
+.axis-x line {
+  stroke: none;
+}
+
+.axis-x text,
+.axis-y text {
+  font-family: 'Libre Franklin', sans-serif;
+  font-size: 12px;
+  color: #4A494A;
+}
+
+.axis-y text {
+  color: rgba(74, 73, 74, .5);
+}
+
+.legend-top {
+  font-size: 11px;
+  fill: rgba(74, 73, 74, .5);
+}
