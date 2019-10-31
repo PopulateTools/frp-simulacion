@@ -145,9 +145,7 @@ const barChart = (id, csv, legend) => {
         .text(legend);
 
       const keysSimulationPib = data.columns.slice(2, 3);
-      console.log("keysSimulationPib", keysSimulationPib);
       const keysSimulationIncrease = data.columns.slice(3);
-      console.log("keysSimulationIncrease", keysSimulationIncrease);
 
       const simulation = d3.selectAll('.simulation-pib-data')
         .selectAll('div')
@@ -165,7 +163,9 @@ const barChart = (id, csv, legend) => {
         .enter()
         .append("span")
         .attr('class', 'dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc')
-        .text(({ value }) => value)
+        .transition()
+        .duration(durationTransition)
+        .text(({ value }) => locale.format(',.0f')(value))
 
        simulation
         .selectAll(".simulation-percentage")
@@ -176,7 +176,10 @@ const barChart = (id, csv, legend) => {
         .enter()
         .append("span")
         .attr('class', 'simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc')
+        .transition()
+        .duration(durationTransition)
         .text(({ value }) => value)
+
     });
 };
 
@@ -208,6 +211,10 @@ function checkValues() {
       const fileName = arrayCheckedValues.join('-');
 
       d3.selectAll('.container-chart')
+        .remove()
+        .exit()
+
+      d3.selectAll('.simulation-pib-data-container')
         .remove()
         .exit()
 
