@@ -142,6 +142,33 @@ var barChart = function barChart(id, csv, legend) {
       return z(key);
     });
     var legends = g.append('text').attr('class', 'legend-top').attr("x", -45).attr("y", -10).text(legend);
+    var keysSimulationPib = data.columns.slice(2, 3);
+    console.log("keysSimulationPib", keysSimulationPib);
+    var keysSimulationIncrease = data.columns.slice(3);
+    console.log("keysSimulationIncrease", keysSimulationIncrease);
+    var simulation = d3.selectAll('.simulation-pib-data').selectAll('div').data(data).enter().append("div").attr('class', 'simulation-pib-data-container w-100 turquoise20-bgc fl');
+    simulation.selectAll("span").data(function (d) {
+      return keysSimulationPib.map(function (key) {
+        return {
+          key: key,
+          value: d[key]
+        };
+      });
+    }).enter().append("span").attr('class', 'dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc').text(function (_ref9) {
+      var value = _ref9.value;
+      return value;
+    });
+    simulation.selectAll(".simulation-percentage").data(function (d) {
+      return keysSimulationIncrease.map(function (key) {
+        return {
+          key: key,
+          value: d[key]
+        };
+      });
+    }).enter().append("span").attr('class', 'simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc').text(function (_ref10) {
+      var value = _ref10.value;
+      return value;
+    });
   });
 }; //We need store values from radio buttons
 

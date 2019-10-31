@@ -1,7 +1,7 @@
 //Listen radiobuttons and fire functions to get the names and radio buttons
-document.querySelectorAll(".input-radio").forEach(input => input.addEventListener('click',() => {
-     getName();
-     checkValues();
+document.querySelectorAll(".input-radio").forEach(input => input.addEventListener('click', () => {
+  getName();
+  checkValues();
 }));
 
 //Get the name for every group of radio buttons
@@ -144,6 +144,39 @@ const barChart = (id, csv, legend) => {
         .attr("y", -10)
         .text(legend);
 
+      const keysSimulationPib = data.columns.slice(2, 3);
+      console.log("keysSimulationPib", keysSimulationPib);
+      const keysSimulationIncrease = data.columns.slice(3);
+      console.log("keysSimulationIncrease", keysSimulationIncrease);
+
+      const simulation = d3.selectAll('.simulation-pib-data')
+        .selectAll('div')
+        .data(data)
+        .enter()
+        .append("div")
+        .attr('class', 'simulation-pib-data-container w-100 turquoise20-bgc fl')
+
+      simulation
+        .selectAll("span")
+        .data(d => keysSimulationPib.map(key => ({
+          key,
+          value: d[key]
+        })))
+        .enter()
+        .append("span")
+        .attr('class', 'dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc')
+        .text(({ value }) => value)
+
+       simulation
+        .selectAll(".simulation-percentage")
+        .data(d => keysSimulationIncrease.map(key => ({
+          key,
+          value: d[key]
+        })))
+        .enter()
+        .append("span")
+        .attr('class', 'simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc')
+        .text(({ value }) => value)
     });
 };
 
@@ -165,12 +198,12 @@ function checkValues() {
 
       const containerInit = document.getElementsByClassName("container-init");
 
-      for(let i=0; i < containerInit.length; i++){
-          containerInit[i].style.width = 0;
-          setTimeout(() => {
-            containerInit[i].style.display = "none";
-          } , 150)
-       }
+      for (let i = 0; i < containerInit.length; i++) {
+        containerInit[i].style.width = 0;
+        setTimeout(() => {
+          containerInit[i].style.display = "none";
+        }, 150)
+      }
 
       const fileName = arrayCheckedValues.join('-');
 
@@ -192,9 +225,9 @@ function getWidth() {
   const sumWidth = widthSimulation + widthChart
   const containerInit = document.getElementsByClassName("container-init");
 
-  for(let i=0; i < containerInit.length; i++){
-      containerInit[i].style.width = `${sumWidth}px`;
-   }
+  for (let i = 0; i < containerInit.length; i++) {
+    containerInit[i].style.width = `${sumWidth}px`;
+  }
 }
 
 getWidth()
