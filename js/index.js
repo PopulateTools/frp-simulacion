@@ -67,6 +67,7 @@ var barChart = function barChart(id, csv, legend) {
   var height = 200 - margin.top - margin.bottom;
   var chart = d3.select(id);
   var svg = chart.select('svg');
+  var durationTransition = 400;
   var g = svg.append("g").attr("transform", "translate(".concat(margin.left, ",").concat(margin.top, ")"));
   svg.attr('width', "100%").attr('height', 250);
   var x0 = d3.scaleBand().rangeRound([10, width]).paddingInner(0.3);
@@ -101,8 +102,8 @@ var barChart = function barChart(id, csv, legend) {
         return d[key];
       });
     })]).nice();
-    var axisX = g.append("g").attr("class", "axis axis-x").attr("transform", "translate(0,".concat(height, ")")).call(d3.axisBottom(x0));
-    var axisY = g.append("g").attr("class", "axis axis-y").call(d3.axisLeft(y).tickFormat(locale.format('~s')).ticks(6).tickSizeInner(-width));
+    var axisX = g.append("g").attr("class", "axis axis-x").attr("transform", "translate(0,".concat(height, ")")).transition().duration(durationTransition).ease(d3.easeLinear).call(d3.axisBottom(x0));
+    var axisY = g.append("g").attr("class", "axis axis-y").transition().duration(durationTransition).ease(d3.easeLinear).call(d3.axisLeft(y).tickFormat(locale.format('~s')).ticks(6).tickSizeInner(-width));
     var rects = g.append("g").selectAll("g").data(data).enter().append("g").attr("transform", function (_ref2) {
       var type = _ref2.type;
       return "translate(".concat(x0(type), ",0)");
@@ -113,19 +114,25 @@ var barChart = function barChart(id, csv, legend) {
           value: d[key]
         };
       });
-    }).enter().append("rect").attr('x', y(0)).transition().delay(function (d, i) {
-      return i * 10;
-    }).duration(450).attr("x", function (_ref3) {
+    }).enter().append("rect").attr("x", function (_ref3) {
       var key = _ref3.key;
       return x1(key);
     }).attr("y", function (_ref4) {
       var value = _ref4.value;
+      return y(value);
+    }).attr("width", x1.bandwidth()).attr('height', 0).transition().delay(function (d, i) {
+      return i * 10;
+    }).duration(durationTransition).attr("x", function (_ref5) {
+      var key = _ref5.key;
+      return x1(key);
+    }).attr("y", function (_ref6) {
+      var value = _ref6.value;
       return value > 0 ? y(value) : y(0);
-    }).attr("height", function (_ref5) {
-      var value = _ref5.value;
+    }).attr("height", function (_ref7) {
+      var value = _ref7.value;
       return value > 0 ? y(0) - y(value) : y(value) - y(0);
-    }).attr("width", x1.bandwidth()).attr("fill", function (_ref6) {
-      var key = _ref6.key;
+    }).attr("width", x1.bandwidth()).attr("fill", function (_ref8) {
+      var key = _ref8.key;
       return z(key);
     });
     var legends = g.append('text').attr('class', 'legend-top').attr("x", -45).attr("y", 0).text(legend);
@@ -152,8 +159,8 @@ function checkValues() {
       d3.selectAll('.grouped-bar-chart').remove().exit();
       d3.selectAll('.axis-y').remove().exit();
       d3.selectAll('.axis-x').remove().exit();
-      console.log(fileName);
       barChart(idPib, fileName, legendText[0]);
+      barChart(idEmpleo, fileName, legendText[1]);
     }
   }
 }

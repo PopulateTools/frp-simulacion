@@ -47,11 +47,12 @@ const barChart = (id, csv, legend) => {
   const height = 200 - margin.top - margin.bottom;
   const chart = d3.select(id);
   const svg = chart.select('svg');
+  const durationTransition = 400;
   const g = svg.append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`)
 
   svg.attr('width', "100%")
-  .attr('height', 250);
+    .attr('height', 250);
 
   const x0 = d3.scaleBand()
     .rangeRound([10, width])
@@ -74,9 +75,9 @@ const barChart = (id, csv, legend) => {
       if (error) throw error;
 
       const locale = d3.formatDefaultLocale({
-          decimal: ',',
-          thousands: '.',
-          grouping: [3]
+        decimal: ',',
+        thousands: '.',
+        grouping: [3]
       });
 
       const keys = data.columns.slice(1);
@@ -87,10 +88,16 @@ const barChart = (id, csv, legend) => {
       const axisX = g.append("g")
         .attr("class", "axis axis-x")
         .attr("transform", `translate(0,${height})`)
+        .transition()
+        .duration(durationTransition)
+        .ease(d3.easeLinear)
         .call(d3.axisBottom(x0));
 
-     const axisY = g.append("g")
+      const axisY = g.append("g")
         .attr("class", "axis axis-y")
+        .transition()
+        .duration(durationTransition)
+        .ease(d3.easeLinear)
         .call(d3.axisLeft(y).tickFormat(locale.format('~s')).ticks(6).tickSizeInner(-width))
 
       const rects = g.append("g")
@@ -107,10 +114,13 @@ const barChart = (id, csv, legend) => {
         })))
         .enter()
         .append("rect")
-        .attr('x', y(0))
+        .attr("x", ({ key }) => x1(key))
+        .attr("y", ({ value }) => y(value))
+        .attr("width", x1.bandwidth())
+        .attr('height', 0)
         .transition()
         .delay((d, i) => i * 10)
-        .duration(450)
+        .duration(durationTransition)
         .attr("x", ({ key }) => x1(key))
         .attr("y", ({ value }) => value > 0 ? y(value) : y(0))
         .attr("height", ({ value }) => value > 0 ? y(0) - y(value) : y(value) - y(0))
@@ -137,28 +147,30 @@ function checkValues() {
   let checkboxChecked = 0;
   for (let i = 0; i < checkbox.length; i++) {
 
-      if(checkbox[i].checked) {
-        checkboxChecked++
-        let checkedValue = checkbox[i].id;
-        arrayCheckedValues.push(checkedValue)
-      }
+    if (checkbox[i].checked) {
+      checkboxChecked++
+      let checkedValue = checkbox[i].id;
+      arrayCheckedValues.push(checkedValue)
+    }
 
-      if (checkboxChecked === 3) {
-        const fileName = arrayCheckedValues.join('-');
+    if (checkboxChecked === 3) {
+      const fileName = arrayCheckedValues.join('-');
 
-        d3.selectAll('.grouped-bar-chart')
-          .remove()
-          .exit()
+      d3.selectAll('.grouped-bar-chart')
+        .remove()
+        .exit()
 
-        d3.selectAll('.axis-y')
-          .remove()
-          .exit()
+      d3.selectAll('.axis-y')
+        .remove()
+        .exit()
 
-        d3.selectAll('.axis-x')
-          .remove()
-          .exit()
-        console.log(fileName)
-        barChart(idPib, fileName, legendText[0]);
-      }
+      d3.selectAll('.axis-x')
+        .remove()
+        .exit()
+
+      barChart(idPib, fileName, legendText[0]);
+      barChart(idEmpleo, fileName, legendText[1]);
+
+    }
   }
 }
