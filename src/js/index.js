@@ -50,6 +50,7 @@ const barChart = (id, csv, legend) => {
   const durationTransition = 400;
   const g = svg.append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`)
+    .attr('class', 'container-chart')
 
   svg.attr('width', "100%")
     .attr('height', 250);
@@ -156,15 +157,7 @@ function checkValues() {
     if (checkboxChecked === 3) {
       const fileName = arrayCheckedValues.join('-');
 
-      d3.selectAll('.grouped-bar-chart')
-        .remove()
-        .exit()
-
-      d3.selectAll('.axis-y')
-        .remove()
-        .exit()
-
-      d3.selectAll('.axis-x')
+      d3.selectAll('.container-chart')
         .remove()
         .exit()
 

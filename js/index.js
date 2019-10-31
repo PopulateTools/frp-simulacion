@@ -68,7 +68,7 @@ var barChart = function barChart(id, csv, legend) {
   var chart = d3.select(id);
   var svg = chart.select('svg');
   var durationTransition = 400;
-  var g = svg.append("g").attr("transform", "translate(".concat(margin.left, ",").concat(margin.top, ")"));
+  var g = svg.append("g").attr("transform", "translate(".concat(margin.left, ",").concat(margin.top, ")")).attr('class', 'container-chart');
   svg.attr('width', "100%").attr('height', 250);
   var x0 = d3.scaleBand().rangeRound([10, width]).paddingInner(0.3);
   var x1 = d3.scaleBand();
@@ -156,9 +156,7 @@ function checkValues() {
 
     if (checkboxChecked === 3) {
       var fileName = arrayCheckedValues.join('-');
-      d3.selectAll('.grouped-bar-chart').remove().exit();
-      d3.selectAll('.axis-y').remove().exit();
-      d3.selectAll('.axis-x').remove().exit();
+      d3.selectAll('.container-chart').remove().exit();
       barChart(idPib, fileName, legendText[0]);
       barChart(idEmpleo, fileName, legendText[1]);
     }
