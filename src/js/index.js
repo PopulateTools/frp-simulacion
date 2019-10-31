@@ -69,6 +69,7 @@ const barChart = (id, csv, legend) => {
       for (var i = 1, n = columns.length; i < n; ++i) d[columns[i]] = +d[columns[i]];
       return d;
     },
+
     function(error, data) {
       if (error) throw error;
 
@@ -83,20 +84,22 @@ const barChart = (id, csv, legend) => {
       x1.domain(keys).rangeRound([0, x0.bandwidth()]);
       y.domain([d3.min(data, d => d3.min(keys, key => d[key])), d3.max(data, d => d3.max(keys, key => d[key]))]).nice();
 
-      g.append("g")
+      const axisX = g.append("g")
         .attr("class", "axis axis-x")
         .attr("transform", `translate(0,${height})`)
         .call(d3.axisBottom(x0));
 
-      g.append("g")
+     const axisY = g.append("g")
         .attr("class", "axis axis-y")
         .call(d3.axisLeft(y).tickFormat(locale.format('~s')).ticks(6).tickSizeInner(-width))
 
-      g.append("g")
+      const rects = g.append("g")
         .selectAll("g")
         .data(data)
-        .enter().append("g")
+        .enter()
+        .append("g")
         .attr("transform", ({ type }) => `translate(${x0(type)},0)`)
+        .attr('class', 'grouped-bar-chart')
         .selectAll("rect")
         .data(d => keys.map(key => ({
           key,
@@ -104,13 +107,18 @@ const barChart = (id, csv, legend) => {
         })))
         .enter()
         .append("rect")
+        .attr('x', y(0))
+        .transition()
+        .delay((d, i) => i * 10)
+        .duration(450)
         .attr("x", ({ key }) => x1(key))
         .attr("y", ({ value }) => value > 0 ? y(value) : y(0))
         .attr("height", ({ value }) => value > 0 ? y(0) - y(value) : y(value) - y(0))
         .attr("width", x1.bandwidth())
         .attr("fill", ({ key }) => z(key));
 
-      g.append('text')
+
+      const legends = g.append('text')
         .attr('class', 'legend-top')
         .attr("x", -45)
         .attr("y", 0)
@@ -137,6 +145,18 @@ function checkValues() {
 
       if (checkboxChecked === 3) {
         const fileName = arrayCheckedValues.join('-');
+
+        d3.selectAll('.grouped-bar-chart')
+          .remove()
+          .exit()
+
+        d3.selectAll('.axis-y')
+          .remove()
+          .exit()
+
+        d3.selectAll('.axis-x')
+          .remove()
+          .exit()
         console.log(fileName)
         barChart(idPib, fileName, legendText[0]);
       }

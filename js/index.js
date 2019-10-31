@@ -101,19 +101,21 @@ var barChart = function barChart(id, csv, legend) {
         return d[key];
       });
     })]).nice();
-    g.append("g").attr("class", "axis axis-x").attr("transform", "translate(0,".concat(height, ")")).call(d3.axisBottom(x0));
-    g.append("g").attr("class", "axis axis-y").call(d3.axisLeft(y).tickFormat(locale.format('~s')).ticks(6).tickSizeInner(-width));
-    g.append("g").selectAll("g").data(data).enter().append("g").attr("transform", function (_ref2) {
+    var axisX = g.append("g").attr("class", "axis axis-x").attr("transform", "translate(0,".concat(height, ")")).call(d3.axisBottom(x0));
+    var axisY = g.append("g").attr("class", "axis axis-y").call(d3.axisLeft(y).tickFormat(locale.format('~s')).ticks(6).tickSizeInner(-width));
+    var rects = g.append("g").selectAll("g").data(data).enter().append("g").attr("transform", function (_ref2) {
       var type = _ref2.type;
       return "translate(".concat(x0(type), ",0)");
-    }).selectAll("rect").data(function (d) {
+    }).attr('class', 'grouped-bar-chart').selectAll("rect").data(function (d) {
       return keys.map(function (key) {
         return {
           key: key,
           value: d[key]
         };
       });
-    }).enter().append("rect").attr("x", function (_ref3) {
+    }).enter().append("rect").attr('x', y(0)).transition().delay(function (d, i) {
+      return i * 10;
+    }).duration(450).attr("x", function (_ref3) {
       var key = _ref3.key;
       return x1(key);
     }).attr("y", function (_ref4) {
@@ -126,7 +128,7 @@ var barChart = function barChart(id, csv, legend) {
       var key = _ref6.key;
       return z(key);
     });
-    g.append('text').attr('class', 'legend-top').attr("x", -45).attr("y", 0).text(legend);
+    var legends = g.append('text').attr('class', 'legend-top').attr("x", -45).attr("y", 0).text(legend);
   });
 };
 
@@ -147,6 +149,9 @@ function checkValues() {
 
     if (checkboxChecked === 3) {
       var fileName = arrayCheckedValues.join('-');
+      d3.selectAll('.grouped-bar-chart').remove().exit();
+      d3.selectAll('.axis-y').remove().exit();
+      d3.selectAll('.axis-x').remove().exit();
       console.log(fileName);
       barChart(idPib, fileName, legendText[0]);
     }
