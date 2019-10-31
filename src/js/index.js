@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function() {
 //Some values from radio buttons
 const idPib = document.getElementById('pib-chart')
 const idEmpleo = document.getElementById('empleo-chart')
-const csvTest = "test-frp"
 const legendText = ["Miles de M €", "Miles"]
 
 //Chart radio buttons
@@ -92,7 +91,7 @@ const barChart = (id, csv, legend) => {
       });
 
       const keys = data.columns.slice(1);
-      x0.domain(data.map(({ type }) => type));
+      x0.domain(data.map(({ year }) => year));
       x1.domain(keys).rangeRound([0, x0.bandwidth()]);
       y.domain([d3.min(data, d => d3.min(keys, key => d[key])), d3.max(data, d => d3.max(keys, key => d[key]))]).nice();
 
@@ -116,7 +115,7 @@ const barChart = (id, csv, legend) => {
         .data(data)
         .enter()
         .append("g")
-        .attr("transform", ({ type }) => `translate(${x0(type)},0)`)
+        .attr("transform", ({ year }) => `translate(${x0(year)},0)`)
         .attr('class', 'grouped-bar-chart')
         .selectAll("rect")
         .data(d => keys.map(key => ({
@@ -126,7 +125,7 @@ const barChart = (id, csv, legend) => {
         .enter()
         .append("rect")
         .attr("x", ({ key }) => x1(key))
-        .attr("y", ({ value }) => y(value))
+        .attr("y", ({ value }) => y(0))
         .attr("width", x1.bandwidth())
         .attr('height', 0)
         .transition()
@@ -171,7 +170,7 @@ const barChart = (id, csv, legend) => {
         .selectAll(".simulation-percentage")
         .data(d => keysSimulationIncrease.map(key => ({
           key,
-          value: d[key]
+          value: d[key].toFixed(2)
         })))
         .enter()
         .append("span")
@@ -195,6 +194,7 @@ function checkValues() {
       checkboxChecked++
       let checkedValue = checkbox[i].id;
       arrayCheckedValues.push(checkedValue)
+      console.log("arrayCheckedValues", arrayCheckedValues);
     }
 
     if (checkboxChecked === 3) {

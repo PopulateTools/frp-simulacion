@@ -59,7 +59,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 var idPib = document.getElementById('pib-chart');
 var idEmpleo = document.getElementById('empleo-chart');
-var csvTest = "test-frp";
 var legendText = ["Miles de M €", "Miles"]; //Chart radio buttons
 
 var barChart = function barChart(id, csv, legend) {
@@ -95,8 +94,8 @@ var barChart = function barChart(id, csv, legend) {
     });
     var keys = data.columns.slice(1);
     x0.domain(data.map(function (_ref) {
-      var type = _ref.type;
-      return type;
+      var year = _ref.year;
+      return year;
     }));
     x1.domain(keys).rangeRound([0, x0.bandwidth()]);
     y.domain([d3.min(data, function (d) {
@@ -111,8 +110,8 @@ var barChart = function barChart(id, csv, legend) {
     var axisX = g.append("g").attr("class", "axis axis-x").attr("transform", "translate(0,".concat(height, ")")).transition().duration(durationTransition).ease(d3.easeLinear).call(d3.axisBottom(x0));
     var axisY = g.append("g").attr("class", "axis axis-y").transition().duration(durationTransition).ease(d3.easeLinear).call(d3.axisLeft(y).tickFormat(locale.format('~s')).ticks(6).tickSizeInner(-width));
     var rects = g.append("g").selectAll("g").data(data).enter().append("g").attr("transform", function (_ref2) {
-      var type = _ref2.type;
-      return "translate(".concat(x0(type), ",0)");
+      var year = _ref2.year;
+      return "translate(".concat(x0(year), ",0)");
     }).attr('class', 'grouped-bar-chart').selectAll("rect").data(function (d) {
       return keys.map(function (key) {
         return {
@@ -125,7 +124,7 @@ var barChart = function barChart(id, csv, legend) {
       return x1(key);
     }).attr("y", function (_ref4) {
       var value = _ref4.value;
-      return y(value);
+      return y(0);
     }).attr("width", x1.bandwidth()).attr('height', 0).transition().delay(function (d, i) {
       return i * 10;
     }).duration(durationTransition).attr("x", function (_ref5) {
@@ -160,7 +159,7 @@ var barChart = function barChart(id, csv, legend) {
       return keysSimulationIncrease.map(function (key) {
         return {
           key: key,
-          value: d[key]
+          value: d[key].toFixed(2)
         };
       });
     }).enter().append("span").attr('class', 'simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc').transition().duration(durationTransition).text(function (_ref10) {
@@ -181,6 +180,7 @@ function checkValues() {
       checkboxChecked++;
       var checkedValue = checkbox[i].id;
       arrayCheckedValues.push(checkedValue);
+      console.log("arrayCheckedValues", arrayCheckedValues);
     }
 
     if (checkboxChecked === 3) {
