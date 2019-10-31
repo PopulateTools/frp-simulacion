@@ -131,15 +131,15 @@ var barChart = function barChart(id, csv, legend) {
     x1.domain(keys).rangeRound([0, x0.bandwidth()]);
     y.domain([d3.min(dataDifNetAcu, function (d) {
       return d3.min(keys, function (key) {
-        return d[key];
+        return d[key] * 1.25;
       });
     }), d3.max(dataDifNetAcu, function (d) {
       return d3.max(keys, function (key) {
-        return d[key];
+        return d[key] * 1.25;
       });
     })]).nice();
     var axisX = g.append("g").attr("class", "axis axis-x").attr("transform", "translate(0,".concat(height, ")")).transition().duration(durationTransition).ease(d3.easeLinear).call(d3.axisBottom(x0));
-    var axisY = g.append("g").attr("class", "axis axis-y").transition().duration(durationTransition).ease(d3.easeLinear).call(d3.axisLeft(y).tickFormat(locale.format('~s')).ticks(6).tickSizeInner(-width));
+    var axisY = g.append("g").attr("class", "axis axis-y").transition().duration(durationTransition).ease(d3.easeLinear).call(d3.axisLeft(y).tickFormat(locale.format('~s')).ticks(8).tickSizeInner(-width));
     var rects = g.append("g").selectAll("g").data(dataDifNetAcu).enter().append("g").attr("transform", function (_ref2) {
       var year = _ref2.year;
       return "translate(".concat(x0(year), ",0)");
