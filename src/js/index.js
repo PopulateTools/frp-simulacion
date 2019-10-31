@@ -167,7 +167,10 @@ function checkValues() {
       const containerInit = document.getElementsByClassName("container-init");
 
       for(let i=0; i < containerInit.length; i++){
-          containerInit[i].style.display = 'none';
+          containerInit[i].style.width = 0;
+          setTimeout(() => {
+            containerInit[i].style.display = "none";
+          } , 150)
        }
 
       const fileName = arrayCheckedValues.join('-');

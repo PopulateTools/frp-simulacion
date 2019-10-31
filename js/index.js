@@ -159,16 +159,25 @@ function checkValues() {
     }
 
     if (checkboxChecked === 3) {
-      var containerInit = document.getElementsByClassName("container-init");
+      (function () {
+        var containerInit = document.getElementsByClassName("container-init");
 
-      for (var _i2 = 0; _i2 < containerInit.length; _i2++) {
-        containerInit[_i2].style.display = 'none';
-      }
+        var _loop = function _loop(_i2) {
+          containerInit[_i2].style.width = 0;
+          setTimeout(function () {
+            containerInit[_i2].style.display = "none";
+          }, 150);
+        };
 
-      var fileName = arrayCheckedValues.join('-');
-      d3.selectAll('.container-chart').remove().exit();
-      barChart(idPib, fileName, legendText[0]);
-      barChart(idEmpleo, fileName, legendText[1]);
+        for (var _i2 = 0; _i2 < containerInit.length; _i2++) {
+          _loop(_i2);
+        }
+
+        var fileName = arrayCheckedValues.join('-');
+        d3.selectAll('.container-chart').remove().exit();
+        barChart(idPib, fileName, legendText[0]);
+        barChart(idEmpleo, fileName, legendText[1]);
+      })();
     }
   }
 }
