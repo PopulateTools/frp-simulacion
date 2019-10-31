@@ -8,18 +8,20 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
+//Listen radiobuttons and fire functions to get the names and radio buttons
 document.querySelectorAll(".input-radio").forEach(function (input) {
-  return input.addEventListener('click', getName);
-});
-document.querySelectorAll(".input-radio").forEach(function (input) {
-  return input.addEventListener('change', checkValues);
-});
+  return input.addEventListener('click', function () {
+    getName();
+    checkValues();
+  });
+}); //Get the name for every group of radio buttons
 
 function getName() {
   var targetElement = event.target;
   var inputName = targetElement.getAttribute('name');
   getActive(inputName);
-}
+} //Add active class to radio buttons
+
 
 function getActive(name) {
   var inputs = document.querySelectorAll("input[name='".concat(name, "']"));
@@ -33,16 +35,19 @@ function getActive(name) {
       element.classList.add('active-checkbox');
     }
   }
-}
+} //Fire tooltips with different radio buttons
+
 
 function tooltips(element, text) {
   new Tooltip(document.getElementById(element), {
     placement: "top",
     title: text
   });
-}
+} //Text radio buttons
 
-var tooltipInfo = [['tooltip-pf', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. '], ['tooltip-idc', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. '], ['tooltip-vdc', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. ']];
+
+var tooltipInfo = [['tooltip-pf', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. '], ['tooltip-idc', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. '], ['tooltip-vdc', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. ']]; //When dom loaded launch radio buttons
+
 document.addEventListener('DOMContentLoaded', function () {
   var _arr = tooltipInfo;
 
@@ -50,11 +55,12 @@ document.addEventListener('DOMContentLoaded', function () {
     var args = _arr[_i];
     tooltips.apply(void 0, _toConsumableArray(args));
   }
-});
+}); //Some values from radio buttons
+
 var idPib = document.getElementById('pib-chart');
 var idEmpleo = document.getElementById('empleo-chart');
 var csvTest = "test-frp";
-var legendText = ["Miles de M €", "Miles"];
+var legendText = ["Miles de M €", "Miles"]; //Chart radio buttons
 
 var barChart = function barChart(id, csv, legend) {
   var margin = {
@@ -137,10 +143,8 @@ var barChart = function barChart(id, csv, legend) {
     });
     var legends = g.append('text').attr('class', 'legend-top').attr("x", -45).attr("y", 0).text(legend);
   });
-};
+}; //We need store values from radio buttons
 
-barChart(idPib, csvTest, legendText[0]);
-barChart(idEmpleo, csvTest, legendText[1]);
 
 function checkValues() {
   var arrayCheckedValues = [];
@@ -155,6 +159,12 @@ function checkValues() {
     }
 
     if (checkboxChecked === 3) {
+      var containerInit = document.getElementsByClassName("container-init");
+
+      for (var _i2 = 0; _i2 < containerInit.length; _i2++) {
+        containerInit[_i2].style.display = 'none';
+      }
+
       var fileName = arrayCheckedValues.join('-');
       d3.selectAll('.container-chart').remove().exit();
       barChart(idPib, fileName, legendText[0]);

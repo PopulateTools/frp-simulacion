@@ -1,12 +1,17 @@
-document.querySelectorAll(".input-radio").forEach(input => input.addEventListener('click', getName));
-document.querySelectorAll(".input-radio").forEach(input => input.addEventListener('change', checkValues));
+//Listen radiobuttons and fire functions to get the names and radio buttons
+document.querySelectorAll(".input-radio").forEach(input => input.addEventListener('click',() => {
+     getName();
+     checkValues();
+}));
 
+//Get the name for every group of radio buttons
 function getName() {
   const targetElement = event.target;
   const inputName = targetElement.getAttribute('name');
   getActive(inputName)
 }
 
+//Add active class to radio buttons
 function getActive(name) {
   const inputs = document.querySelectorAll(`input[name='${name}']`);
   for (let i = 0; i < inputs.length; i++) {
@@ -19,6 +24,7 @@ function getActive(name) {
   }
 }
 
+//Fire tooltips with different radio buttons
 function tooltips(element, text) {
   new Tooltip(document.getElementById(element), {
     placement: "top",
@@ -26,21 +32,25 @@ function tooltips(element, text) {
   });
 }
 
+//Text radio buttons
 const tooltipInfo = [
   ['tooltip-pf', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. '],
   ['tooltip-idc', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. '],
   ['tooltip-vdc', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. ']
 ];
 
+//When dom loaded launch radio buttons
 document.addEventListener('DOMContentLoaded', function() {
   for (const args of tooltipInfo) tooltips(...args);
 });
 
+//Some values from radio buttons
 const idPib = document.getElementById('pib-chart')
 const idEmpleo = document.getElementById('empleo-chart')
 const csvTest = "test-frp"
 const legendText = ["Miles de M €", "Miles"]
 
+//Chart radio buttons
 const barChart = (id, csv, legend) => {
   const margin = { top: 16, right: 16, bottom: 16, left: 60 };
   const width = 370 - margin.left - margin.right;
@@ -138,9 +148,7 @@ const barChart = (id, csv, legend) => {
     });
 };
 
-barChart(idPib, csvTest, legendText[0]);
-barChart(idEmpleo, csvTest, legendText[1]);
-
+//We need store values from radio buttons
 function checkValues() {
   let arrayCheckedValues = []
 
@@ -155,6 +163,13 @@ function checkValues() {
     }
 
     if (checkboxChecked === 3) {
+
+      const containerInit = document.getElementsByClassName("container-init");
+
+      for(let i=0; i < containerInit.length; i++){
+          containerInit[i].style.display = 'none';
+       }
+
       const fileName = arrayCheckedValues.join('-');
 
       d3.selectAll('.container-chart')
@@ -170,7 +185,6 @@ function checkValues() {
 
 
 function getWidth() {
-
   const widthSimulation = document.getElementById("empleo-simulacion").offsetWidth
   const widthChart = document.getElementById("pib-chart").offsetWidth
   const sumWidth = widthSimulation + widthChart
