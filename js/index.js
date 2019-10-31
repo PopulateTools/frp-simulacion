@@ -165,7 +165,7 @@ var barChart = function barChart(id, csv, legend) {
       });
     }).enter().append("span").attr('class', 'simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc').transition().duration(durationTransition).text(function (_ref10) {
       var value = _ref10.value;
-      return value;
+      return value >= 0 ? "+".concat(value) : value;
     });
   });
 }; //We need store values from radio buttons

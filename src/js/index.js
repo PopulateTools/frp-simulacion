@@ -178,7 +178,7 @@ const barChart = (id, csv, legend) => {
         .attr('class', 'simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc')
         .transition()
         .duration(durationTransition)
-        .text(({ value }) => value)
+        .text(({ value }) => value >= 0 ? `+${value}` : value)
 
     });
 };
