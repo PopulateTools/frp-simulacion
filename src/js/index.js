@@ -39,17 +39,17 @@ const tooltipInfo = [
   ['tooltip-vdc', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. ']
 ];
 
-//When dom loaded launch radio buttons
+//When dom loaded launch tooltips
 document.addEventListener('DOMContentLoaded', function() {
   for (const args of tooltipInfo) tooltips(...args);
 });
 
-//Some values from radio buttons
+//Some values from charts
 const idPib = document.getElementById('pib-chart')
 const idEmpleo = document.getElementById('empleo-chart')
 const legendText = ["Miles de M €", "Miles"]
 
-//Chart radio buttons
+//Charts
 const barChart = (id, csv, legend) => {
   const margin = { top: 24, right: 16, bottom: 16, left: 60 };
   const width = 370 - margin.left - margin.right;
@@ -57,6 +57,7 @@ const barChart = (id, csv, legend) => {
   const chart = d3.select(id);
   const svg = chart.select('svg');
   const durationTransition = 400;
+  let data;
   const g = svg.append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`)
     .attr('class', 'container-chart')
@@ -90,10 +91,43 @@ const barChart = (id, csv, legend) => {
         grouping: [3]
       });
 
-      const keys = data.columns.slice(1);
-      x0.domain(data.map(({ year }) => year));
+      /* Generate a new dataset */
+      let arrayDifNeta = []
+      let arrayDifAcumulada = []
+      let arrayDifNetaAcumula = []
+      const years = ["2019", "2020", "2021", "2022"]
+
+      for (let i = 0; i < data.length; i++) {
+        const difNeta = data[i].simulacionpib - data[i].prevision
+        arrayDifNeta.push(difNeta)
+      }
+
+      arrayDifAcumulada.push(arrayDifNeta[0])
+
+      const difAcumuladaValue2020 = arrayDifNeta[0] + arrayDifNeta[1]
+      arrayDifAcumulada.push(difAcumuladaValue2020)
+
+      const difAcumuladaValue2021 = difAcumuladaValue2020 + arrayDifNeta[2]
+      arrayDifAcumulada.push(difAcumuladaValue2021)
+
+
+      const difAcumuladaValue2022 = difAcumuladaValue2021 + arrayDifNeta[3]
+      arrayDifAcumulada.push(difAcumuladaValue2022)
+
+      arrayDifNetaAcumula = arrayDifNeta.map((value, index) => [years[index],arrayDifNeta[index],arrayDifAcumulada[index]])
+
+      const dataDifNetAcu = arrayDifNetaAcumula.map(key => ({
+          year: key[0],
+          neta: key[1],
+          acumulada: key[2]
+        }))
+
+      let keys = d3.keys(dataDifNetAcu[0]);
+      keys = keys.slice(1)
+
+      x0.domain(dataDifNetAcu.map(({ year }) => year));
       x1.domain(keys).rangeRound([0, x0.bandwidth()]);
-      y.domain([d3.min(data, d => d3.min(keys, key => d[key])), d3.max(data, d => d3.max(keys, key => d[key]))]).nice();
+      y.domain([d3.min(dataDifNetAcu, d => d3.min(keys, key => d[key])), d3.max(dataDifNetAcu, d => d3.max(keys, key => d[key]))]).nice();
 
       const axisX = g.append("g")
         .attr("class", "axis axis-x")
@@ -112,7 +146,7 @@ const barChart = (id, csv, legend) => {
 
       const rects = g.append("g")
         .selectAll("g")
-        .data(data)
+        .data(dataDifNetAcu)
         .enter()
         .append("g")
         .attr("transform", ({ year }) => `translate(${x0(year)},0)`)
@@ -194,7 +228,6 @@ function checkValues() {
       checkboxChecked++
       let checkedValue = checkbox[i].id;
       arrayCheckedValues.push(checkedValue)
-      console.log("arrayCheckedValues", arrayCheckedValues);
     }
 
     if (checkboxChecked === 3) {

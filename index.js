@@ -6,6 +6,9 @@ export { min, max } from 'd3-array';
 
 export { scaleTime, scaleLinear, scaleBand, scaleOrdinal } from 'd3-scale';
 
+export { keys } from 'd3-collection';
+
+
 export { axisBottom, axisLeft } from 'd3-axis';
 
 export { csv } from 'd3-request';

@@ -46,7 +46,7 @@ function tooltips(element, text) {
 } //Text radio buttons
 
 
-var tooltipInfo = [['tooltip-pf', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. '], ['tooltip-idc', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. '], ['tooltip-vdc', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. ']]; //When dom loaded launch radio buttons
+var tooltipInfo = [['tooltip-pf', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. '], ['tooltip-idc', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. '], ['tooltip-vdc', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. ']]; //When dom loaded launch tooltips
 
 document.addEventListener('DOMContentLoaded', function () {
   var _arr = tooltipInfo;
@@ -55,11 +55,11 @@ document.addEventListener('DOMContentLoaded', function () {
     var args = _arr[_i];
     tooltips.apply(void 0, _toConsumableArray(args));
   }
-}); //Some values from radio buttons
+}); //Some values from charts
 
 var idPib = document.getElementById('pib-chart');
 var idEmpleo = document.getElementById('empleo-chart');
-var legendText = ["Miles de M €", "Miles"]; //Chart radio buttons
+var legendText = ["Miles de M €", "Miles"]; //Charts
 
 var barChart = function barChart(id, csv, legend) {
   var margin = {
@@ -73,6 +73,7 @@ var barChart = function barChart(id, csv, legend) {
   var chart = d3.select(id);
   var svg = chart.select('svg');
   var durationTransition = 400;
+  var data;
   var g = svg.append("g").attr("transform", "translate(".concat(margin.left, ",").concat(margin.top, ")")).attr('class', 'container-chart');
   svg.attr('width', "100%").attr('height', 250);
   var x0 = d3.scaleBand().rangeRound([10, width]).paddingInner(0.3);
@@ -92,24 +93,54 @@ var barChart = function barChart(id, csv, legend) {
       thousands: '.',
       grouping: [3]
     });
-    var keys = data.columns.slice(1);
-    x0.domain(data.map(function (_ref) {
+    /* Generate a new dataset */
+
+    var arrayDifNeta = [];
+    var arrayDifAcumulada = [];
+    var arrayDifNetaAcumula = [];
+    var years = ["2019", "2020", "2021", "2022"];
+
+    for (var i = 0; i < data.length; i++) {
+      var difNeta = data[i].simulacionpib - data[i].prevision;
+      arrayDifNeta.push(difNeta);
+    }
+
+    arrayDifAcumulada.push(arrayDifNeta[0]);
+    var difAcumuladaValue2020 = arrayDifNeta[0] + arrayDifNeta[1];
+    arrayDifAcumulada.push(difAcumuladaValue2020);
+    var difAcumuladaValue2021 = difAcumuladaValue2020 + arrayDifNeta[2];
+    arrayDifAcumulada.push(difAcumuladaValue2021);
+    var difAcumuladaValue2022 = difAcumuladaValue2021 + arrayDifNeta[3];
+    arrayDifAcumulada.push(difAcumuladaValue2022);
+    arrayDifNetaAcumula = arrayDifNeta.map(function (value, index) {
+      return [years[index], arrayDifNeta[index], arrayDifAcumulada[index]];
+    });
+    var dataDifNetAcu = arrayDifNetaAcumula.map(function (key) {
+      return {
+        year: key[0],
+        neta: key[1],
+        acumulada: key[2]
+      };
+    });
+    var keys = d3.keys(dataDifNetAcu[0]);
+    keys = keys.slice(1);
+    x0.domain(dataDifNetAcu.map(function (_ref) {
       var year = _ref.year;
       return year;
     }));
     x1.domain(keys).rangeRound([0, x0.bandwidth()]);
-    y.domain([d3.min(data, function (d) {
+    y.domain([d3.min(dataDifNetAcu, function (d) {
       return d3.min(keys, function (key) {
         return d[key];
       });
-    }), d3.max(data, function (d) {
+    }), d3.max(dataDifNetAcu, function (d) {
       return d3.max(keys, function (key) {
         return d[key];
       });
     })]).nice();
     var axisX = g.append("g").attr("class", "axis axis-x").attr("transform", "translate(0,".concat(height, ")")).transition().duration(durationTransition).ease(d3.easeLinear).call(d3.axisBottom(x0));
     var axisY = g.append("g").attr("class", "axis axis-y").transition().duration(durationTransition).ease(d3.easeLinear).call(d3.axisLeft(y).tickFormat(locale.format('~s')).ticks(6).tickSizeInner(-width));
-    var rects = g.append("g").selectAll("g").data(data).enter().append("g").attr("transform", function (_ref2) {
+    var rects = g.append("g").selectAll("g").data(dataDifNetAcu).enter().append("g").attr("transform", function (_ref2) {
       var year = _ref2.year;
       return "translate(".concat(x0(year), ",0)");
     }).attr('class', 'grouped-bar-chart').selectAll("rect").data(function (d) {
@@ -180,7 +211,6 @@ function checkValues() {
       checkboxChecked++;
       var checkedValue = checkbox[i].id;
       arrayCheckedValues.push(checkedValue);
-      console.log("arrayCheckedValues", arrayCheckedValues);
     }
 
     if (checkboxChecked === 3) {
