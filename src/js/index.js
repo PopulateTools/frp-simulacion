@@ -57,11 +57,12 @@ const firstUpdate = false
 
 //Charts
 const barChart = (id, csv, legend, tableClass) => {
-  const margin = { top: 32, right: 16, bottom: 16, left: 40 };
+  const margin = { top: 32, right: 16, bottom: 16, left: 56 };
   const chart = d3.select(id);
   const svg = chart.select('svg');
   const width = chart.node().offsetWidth - margin.left - margin.right;
   const height = 250 - margin.top - margin.bottom;
+  const h = 270;
   const durationTransition = 400;
   let data;
   const g = svg.append("g")
@@ -69,7 +70,7 @@ const barChart = (id, csv, legend, tableClass) => {
     .attr('class', 'container-chart')
 
   svg.attr('width', width + margin.left + margin.right)
-    .attr('height', 350);
+    .attr('height', h);
 
   const x0 = d3.scaleBand()
     .rangeRound([10, width])
@@ -136,7 +137,19 @@ const barChart = (id, csv, legend, tableClass) => {
 
       x0.domain(dataDifNetAcu.map(({ year }) => year));
       x1.domain(keys).rangeRound([0, x0.bandwidth()]);
-      y.domain([d3.min(dataDifNetAcu, d => d3.min(keys, key => d[key])), d3.max(dataDifNetAcu, d => d3.max(keys, key => d[key]))]).nice();
+      y.domain([d3.min(dataDifNetAcu, d => {
+        if(d3.min(keys, key => d[key]) > 0) {
+          return 0
+        } else {
+          return d3.min(keys, key => d[key])
+        }
+      }), d3.max(dataDifNetAcu, d => {
+        if(d3.max(keys, key => d[key]) < 0) {
+          return 0
+        } else {
+          return d3.max(keys, key => d[key])
+        }
+      })]).nice();
 
       const axisX = g.append("g")
         .attr("class", "axis axis-x")
@@ -151,7 +164,7 @@ const barChart = (id, csv, legend, tableClass) => {
         .transition()
         .duration(durationTransition)
         .ease(d3.easeLinear)
-        .call(d3.axisLeft(y).tickFormat(locale.format('~s')).ticks(5).tickSizeInner(-width))
+        .call(d3.axisLeft(y).ticks(5).tickSizeInner(-width))
 
       const rects = g.append("g")
         .attr('class', 'container-grouped')

@@ -69,16 +69,17 @@ var barChart = function barChart(id, csv, legend, tableClass) {
     top: 32,
     right: 16,
     bottom: 16,
-    left: 40
+    left: 56
   };
   var chart = d3.select(id);
   var svg = chart.select('svg');
   var width = chart.node().offsetWidth - margin.left - margin.right;
   var height = 250 - margin.top - margin.bottom;
+  var h = 270;
   var durationTransition = 400;
   var data;
   var g = svg.append("g").attr("transform", "translate(".concat(margin.left, ",").concat(margin.top, ")")).attr('class', 'container-chart');
-  svg.attr('width', width + margin.left + margin.right).attr('height', 350);
+  svg.attr('width', width + margin.left + margin.right).attr('height', h);
   var x0 = d3.scaleBand().rangeRound([10, width]).paddingInner(0.3);
   var x1 = d3.scaleBand();
   var y = d3.scaleLinear().rangeRound([height - margin.top, margin.bottom]);
@@ -135,16 +136,28 @@ var barChart = function barChart(id, csv, legend, tableClass) {
     }));
     x1.domain(keys).rangeRound([0, x0.bandwidth()]);
     y.domain([d3.min(dataDifNetAcu, function (d) {
-      return d3.min(keys, function (key) {
+      if (d3.min(keys, function (key) {
         return d[key];
-      });
+      }) > 0) {
+        return 0;
+      } else {
+        return d3.min(keys, function (key) {
+          return d[key];
+        });
+      }
     }), d3.max(dataDifNetAcu, function (d) {
-      return d3.max(keys, function (key) {
+      if (d3.max(keys, function (key) {
         return d[key];
-      });
+      }) < 0) {
+        return 0;
+      } else {
+        return d3.max(keys, function (key) {
+          return d[key];
+        });
+      }
     })]).nice();
     var axisX = g.append("g").attr("class", "axis axis-x").attr("transform", "translate(0,".concat(height, ")")).transition().duration(durationTransition).ease(d3.easeLinear).call(d3.axisBottom(x0));
-    var axisY = g.append("g").attr("class", "axis axis-y").transition().duration(durationTransition).ease(d3.easeLinear).call(d3.axisLeft(y).tickFormat(locale.format('~s')).ticks(5).tickSizeInner(-width));
+    var axisY = g.append("g").attr("class", "axis axis-y").transition().duration(durationTransition).ease(d3.easeLinear).call(d3.axisLeft(y).ticks(5).tickSizeInner(-width));
     var rects = g.append("g").attr('class', 'container-grouped').selectAll("g").data(dataDifNetAcu).enter().append("g").attr("transform", function (_ref2) {
       var year = _ref2.year;
       return "translate(".concat(x0(year), ",0)");
