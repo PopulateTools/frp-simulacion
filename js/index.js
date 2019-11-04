@@ -232,8 +232,10 @@ function checkValues() {
         var fileName = arrayCheckedValues.join('-');
         d3.selectAll('.container-chart').remove().exit();
         d3.selectAll('.simulation-pib-data-container').remove().exit();
-        barChart(idPib, fileName, legendText[0]);
-        barChart(idEmpleo, fileName, legendText[1]);
+        var fileNamePib = "pib/".concat(fileName);
+        var fileNameEmpleo = "empleo/".concat(fileName);
+        barChart(idPib, fileNamePib, legendText[0]);
+        barChart(idEmpleo, fileNameEmpleo, legendText[1]);
       })();
     }
   }

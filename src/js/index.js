@@ -252,8 +252,11 @@ function checkValues() {
         .remove()
         .exit()
 
-      barChart(idPib, fileName, legendText[0]);
-      barChart(idEmpleo, fileName, legendText[1]);
+      const fileNamePib = `pib/${fileName}`
+      const fileNameEmpleo = `empleo/${fileName}`
+
+      barChart(idPib, fileNamePib, legendText[0]);
+      barChart(idEmpleo, fileNameEmpleo, legendText[1]);
 
     }
   }
