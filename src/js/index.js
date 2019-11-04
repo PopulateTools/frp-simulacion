@@ -119,6 +119,7 @@ const barChart = (id, csv, legend, tableClass) => {
 
       const difAcumuladaValue2022 = difAcumuladaValue2021 + arrayDifNeta[3]
       arrayDifAcumulada.push(difAcumuladaValue2022)
+      console.log("arrayDifAcumulada", arrayDifAcumulada);
 
       arrayDifNetaAcumula = arrayDifNeta.map((value, index) => [years[index],arrayDifNeta[index],arrayDifAcumulada[index]])
 
@@ -131,9 +132,15 @@ const barChart = (id, csv, legend, tableClass) => {
       let keys = d3.keys(dataDifNetAcu[0]);
       keys = keys.slice(1)
 
+      console.log(dataDifNetAcu[3].acumulada)
+
       x0.domain(dataDifNetAcu.map(({ year }) => year));
       x1.domain(keys).rangeRound([0, x0.bandwidth()]);
-      y.domain([d3.min(dataDifNetAcu, d => d3.min(keys, key => d[key] * 2)), d3.max(dataDifNetAcu, d => d3.max(keys, key => d[key] * 1.25))]).nice();
+      if(dataDifNetAcu[3].acumulada > 15000) {
+        y.domain([d3.min(dataDifNetAcu, d => d3.min(keys, key => d[key] * 2)), d3.max(dataDifNetAcu, d => d3.max(keys, key => d[key] * 3.25))]).nice();
+      } else {
+        y.domain([d3.min(dataDifNetAcu, d => d3.min(keys, key => d[key] * 2)), d3.max(dataDifNetAcu, d => d3.max(keys, key => d[key] * 1.25))]).nice();
+      }
 
       const axisX = g.append("g")
         .attr("class", "axis axis-x")
@@ -151,6 +158,7 @@ const barChart = (id, csv, legend, tableClass) => {
         .call(d3.axisLeft(y).tickFormat(locale.format('~s')).ticks(5).tickSizeInner(-width))
 
       const rects = g.append("g")
+        .attr('class', 'container-grouped')
         .selectAll("g")
         .data(dataDifNetAcu)
         .enter()
@@ -183,7 +191,6 @@ const barChart = (id, csv, legend, tableClass) => {
         .attr("x", -35)
         .attr("y", -10)
         .text(legend);
-
 
       const keysSimulationPib = data.columns.slice(2, 3);
       const keysSimulationIncrease = data.columns.slice(3);
@@ -251,6 +258,10 @@ function checkValues() {
           containerInit[i].style.display = "none";
         }, 150)
       }
+
+      d3.selectAll('.container-chart')
+        .remove()
+        .exit()
 
       const fileName = arrayCheckedValues.join('-');
 
