@@ -113,6 +113,7 @@ const barChart = (id, csv, legend) => {
 
       const difAcumuladaValue2022 = difAcumuladaValue2021 + arrayDifNeta[3]
       arrayDifAcumulada.push(difAcumuladaValue2022)
+      console.log("arrayDifAcumulada", arrayDifAcumulada);
 
       arrayDifNetaAcumula = arrayDifNeta.map((value, index) => [years[index],arrayDifNeta[index],arrayDifAcumulada[index]])
 
@@ -127,7 +128,7 @@ const barChart = (id, csv, legend) => {
 
       x0.domain(dataDifNetAcu.map(({ year }) => year));
       x1.domain(keys).rangeRound([0, x0.bandwidth()]);
-      y.domain([d3.min(dataDifNetAcu, d => d3.min(keys, key => d[key] * 1.25)), d3.max(dataDifNetAcu, d => d3.max(keys, key => d[key] * 1.25))]).nice();
+      y.domain([d3.min(dataDifNetAcu, d => d3.min(keys, key => d[key] * 2)), d3.max(dataDifNetAcu, d => d3.max(keys, key => d[key] * 1.25))]).nice();
 
       const axisX = g.append("g")
         .attr("class", "axis axis-x")
@@ -142,7 +143,7 @@ const barChart = (id, csv, legend) => {
         .transition()
         .duration(durationTransition)
         .ease(d3.easeLinear)
-        .call(d3.axisLeft(y).tickFormat(locale.format('~s')).ticks(8).tickSizeInner(-width))
+        .call(d3.axisLeft(y).tickFormat(locale.format('~s')).ticks(5).tickSizeInner(-width))
 
       const rects = g.append("g")
         .selectAll("g")
