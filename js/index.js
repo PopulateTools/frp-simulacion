@@ -59,14 +59,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
 var idPib = document.getElementById('pib-chart');
 var idEmpleo = document.getElementById('empleo-chart');
-var legendText = ["Miles de M €", "Miles"]; //Charts
+var tablePib = '.simulation-pib-data';
+var tableEmpleo = '.simulation-empleo-data';
+var legendText = ["Miles de M €", "Miles"];
+var firstUpdate = false; //Charts
 
-var barChart = function barChart(id, csv, legend) {
+var barChart = function barChart(id, csv, legend, tableClass) {
   var margin = {
     top: 24,
     right: 16,
     bottom: 16,
-    left: 60
+    left: 40
   };
   var width = 370 - margin.left - margin.right;
   var height = 200 - margin.top - margin.bottom;
@@ -112,7 +115,6 @@ var barChart = function barChart(id, csv, legend) {
     arrayDifAcumulada.push(difAcumuladaValue2021);
     var difAcumuladaValue2022 = difAcumuladaValue2021 + arrayDifNeta[3];
     arrayDifAcumulada.push(difAcumuladaValue2022);
-    console.log("arrayDifAcumulada", arrayDifAcumulada);
     arrayDifNetaAcumula = arrayDifNeta.map(function (value, index) {
       return [years[index], arrayDifNeta[index], arrayDifAcumulada[index]];
     });
@@ -172,10 +174,10 @@ var barChart = function barChart(id, csv, legend) {
       var key = _ref8.key;
       return z(key);
     });
-    var legends = g.append('text').attr('class', 'legend-top').attr("x", -45).attr("y", -10).text(legend);
+    var legends = g.append('text').attr('class', 'legend-top').attr("x", -35).attr("y", -10).text(legend);
     var keysSimulationPib = data.columns.slice(2, 3);
     var keysSimulationIncrease = data.columns.slice(3);
-    var simulation = d3.selectAll('.simulation-pib-data').selectAll('div').data(data).enter().append("div").attr('class', 'simulation-pib-data-container w-100 turquoise20-bgc fl');
+    var simulation = d3.selectAll(tableClass).selectAll('div').remove().exit().data(data).enter().append("div").attr('class', 'simulation-pib-data-container w-100 turquoise20-bgc fl');
     simulation.selectAll("span").data(function (d) {
       return keysSimulationPib.map(function (key) {
         return {
@@ -230,12 +232,10 @@ function checkValues() {
         }
 
         var fileName = arrayCheckedValues.join('-');
-        d3.selectAll('.container-chart').remove().exit();
-        d3.selectAll('.simulation-pib-data-container').remove().exit();
         var fileNamePib = "pib/".concat(fileName);
         var fileNameEmpleo = "empleo/".concat(fileName);
-        barChart(idPib, fileNamePib, legendText[0]);
-        barChart(idEmpleo, fileNameEmpleo, legendText[1]);
+        barChart(idPib, fileNamePib, legendText[0], tablePib);
+        barChart(idEmpleo, fileNameEmpleo, legendText[1], tableEmpleo);
       })();
     }
   }

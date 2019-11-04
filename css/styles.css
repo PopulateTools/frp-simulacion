@@ -10802,4 +10802,14 @@ html {
   max-width: 12rem;
 }
 
+.container-radio:hover {
+  cursor: pointer;
+  background-color: rgba(0, 108, 97, .1);
+  background-color: var(--olive10);
+}
+
+.container-radio label {
+  cursor: pointer;
+}
+
 /*# sourceMappingURL=styles.css.map */

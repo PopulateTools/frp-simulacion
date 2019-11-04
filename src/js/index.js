@@ -47,11 +47,17 @@ document.addEventListener('DOMContentLoaded', function() {
 //Some values from charts
 const idPib = document.getElementById('pib-chart')
 const idEmpleo = document.getElementById('empleo-chart')
+
+const tablePib = '.simulation-pib-data'
+const tableEmpleo = '.simulation-empleo-data'
+
 const legendText = ["Miles de M €", "Miles"]
 
+const firstUpdate = false
+
 //Charts
-const barChart = (id, csv, legend) => {
-  const margin = { top: 24, right: 16, bottom: 16, left: 60 };
+const barChart = (id, csv, legend, tableClass) => {
+  const margin = { top: 24, right: 16, bottom: 16, left: 40 };
   const width = 370 - margin.left - margin.right;
   const height = 200 - margin.top - margin.bottom;
   const chart = d3.select(id);
@@ -113,7 +119,6 @@ const barChart = (id, csv, legend) => {
 
       const difAcumuladaValue2022 = difAcumuladaValue2021 + arrayDifNeta[3]
       arrayDifAcumulada.push(difAcumuladaValue2022)
-      console.log("arrayDifAcumulada", arrayDifAcumulada);
 
       arrayDifNetaAcumula = arrayDifNeta.map((value, index) => [years[index],arrayDifNeta[index],arrayDifAcumulada[index]])
 
@@ -172,17 +177,21 @@ const barChart = (id, csv, legend) => {
         .attr("width", x1.bandwidth())
         .attr("fill", ({ key }) => z(key));
 
-      const legends = g.append('text')
+      const legends = g
+        .append('text')
         .attr('class', 'legend-top')
-        .attr("x", -45)
+        .attr("x", -35)
         .attr("y", -10)
         .text(legend);
+
 
       const keysSimulationPib = data.columns.slice(2, 3);
       const keysSimulationIncrease = data.columns.slice(3);
 
-      const simulation = d3.selectAll('.simulation-pib-data')
+      const simulation = d3.selectAll(tableClass)
         .selectAll('div')
+        .remove()
+        .exit()
         .data(data)
         .enter()
         .append("div")
@@ -214,6 +223,7 @@ const barChart = (id, csv, legend) => {
         .duration(durationTransition)
         .text(({ value }) => value >= 0 ? `+${value}` : value)
 
+
     });
 };
 
@@ -244,24 +254,15 @@ function checkValues() {
 
       const fileName = arrayCheckedValues.join('-');
 
-      d3.selectAll('.container-chart')
-        .remove()
-        .exit()
-
-      d3.selectAll('.simulation-pib-data-container')
-        .remove()
-        .exit()
-
       const fileNamePib = `pib/${fileName}`
       const fileNameEmpleo = `empleo/${fileName}`
 
-      barChart(idPib, fileNamePib, legendText[0]);
-      barChart(idEmpleo, fileNameEmpleo, legendText[1]);
+      barChart(idPib, fileNamePib, legendText[0], tablePib);
+      barChart(idEmpleo, fileNameEmpleo, legendText[1], tableEmpleo);
 
     }
   }
 }
-
 
 function getWidth() {
   const widthSimulation = document.getElementById("empleo-simulacion").offsetWidth

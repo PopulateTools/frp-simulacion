@@ -10755,3 +10755,12 @@ html {
   margin: 0;
   max-width: 12rem;
 }
+
+.container-radio:hover {
+  cursor: pointer;
+  background-color: var(--olive10);
+}
+
+.container-radio label {
+  cursor: pointer;
+}
