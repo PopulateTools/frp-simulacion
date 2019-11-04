@@ -2614,6 +2614,36 @@
   var ascendingBisect = bisector(ascending$1);
   var bisectRight = ascendingBisect.right;
 
+  function extent(values, valueof) {
+    let min;
+    let max;
+    if (valueof === undefined) {
+      for (const value of values) {
+        if (value != null) {
+          if (min === undefined) {
+            if (value >= value) min = max = value;
+          } else {
+            if (min > value) min = value;
+            if (max < value) max = value;
+          }
+        }
+      }
+    } else {
+      let index = -1;
+      for (let value of values) {
+        if ((value = valueof(value, ++index, values)) != null) {
+          if (min === undefined) {
+            if (value >= value) min = max = value;
+          } else {
+            if (min > value) min = value;
+            if (max < value) max = value;
+          }
+        }
+      }
+    }
+    return [min, max];
+  }
+
   function sequence(start, stop, step) {
     start = +start, stop = +stop, step = (n = arguments.length) < 2 ? (stop = start, start = 0, 1) : n < 3 ? 1 : +step;
 
@@ -5096,6 +5126,7 @@
   exports.axisLeft = axisLeft;
   exports.csv = csv$1;
   exports.easeLinear = linear$1;
+  exports.extent = extent;
   exports.formatDefaultLocale = defaultLocale;
   exports.keys = keys;
   exports.max = max;

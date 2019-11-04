@@ -66,7 +66,7 @@ var firstUpdate = false; //Charts
 
 var barChart = function barChart(id, csv, legend, tableClass) {
   var margin = {
-    top: 24,
+    top: 32,
     right: 16,
     bottom: 16,
     left: 40
@@ -74,14 +74,14 @@ var barChart = function barChart(id, csv, legend, tableClass) {
   var chart = d3.select(id);
   var svg = chart.select('svg');
   var width = chart.node().offsetWidth - margin.left - margin.right;
-  var height = 200 - margin.top - margin.bottom;
+  var height = 250 - margin.top - margin.bottom;
   var durationTransition = 400;
   var data;
   var g = svg.append("g").attr("transform", "translate(".concat(margin.left, ",").concat(margin.top, ")")).attr('class', 'container-chart');
-  svg.attr('width', width + margin.left + margin.right).attr('height', 250);
+  svg.attr('width', width + margin.left + margin.right).attr('height', 350);
   var x0 = d3.scaleBand().rangeRound([10, width]).paddingInner(0.3);
   var x1 = d3.scaleBand();
-  var y = d3.scaleLinear().rangeRound([height, 0]);
+  var y = d3.scaleLinear().rangeRound([height - margin.top, margin.bottom]);
   var z = d3.scaleOrdinal().range(["#006D63", "#B8DF22"]);
   d3.csv("csv/".concat(csv, ".csv"), function (d, i, columns) {
     for (var i = 1, n = columns.length; i < n; ++i) {
@@ -128,35 +128,21 @@ var barChart = function barChart(id, csv, legend, tableClass) {
     });
     var keys = d3.keys(dataDifNetAcu[0]);
     keys = keys.slice(1);
-    console.log(dataDifNetAcu[3].acumulada);
+    console.log("keys", keys);
     x0.domain(dataDifNetAcu.map(function (_ref) {
       var year = _ref.year;
       return year;
     }));
     x1.domain(keys).rangeRound([0, x0.bandwidth()]);
-
-    if (dataDifNetAcu[3].acumulada > 15000) {
-      y.domain([d3.min(dataDifNetAcu, function (d) {
-        return d3.min(keys, function (key) {
-          return d[key] * 2;
-        });
-      }), d3.max(dataDifNetAcu, function (d) {
-        return d3.max(keys, function (key) {
-          return d[key] * 3.25;
-        });
-      })]).nice();
-    } else {
-      y.domain([d3.min(dataDifNetAcu, function (d) {
-        return d3.min(keys, function (key) {
-          return d[key] * 2;
-        });
-      }), d3.max(dataDifNetAcu, function (d) {
-        return d3.max(keys, function (key) {
-          return d[key] * 1.25;
-        });
-      })]).nice();
-    }
-
+    y.domain([d3.min(dataDifNetAcu, function (d) {
+      return d3.min(keys, function (key) {
+        return d[key];
+      });
+    }), d3.max(dataDifNetAcu, function (d) {
+      return d3.max(keys, function (key) {
+        return d[key];
+      });
+    })]).nice();
     var axisX = g.append("g").attr("class", "axis axis-x").attr("transform", "translate(0,".concat(height, ")")).transition().duration(durationTransition).ease(d3.easeLinear).call(d3.axisBottom(x0));
     var axisY = g.append("g").attr("class", "axis axis-y").transition().duration(durationTransition).ease(d3.easeLinear).call(d3.axisLeft(y).tickFormat(locale.format('~s')).ticks(5).tickSizeInner(-width));
     var rects = g.append("g").attr('class', 'container-grouped').selectAll("g").data(dataDifNetAcu).enter().append("g").attr("transform", function (_ref2) {
@@ -185,7 +171,7 @@ var barChart = function barChart(id, csv, legend, tableClass) {
       return value > 0 ? y(value) : y(0);
     }).attr("height", function (_ref7) {
       var value = _ref7.value;
-      return value > 0 ? y(0) - y(value) : y(value) - y(0);
+      return Math.abs(y(value) - y(0));
     }).attr("width", x1.bandwidth()).attr("fill", function (_ref8) {
       var key = _ref8.key;
       return z(key);

@@ -57,11 +57,11 @@ const firstUpdate = false
 
 //Charts
 const barChart = (id, csv, legend, tableClass) => {
-  const margin = { top: 24, right: 16, bottom: 16, left: 40 };
+  const margin = { top: 32, right: 16, bottom: 16, left: 40 };
   const chart = d3.select(id);
   const svg = chart.select('svg');
   const width = chart.node().offsetWidth - margin.left - margin.right;
-  const height = 200 - margin.top - margin.bottom;
+  const height = 250 - margin.top - margin.bottom;
   const durationTransition = 400;
   let data;
   const g = svg.append("g")
@@ -69,7 +69,7 @@ const barChart = (id, csv, legend, tableClass) => {
     .attr('class', 'container-chart')
 
   svg.attr('width', width + margin.left + margin.right)
-    .attr('height', 250);
+    .attr('height', 350);
 
   const x0 = d3.scaleBand()
     .rangeRound([10, width])
@@ -78,7 +78,7 @@ const barChart = (id, csv, legend, tableClass) => {
   const x1 = d3.scaleBand()
 
   const y = d3.scaleLinear()
-    .rangeRound([height, 0]);
+    .rangeRound([height - margin.top, margin.bottom]);
 
   const z = d3.scaleOrdinal()
     .range(["#006D63", "#B8DF22"]);
@@ -131,16 +131,12 @@ const barChart = (id, csv, legend, tableClass) => {
 
       let keys = d3.keys(dataDifNetAcu[0]);
       keys = keys.slice(1)
+      console.log("keys", keys);
 
-      console.log(dataDifNetAcu[3].acumulada)
 
       x0.domain(dataDifNetAcu.map(({ year }) => year));
       x1.domain(keys).rangeRound([0, x0.bandwidth()]);
-      if(dataDifNetAcu[3].acumulada > 15000) {
-        y.domain([d3.min(dataDifNetAcu, d => d3.min(keys, key => d[key] * 2)), d3.max(dataDifNetAcu, d => d3.max(keys, key => d[key] * 3.25))]).nice();
-      } else {
-        y.domain([d3.min(dataDifNetAcu, d => d3.min(keys, key => d[key] * 2)), d3.max(dataDifNetAcu, d => d3.max(keys, key => d[key] * 1.25))]).nice();
-      }
+      y.domain([d3.min(dataDifNetAcu, d => d3.min(keys, key => d[key])), d3.max(dataDifNetAcu, d => d3.max(keys, key => d[key]))]).nice();
 
       const axisX = g.append("g")
         .attr("class", "axis axis-x")
@@ -181,7 +177,7 @@ const barChart = (id, csv, legend, tableClass) => {
         .duration(durationTransition)
         .attr("x", ({ key }) => x1(key))
         .attr("y", ({ value }) => value > 0 ? y(value) : y(0))
-        .attr("height", ({ value }) => value > 0 ? y(0) - y(value) : y(value) - y(0))
+        .attr("height", ({ value }) => Math.abs(y(value) - y(0)))
         .attr("width", x1.bandwidth())
         .attr("fill", ({ key }) => z(key));
 
