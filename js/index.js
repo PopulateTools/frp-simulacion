@@ -71,14 +71,14 @@ var barChart = function barChart(id, csv, legend, tableClass) {
     bottom: 16,
     left: 40
   };
-  var width = 370 - margin.left - margin.right;
-  var height = 200 - margin.top - margin.bottom;
   var chart = d3.select(id);
   var svg = chart.select('svg');
+  var width = chart.node().offsetWidth - margin.left - margin.right;
+  var height = 200 - margin.top - margin.bottom;
   var durationTransition = 400;
   var data;
   var g = svg.append("g").attr("transform", "translate(".concat(margin.left, ",").concat(margin.top, ")")).attr('class', 'container-chart');
-  svg.attr('width', "100%").attr('height', 250);
+  svg.attr('width', width + margin.left + margin.right).attr('height', 250);
   var x0 = d3.scaleBand().rangeRound([10, width]).paddingInner(0.3);
   var x1 = d3.scaleBand();
   var y = d3.scaleLinear().rangeRound([height, 0]);

@@ -58,17 +58,17 @@ const firstUpdate = false
 //Charts
 const barChart = (id, csv, legend, tableClass) => {
   const margin = { top: 24, right: 16, bottom: 16, left: 40 };
-  const width = 370 - margin.left - margin.right;
-  const height = 200 - margin.top - margin.bottom;
   const chart = d3.select(id);
   const svg = chart.select('svg');
+  const width = chart.node().offsetWidth - margin.left - margin.right;
+  const height = 200 - margin.top - margin.bottom;
   const durationTransition = 400;
   let data;
   const g = svg.append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`)
     .attr('class', 'container-chart')
 
-  svg.attr('width', "100%")
+  svg.attr('width', width + margin.left + margin.right)
     .attr('height', 250);
 
   const x0 = d3.scaleBand()
