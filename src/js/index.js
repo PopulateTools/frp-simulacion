@@ -562,6 +562,7 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
         this.parentNode.appendChild(this);
       });
     };
+
     d3.selection.prototype.moveToBack = function() {
       return this.each(function() {
         var firstChild = this.parentNode.firstChild;
@@ -571,16 +572,36 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
       });
     };
 
+    d3.select('.prevision')
+      .moveToFront()
+
     d3.select('.highlighted')
       .data(dataComb)
       .moveToFront()
       .on('mouseover', (d) => {
+        const formatValues = locale.format(',.0f')
         const positionleft = `${d3.event.pageX}`;
         const positionTop = `${d3.event.pageY}`;
         const tooltipWidth = d3.select('.tooltip-simulation').node().getBoundingClientRect().width;
         const tooltipHeight = d3.select('.tooltip-simulation').node().getBoundingClientRect().height;
         const positionTopTooltip = positionTop - tooltipHeight
         const positionleftTooltip = positionleft - (tooltipWidth / 2)
+        let pibFormat = []
+        let percentageFormat = []
+
+        for (let i = 0; i < d.values.length; i++) {
+         const element = d.values[i].simulacionpib
+         const valueToFixed = formatValues(element)
+         pibFormat.push(valueToFixed)
+        }
+
+        for (let i = 0; i < d.values.length; i++) {
+         const element = d.values[i].simulacionpercentage
+         const valueToFixed = Number(element).toFixed(2)
+         percentageFormat.push(valueToFixed)
+         console.log("percentageFormat", percentageFormat);
+        }
+
         tooltipSimulation
           .style('opacity', 1)
           .html(
@@ -635,23 +656,23 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
               </div>
               <div class="simulation-pib-data">
                 <div class="simulation-pib-data-container w-100 turquoise20-bgc fl">
-                  <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${d.values[0].simulacionpib}</span>
-                  <span class="simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${d.values[0].simulacionpercentage}%
+                  <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${pibFormat[0]}</span>
+                  <span class="simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${percentageFormat[0]}%
                   </span>
                 </div>
                 <div class="simulation-pib-data-container w-100 turquoise20-bgc fl">
-                  <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${d.values[1].simulacionpib}</span>
-                  <span class="simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${d.values[1].simulacionpercentage}%
+                  <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${pibFormat[1]}</span>
+                  <span class="simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${percentageFormat[1]}%
                   </span>
                 </div>
                 <div class="simulation-pib-data-container w-100 turquoise20-bgc fl">
-                  <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${d.values[2].simulacionpib}</span></span>
-                  <span class="simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${d.values[2].simulacionpercentage}%
+                  <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${pibFormat[2]}</span></span>
+                  <span class="simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${percentageFormat[2]}%
                   </span>
                 </div>
                 <div class="simulation-pib-data-container w-100 turquoise20-bgc fl">
-                  <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${d.values[3].simulacionpib}</span></span>
-                  <span class="simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${d.values[3].simulacionpercentage}%
+                  <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${pibFormat[3]}</span></span>
+                  <span class="simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${percentageFormat[3]}%
                   </span>
                 </div>
               </div>
@@ -665,7 +686,7 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
       })
       .on('mouseout', () => {
         tooltipSimulation
-          .style('opacity', 1)
+          .style('opacity', 0)
       })
 
 
