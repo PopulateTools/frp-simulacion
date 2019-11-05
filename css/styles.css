@@ -10816,4 +10816,9 @@ html {
   fill: none;
 }
 
+.prevision {
+  stroke: green !important;
+  stroke-width: 5px;
+}
+
 /*# sourceMappingURL=styles.css.map */

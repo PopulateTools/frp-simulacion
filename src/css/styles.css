@@ -10768,3 +10768,8 @@ html {
 #multiline-simulation-empleo .line {
   fill: none;
 }
+
+.prevision {
+  stroke: green !important;
+  stroke-width: 5px;
+}

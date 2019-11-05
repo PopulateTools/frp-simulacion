@@ -368,8 +368,8 @@ var multipleLine = function multipleLine() {
   var margin = {
     top: 24,
     right: 24,
-    bottom: 24,
-    left: 24
+    bottom: 32,
+    left: 48
   };
   var width = 0;
   var height = 0;
@@ -377,10 +377,11 @@ var multipleLine = function multipleLine() {
   var svg = chart.select('svg');
   var scales = {};
   var dataz;
+  var tooltipSimulation = chart.append('div').attr('class', 'tooltip tooltip-simulation').style('opacity', 0);
 
   var setupScales = function setupScales() {
     var countX = d3.scaleTime().domain([2019, 2022]);
-    var countY = d3.scaleLinear().domain([18000, 22000]);
+    var countY = d3.scaleLinear().domain([19000, 22000]);
     scales.count = {
       x: countX,
       y: countY
@@ -421,18 +422,26 @@ var multipleLine = function multipleLine() {
     }).entries(data);
     console.log("dataComb", dataComb);
     var container = chart.select('.multiline-simulation-empleo-container-dos');
-    var colors = ['#b114c0', '#9C1B12', '#759CA7', '#CEBAC6', '#2D3065'];
-    var color = d3.scaleOrdinal(colors);
     var line = d3.line().x(function (d) {
       return scales.count.x(d.year);
     }).y(function (d) {
       return scales.count.y(d.simulacionpib);
     });
     container.selectAll('.line').remove().exit().data(dataComb);
+    console.log("dataComb", dataComb);
     dataComb.forEach(function (d) {
-      container.append('path').attr('class', 'line ' + d.key).style('stroke', function () {
-        return d.color = color(d.key);
-      }).attr('d', line(d.values));
+      container.append('path').on('mouseover', function (d) {
+        var positionX = scales.count.x(d.key);
+        var postionWidthTooltip = positionX + 270;
+        var tooltipWidth = 210;
+        var positionleft = "".concat(d3.event.pageX, "px");
+        var positionright = "".concat(d3.event.pageX - tooltipWidth, "px");
+        tooltipSimulation.transition();
+        tooltipSimulation.attr('class', 'tooltip tooltip-scatter tooltip-min');
+        tooltipSimulation.style('opacity', 1).html("<p class=\"tooltip-scatter-text\">La temperatura m\xEDnima de ".concat(d.values, " en ").concat(d.key, " <p/>")).style('left', postionWidthTooltip > w ? positionright : positionleft).style('top', "".concat(d3.event.pageY - 28, "px"));
+      }).on('mouseout', function () {
+        tooltipSimulation.transition().duration(200).style('opacity', 0);
+      }).attr('class', 'line ' + d.key).style('stroke', '#DADADA').attr('d', line(d.values));
     });
     drawAxes(g);
   };

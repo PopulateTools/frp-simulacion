@@ -215,7 +215,7 @@ const barChart = (id, csv, legend, tableClass) => {
         value: d[key]
       })))
 
-      rects
+    rects
       .enter()
       .append('rect')
       .attr("width", scales.count.x1.bandwidth())
@@ -227,12 +227,12 @@ const barChart = (id, csv, legend, tableClass) => {
       .attr("y", ({ value }) => value > 0 ? scales.count.y(value) : scales.count.y(0))
       .attr("height", ({ value }) => Math.abs(scales.count.y(value) - scales.count.y(0)))
 
-      rects.transition()
+    rects.transition()
       .duration(durationTransition)
       .attr("y", ({ value }) => value > 0 ? scales.count.y(value) : scales.count.y(0))
       .attr("height", ({ value }) => Math.abs(scales.count.y(value) - scales.count.y(0)))
 
-      rects.exit().remove()
+    rects.exit().remove()
 
 
     drawAxes(g);
@@ -279,68 +279,68 @@ const barChart = (id, csv, legend, tableClass) => {
       if (error) {
 
       } else {
-       const keysSimulationPib = data.columns.slice(2, 3);
-       const keysSimulationIncrease = data.columns.slice(3);
+        const keysSimulationPib = data.columns.slice(2, 3);
+        const keysSimulationIncrease = data.columns.slice(3);
 
-       const simulation = d3.selectAll(tableClass)
-         .selectAll('div')
-         .remove()
-         .exit()
-         .data(data)
-         .enter()
-         .append("div")
-         .attr('class', 'simulation-pib-data-container w-100 turquoise20-bgc fl')
-
-       simulation
-         .selectAll("span")
-         .data(d => keysSimulationPib.map(key => ({
-           key,
-           value: d[key]
-         })))
-         .enter()
-         .append("span")
-         .attr('class', 'dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc')
-         .transition()
-         .duration(durationTransition)
-         .text(({ value }) => locale.format(',.0f')(value))
+        const simulation = d3.selectAll(tableClass)
+          .selectAll('div')
+          .remove()
+          .exit()
+          .data(data)
+          .enter()
+          .append("div")
+          .attr('class', 'simulation-pib-data-container w-100 turquoise20-bgc fl')
 
         simulation
-         .selectAll(".simulation-percentage")
-         .data(d => keysSimulationIncrease.map(key => ({
-           key,
-           value: d[key].toFixed(2)
-         })))
-         .enter()
-         .append("span")
-         .attr('class', 'simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc')
-         .transition()
-         .duration(durationTransition)
-         .text(({ value }) => value >= 0 ? `+${value}%` : `${value}%`)
+          .selectAll("span")
+          .data(d => keysSimulationPib.map(key => ({
+            key,
+            value: d[key]
+          })))
+          .enter()
+          .append("span")
+          .attr('class', 'dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc')
+          .transition()
+          .duration(durationTransition)
+          .text(({ value }) => locale.format(',.0f')(value))
 
-       let arrayDifNeta = []
-       let arrayDifAcumulada = []
-       let arrayDifNetaAcumula = []
-       const years = ["2019", "2020", "2021", "2022"]
+        simulation
+          .selectAll(".simulation-percentage")
+          .data(d => keysSimulationIncrease.map(key => ({
+            key,
+            value: d[key].toFixed(2)
+          })))
+          .enter()
+          .append("span")
+          .attr('class', 'simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc')
+          .transition()
+          .duration(durationTransition)
+          .text(({ value }) => value >= 0 ? `+${value}%` : `${value}%`)
 
-       for (let i = 0; i < data.length; i++) {
-         const difNeta = data[i].simulacionpib - data[i].prevision
-         arrayDifNeta.push(difNeta)
-       }
+        let arrayDifNeta = []
+        let arrayDifAcumulada = []
+        let arrayDifNetaAcumula = []
+        const years = ["2019", "2020", "2021", "2022"]
 
-       arrayDifAcumulada.push(arrayDifNeta[0])
+        for (let i = 0; i < data.length; i++) {
+          const difNeta = data[i].simulacionpib - data[i].prevision
+          arrayDifNeta.push(difNeta)
+        }
 
-       const difAcumuladaValue2020 = arrayDifNeta[0] + arrayDifNeta[1]
-       arrayDifAcumulada.push(difAcumuladaValue2020)
+        arrayDifAcumulada.push(arrayDifNeta[0])
 
-       const difAcumuladaValue2021 = difAcumuladaValue2020 + arrayDifNeta[2]
-       arrayDifAcumulada.push(difAcumuladaValue2021)
+        const difAcumuladaValue2020 = arrayDifNeta[0] + arrayDifNeta[1]
+        arrayDifAcumulada.push(difAcumuladaValue2020)
 
-       const difAcumuladaValue2022 = difAcumuladaValue2021 + arrayDifNeta[3]
-       arrayDifAcumulada.push(difAcumuladaValue2022)
+        const difAcumuladaValue2021 = difAcumuladaValue2020 + arrayDifNeta[2]
+        arrayDifAcumulada.push(difAcumuladaValue2021)
 
-       arrayDifNetaAcumula = arrayDifNeta.map((value, index) => [years[index], arrayDifNeta[index], arrayDifAcumulada[index]])
+        const difAcumuladaValue2022 = difAcumuladaValue2021 + arrayDifNeta[3]
+        arrayDifAcumulada.push(difAcumuladaValue2022)
 
-       dataz = arrayDifNetaAcumula
+        arrayDifNetaAcumula = arrayDifNeta.map((value, index) => [years[index], arrayDifNeta[index], arrayDifAcumulada[index]])
+
+        dataz = arrayDifNetaAcumula
 
         setupElements();
         setupScales();
@@ -417,138 +417,164 @@ getWidth()
 
 
 const multipleLine = () => {
-    const margin = { top: 24, right: 24, bottom: 24, left: 24 };
-    let width = 0;
-    let height = 0;
-    const chart = d3.select('#multiline-simulation-empleo');
-    const svg = chart.select('svg');
-    const scales = {};
-    let dataz;
+  const margin = { top: 24, right: 24, bottom: 32, left: 48 };
+  let width = 0;
+  let height = 0;
+  const chart = d3.select('#multiline-simulation-empleo');
+  const svg = chart.select('svg');
+  const scales = {};
+  let dataz;
+  const tooltipSimulation = chart
+    .append('div')
+    .attr('class', 'tooltip tooltip-simulation')
+    .style('opacity', 0);
 
-    const setupScales = () => {
-        const countX = d3.scaleTime()
-          .domain([
-              2019,
-              2022
-          ]);
+  const setupScales = () => {
+    const countX = d3.scaleTime()
+      .domain([
+        2019,
+        2022
+      ]);
 
-        const countY = d3.scaleLinear()
-          .domain([
-              18000,
-              22000
-          ]);
+    const countY = d3.scaleLinear()
+      .domain([
+        19000,
+        22000
+      ]);
 
-        scales.count = { x: countX, y: countY };
-    };
+    scales.count = { x: countX, y: countY };
+  };
 
-    const setupElements = () => {
-        const g = svg.select('.multiline-simulation-empleo-container');
+  const setupElements = () => {
+    const g = svg.select('.multiline-simulation-empleo-container');
 
-        g.append('g').attr('class', 'axis axis-x');
+    g.append('g').attr('class', 'axis axis-x');
 
-        g.append('g').attr('class', 'axis axis-y');
+    g.append('g').attr('class', 'axis axis-y');
 
-        g.append('g').attr('class', 'multiline-simulation-empleo-container-dos');
-    };
+    g.append('g').attr('class', 'multiline-simulation-empleo-container-dos');
+  };
 
-    const updateScales = (width, height) => {
-        scales.count.x.range([0, width]);
-        scales.count.y.range([height, 0]);
-    };
+  const updateScales = (width, height) => {
+    scales.count.x.range([0, width]);
+    scales.count.y.range([height, 0]);
+  };
 
-    const drawAxes = (g) => {
-        const axisX = d3.axisBottom(scales.count.x).tickFormat(d3.format('d'));
+  const drawAxes = (g) => {
+    const axisX = d3.axisBottom(scales.count.x).tickFormat(d3.format('d'));
 
-        g.select('.axis-x')
-    .attr('transform', `translate(0,${height})`)
-    .call(axisX);
+    g.select('.axis-x')
+      .attr('transform', `translate(0,${height})`)
+      .call(axisX);
 
-        const axisY = d3
-            .axisLeft(scales.count.y)
-            .tickFormat(d3.format('d'))
-            .ticks(5)
-            .tickSizeInner(-width);
+    const axisY = d3
+      .axisLeft(scales.count.y)
+      .tickFormat(d3.format('d'))
+      .ticks(5)
+      .tickSizeInner(-width);
 
-        g.select('.axis-y').call(axisY);
-    };
+    g.select('.axis-y').call(axisY);
+  };
 
-    const updateChart = (data) => {
-        const w = chart.node().offsetWidth;
-        const h = 600;
+  const updateChart = (data) => {
+    const w = chart.node().offsetWidth;
+    const h = 600;
 
-        width = w - margin.left - margin.right;
-        height = h - margin.top - margin.bottom;
+    width = w - margin.left - margin.right;
+    height = h - margin.top - margin.bottom;
 
-        svg.attr('width', w).attr('height', h);
+    svg.attr('width', w).attr('height', h);
 
-        const translate = `translate(${margin.left},${margin.top})`;
+    const translate = `translate(${margin.left},${margin.top})`;
 
-        const g = svg.select('.multiline-simulation-empleo-container');
+    const g = svg.select('.multiline-simulation-empleo-container');
 
-        g.attr('transform', translate);
+    g.attr('transform', translate);
 
-        updateScales(width, height);
+    updateScales(width, height);
 
-        const dataComb = d3
-            .nest()
-            .key((d) => d.filter)
-            .entries(data);
-        console.log("dataComb", dataComb);
+    const dataComb = d3
+      .nest()
+      .key((d) => d.filter)
+      .entries(data);
+    console.log("dataComb", dataComb);
 
-        const container = chart.select('.multiline-simulation-empleo-container-dos');
+    const container = chart.select('.multiline-simulation-empleo-container-dos');
 
-        const colors = ['#b114c0', '#9C1B12', '#759CA7', '#CEBAC6', '#2D3065'];
+    const line = d3
+      .line()
+      .x((d) => scales.count.x(d.year))
+      .y((d) => scales.count.y(d.simulacionpib));
 
-        const color = d3.scaleOrdinal(colors);
+    container
+      .selectAll('.line')
+      .remove()
+      .exit()
+      .data(dataComb);
+    console.log("dataComb", dataComb);
 
-        const line = d3
-            .line()
-            .x((d) => scales.count.x(d.year))
-            .y((d) => scales.count.y(d.simulacionpib));
+    dataComb.forEach((d) => {
+      container
+        .append('path')
+        .on('mouseover', (d) => {
+          const positionX = scales.count.x(d.key);
+          const postionWidthTooltip = positionX + 270;
+          const tooltipWidth = 210;
+          const positionleft = `${d3.event.pageX}px`;
+          const positionright = `${d3.event.pageX - tooltipWidth}px`;
+          tooltipSimulation.transition();
+          tooltipSimulation.attr('class', 'tooltip tooltip-scatter tooltip-min');
+          tooltipSimulation
+            .style('opacity', 1)
+            .html(
+              `<p class="tooltip-scatter-text">La temperatura mínima de ${d.values} en ${d.key} <p/>`
+            )
+            .style(
+              'left',
+              postionWidthTooltip > w ? positionright : positionleft
+            )
+            .style('top', `${d3.event.pageY - 28}px`);
+        })
+        .on('mouseout', () => {
+          tooltipSimulation
+            .transition()
+            .duration(200)
+            .style('opacity', 0);
+        })
+        .attr('class', 'line ' + d.key)
+        .style('stroke', '#DADADA')
+        .attr('d', line(d.values));
+    });
 
-        container
-            .selectAll('.line')
-            .remove()
-            .exit()
-            .data(dataComb);
+    drawAxes(g);
+  };
 
-        dataComb.forEach((d) => {
-            container
-                .append('path')
-                .attr('class', 'line ' + d.key)
-                .style('stroke', () => (d.color = color(d.key)))
-                .attr('d', line(d.values));
-        });
+  const resize = () => {
+    d3.csv('csv/simulation-empleo-all.csv', (error, data) => {
+      if (error) {
+        console.log(error);
+      } else {
+        updateChart(data);
+      }
+    });
+  };
 
-        drawAxes(g);
-    };
+  const loadData = () => {
+    d3.csv('csv/simulation-empleo-all.csv', (error, data) => {
+      if (error) {
+        console.log(error);
+      } else {
 
-    const resize = () => {
-        d3.csv('csv/simulation-empleo-all.csv', (error, data) => {
-            if (error) {
-                console.log(error);
-            } else {
-                updateChart(data);
-            }
-        });
-    };
+        setupElements();
+        setupScales();
+        updateChart(data);
+      }
+    });
+  };
 
-    const loadData = () => {
-        d3.csv('csv/simulation-empleo-all.csv', (error, data) => {
-            if (error) {
-                console.log(error);
-            } else {
+  window.addEventListener('resize', resize);
 
-                setupElements();
-                setupScales();
-                updateChart(data);
-            }
-        });
-    };
-
-    window.addEventListener('resize', resize);
-
-    loadData();
+  loadData();
 };
 
 multipleLine();

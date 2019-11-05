@@ -1,4 +1,8 @@
 filter,year,prevision,simulacionpib,simulacionpercentage
+prevision,2019,20298,20298,0
+prevision,2020,20684,20684,0
+prevision,2021,21056,21056,0
+prevision,2022,21414,21414,0
 pf-1-idc-1-vdc-1,2019,20298,20337,0.1906
 pf-1-idc-1-vdc-1,2020,20684,20666,-0.0858
 pf-1-idc-1-vdc-1,2021,21056,21027,-0.1367
