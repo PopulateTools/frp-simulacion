@@ -557,15 +557,30 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
         .attr('d', line(d.values));
     });
 
+    d3.selection.prototype.moveToFront = function() {
+      return this.each(function() {
+        this.parentNode.appendChild(this);
+      });
+    };
+    d3.selection.prototype.moveToBack = function() {
+      return this.each(function() {
+        var firstChild = this.parentNode.firstChild;
+        if (firstChild) {
+          this.parentNode.insertBefore(this, firstChild);
+        }
+      });
+    };
+
     d3.select('.highlighted')
       .data(dataComb)
+      .moveToFront()
       .on('mouseover', (d) => {
         const positionleft = `${d3.event.pageX}`;
         const positionTop = `${d3.event.pageY}`;
         const tooltipWidth = d3.select('.tooltip-simulation').node().getBoundingClientRect().width;
         const tooltipHeight = d3.select('.tooltip-simulation').node().getBoundingClientRect().height;
         const positionTopTooltip = positionTop - tooltipHeight
-        const positionleftTooltip = positionleft - (tooltipWidth/2)
+        const positionleftTooltip = positionleft - (tooltipWidth / 2)
         tooltipSimulation
           .style('opacity', 1)
           .html(
@@ -646,7 +661,7 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
             </div>`
           )
           .style('left', `${positionleftTooltip}px`)
-          .style('top', `${positionTopTooltip + 10}px `);
+          .style('top', `${positionTopTooltip - 35}px `);
       })
       .on('mouseout', () => {
         tooltipSimulation
