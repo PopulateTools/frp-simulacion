@@ -53,195 +53,311 @@ const tableEmpleo = '.simulation-empleo-data'
 
 const legendText = ["Miles de M €", "Miles"]
 
-const firstUpdate = false
+let firstUpdate = false
 
 //Charts
 const barChart = (id, csv, legend, tableClass) => {
   const margin = { top: 32, right: 16, bottom: 16, left: 56 };
   const chart = d3.select(id);
   const svg = chart.select('svg');
-  const width = chart.node().offsetWidth - margin.left - margin.right;
-  const height = 250 - margin.top - margin.bottom;
-  const h = 270;
+  let width = 0;
+  let height = 0;
+  let w = 0;
+  let h = 270;
   const durationTransition = 400;
-  let data;
-  const g = svg.append("g")
-    .attr("transform", `translate(${margin.left},${margin.top})`)
-    .attr('class', 'container-chart')
-
-  svg.attr('width', width + margin.left + margin.right)
-    .attr('height', h);
-
-  const x0 = d3.scaleBand()
-    .rangeRound([10, width])
-    .paddingInner(0.3);
-
-  const x1 = d3.scaleBand()
-
-  const y = d3.scaleLinear()
-    .rangeRound([height - margin.top, margin.bottom]);
-
+  let dataz;
+  let dataDifNetAcu;
+  const scales = {};
   const z = d3.scaleOrdinal()
     .range(["#006D63", "#B8DF22"]);
 
-  d3.csv(`csv/${csv}.csv`, function(d, i, columns) {
-      for (var i = 1, n = columns.length; i < n; ++i) d[columns[i]] = +d[columns[i]];
-      return d;
-    },
+  const legends = svg
+    .append('text')
+    .attr('class', 'legend-top')
+    .attr("x", 10)
+    .attr("y", 20)
+    .text(legend);
 
-    function(error, data) {
-      if (error) throw error;
+  const locale = d3.formatDefaultLocale({
+    decimal: ',',
+    thousands: '.',
+    grouping: [3]
+  });
 
-      const locale = d3.formatDefaultLocale({
-        decimal: ',',
-        thousands: '.',
-        grouping: [3]
-      });
+  const setupScales = () => {
 
-      /* Generate a new dataset */
-      let arrayDifNeta = []
-      let arrayDifAcumulada = []
-      let arrayDifNetaAcumula = []
-      const years = ["2019", "2020", "2021", "2022"]
+    const dataDifNetAcu = dataz.map(key => ({
+      year: key[0],
+      neta: key[1],
+      acumulada: key[2]
+    }))
 
-      for (let i = 0; i < data.length; i++) {
-        const difNeta = data[i].simulacionpib - data[i].prevision
-        arrayDifNeta.push(difNeta)
-      }
+    let keys = d3.keys(dataDifNetAcu[0]);
+    keys = keys.slice(1)
 
-      arrayDifAcumulada.push(arrayDifNeta[0])
+    const countX = d3.scaleBand()
+      .rangeRound([10, width])
+      .domain(dataDifNetAcu.map(({ year }) => year))
+      .paddingInner(0.3);
 
-      const difAcumuladaValue2020 = arrayDifNeta[0] + arrayDifNeta[1]
-      arrayDifAcumulada.push(difAcumuladaValue2020)
+    const countX1 = d3.scaleBand()
+      .domain(keys);
 
-      const difAcumuladaValue2021 = difAcumuladaValue2020 + arrayDifNeta[2]
-      arrayDifAcumulada.push(difAcumuladaValue2021)
-
-
-      const difAcumuladaValue2022 = difAcumuladaValue2021 + arrayDifNeta[3]
-      arrayDifAcumulada.push(difAcumuladaValue2022)
-      console.log("arrayDifAcumulada", arrayDifAcumulada);
-
-      arrayDifNetaAcumula = arrayDifNeta.map((value, index) => [years[index],arrayDifNeta[index],arrayDifAcumulada[index]])
-
-      const dataDifNetAcu = arrayDifNetaAcumula.map(key => ({
-          year: key[0],
-          neta: key[1],
-          acumulada: key[2]
-        }))
-
-      let keys = d3.keys(dataDifNetAcu[0]);
-      keys = keys.slice(1)
-      console.log("keys", keys);
-
-
-      x0.domain(dataDifNetAcu.map(({ year }) => year));
-      x1.domain(keys).rangeRound([0, x0.bandwidth()]);
-      y.domain([d3.min(dataDifNetAcu, d => {
-        if(d3.min(keys, key => d[key]) > 0) {
+    const countY = d3.scaleLinear()
+      .domain([d3.min(dataDifNetAcu, d => {
+        if (d3.min(keys, key => d[key]) > 0) {
           return 0
         } else {
           return d3.min(keys, key => d[key])
         }
       }), d3.max(dataDifNetAcu, d => {
-        if(d3.max(keys, key => d[key]) < 0) {
+        if (d3.max(keys, key => d[key]) < 0) {
           return 0
         } else {
           return d3.max(keys, key => d[key])
         }
-      })]).nice();
+      })]).nice()
 
-      const axisX = g.append("g")
-        .attr("class", "axis axis-x")
-        .attr("transform", `translate(0,${height})`)
-        .transition()
-        .duration(durationTransition)
-        .ease(d3.easeLinear)
-        .call(d3.axisBottom(x0));
 
-      const axisY = g.append("g")
-        .attr("class", "axis axis-y")
-        .transition()
-        .duration(durationTransition)
-        .ease(d3.easeLinear)
-        .call(d3.axisLeft(y).ticks(5).tickSizeInner(-width))
+    scales.count = { x0: countX, x1: countX1, y: countY };
+  };
 
-      const rects = g.append("g")
-        .attr('class', 'container-grouped')
-        .selectAll("g")
-        .data(dataDifNetAcu)
-        .enter()
-        .append("g")
-        .attr("transform", ({ year }) => `translate(${x0(year)},0)`)
-        .attr('class', 'grouped-bar-chart')
-        .selectAll("rect")
-        .data(d => keys.map(key => ({
-          key,
-          value: d[key]
-        })))
-        .enter()
-        .append("rect")
-        .attr("x", ({ key }) => x1(key))
-        .attr("y", ({ value }) => y(0))
-        .attr("width", x1.bandwidth())
-        .attr('height', 0)
-        .transition()
-        .delay((d, i) => i * 10)
-        .duration(durationTransition)
-        .attr("x", ({ key }) => x1(key))
-        .attr("y", ({ value }) => value > 0 ? y(value) : y(0))
-        .attr("height", ({ value }) => Math.abs(y(value) - y(0)))
-        .attr("width", x1.bandwidth())
-        .attr("fill", ({ key }) => z(key));
+  const setupElements = () => {
+    const g = svg.select('.bar-grouped-container');
 
-      const legends = g
-        .append('text')
-        .attr('class', 'legend-top')
-        .attr("x", -35)
-        .attr("y", -10)
-        .text(legend);
+    g.append('g').attr('class', 'axis axis-x');
 
-      const keysSimulationPib = data.columns.slice(2, 3);
-      const keysSimulationIncrease = data.columns.slice(3);
+    g.append('g').attr('class', 'axis axis-y');
 
-      const simulation = d3.selectAll(tableClass)
-        .selectAll('div')
-        .remove()
-        .exit()
-        .data(data)
-        .enter()
-        .append("div")
-        .attr('class', 'simulation-pib-data-container w-100 turquoise20-bgc fl')
+    g.append('g').attr('class', 'bar-grouped-container-bis');
 
-      simulation
-        .selectAll("span")
-        .data(d => keysSimulationPib.map(key => ({
-          key,
-          value: d[key]
-        })))
-        .enter()
-        .append("span")
-        .attr('class', 'dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc')
-        .transition()
-        .duration(durationTransition)
-        .text(({ value }) => locale.format(',.0f')(value))
+  };
+
+  const updateScales = (width, height) => {
+    scales.count.x0.rangeRound([10, width]);
+    scales.count.x1.rangeRound([0, scales.count.x0.bandwidth()]);
+    scales.count.y.range([height - margin.top, margin.bottom]);
+  };
+
+  const drawAxes = (g) => {
+
+    const axisX = d3
+      .axisBottom(scales.count.x0)
+
+    g.select('.axis-x')
+      .transition()
+      .delay((d, i) => i * 10)
+      .duration(durationTransition)
+      .ease(d3.easeLinear)
+      .attr('transform', `translate(0,${height - margin.top})`)
+      .call(axisX);
+
+    const axisY = d3
+      .axisLeft(scales.count.y)
+      .tickFormat(d3.format('d'))
+      .tickPadding(10)
+      .ticks(5)
+      .tickSizeInner(-width);
+
+    g.select('.axis-y')
+      .transition()
+      .delay((d, i) => i * 10)
+      .duration(durationTransition)
+      .ease(d3.easeLinear)
+      .call(axisY);
+  };
+
+  const updateChart = (dataz) => {
+    w = chart.node().offsetWidth;
+    h = 260;
+
+    width = w - margin.left - margin.right;
+    height = h - margin.top - margin.bottom;
+
+    svg.attr('width', w).attr('height', h);
+
+    const translate = `translate(${margin.left},${margin.top})`;
+
+    const g = svg.select('.bar-grouped-container');
+
+    g.attr('transform', translate);
+
+    updateScales(width, height);
+
+    const container = chart.select('.bar-grouped-container-bis');
+
+    const dataDifNetAcu = dataz.map(key => ({
+      year: key[0],
+      neta: key[1],
+      acumulada: key[2]
+    }))
+
+    let keys = d3.keys(dataDifNetAcu[0]);
+    keys = keys.slice(1)
+
+    const layer = container
+      .selectAll('.container-grouped')
+      .data(dataDifNetAcu)
+
+    layer.exit().remove()
+
+    layer.enter()
+      .append('g')
+      .attr('class', 'container-grouped')
+      .attr("transform", ({ year }) => `translate(${scales.count.x0(year)},0)`)
+
+
+    const rects = container
+      .selectAll('.container-grouped')
+      .selectAll("rect")
+      .data(d => keys.map(key => ({
+        key,
+        value: d[key]
+      })))
+
+      rects
+      .enter()
+      .append('rect')
+      .attr("width", scales.count.x1.bandwidth())
+      .attr("x", ({ key }) => scales.count.x1(key))
+      .attr("fill", ({ key }) => z(key))
+      .attr("y", 0)
+      .transition()
+      .duration(durationTransition)
+      .attr("y", ({ value }) => value > 0 ? scales.count.y(value) : scales.count.y(0))
+      .attr("height", ({ value }) => Math.abs(scales.count.y(value) - scales.count.y(0)))
+
+      rects.transition()
+      .duration(durationTransition)
+      .attr("y", ({ value }) => value > 0 ? scales.count.y(value) : scales.count.y(0))
+      .attr("height", ({ value }) => Math.abs(scales.count.y(value) - scales.count.y(0)))
+
+      rects.exit().remove()
+
+
+    drawAxes(g);
+
+  };
+
+  const resize = () => {
+    d3.csv(`csv/${csv}.csv`, type, (error, data) => {
+      if (error) {
+
+      } else {
+        let arrayDifNeta = []
+        let arrayDifAcumulada = []
+        let arrayDifNetaAcumula = []
+        const years = ["2019", "2020", "2021", "2022"]
+
+        for (let i = 0; i < data.length; i++) {
+          const difNeta = data[i].simulacionpib - data[i].prevision
+          arrayDifNeta.push(difNeta)
+        }
+
+        arrayDifAcumulada.push(arrayDifNeta[0])
+
+        const difAcumuladaValue2020 = arrayDifNeta[0] + arrayDifNeta[1]
+        arrayDifAcumulada.push(difAcumuladaValue2020)
+
+        const difAcumuladaValue2021 = difAcumuladaValue2020 + arrayDifNeta[2]
+        arrayDifAcumulada.push(difAcumuladaValue2021)
+
+        const difAcumuladaValue2022 = difAcumuladaValue2021 + arrayDifNeta[3]
+        arrayDifAcumulada.push(difAcumuladaValue2022)
+
+        arrayDifNetaAcumula = arrayDifNeta.map((value, index) => [years[index], arrayDifNeta[index], arrayDifAcumulada[index]])
+
+        dataz = arrayDifNetaAcumula
+        setupScales();
+        updateChart(dataz);
+      }
+    });
+  };
+
+  const loadData = () => {
+    d3.csv(`csv/${csv}.csv`, type, (error, data) => {
+      if (error) {
+
+      } else {
+       const keysSimulationPib = data.columns.slice(2, 3);
+       const keysSimulationIncrease = data.columns.slice(3);
+
+       const simulation = d3.selectAll(tableClass)
+         .selectAll('div')
+         .remove()
+         .exit()
+         .data(data)
+         .enter()
+         .append("div")
+         .attr('class', 'simulation-pib-data-container w-100 turquoise20-bgc fl')
 
        simulation
-        .selectAll(".simulation-percentage")
-        .data(d => keysSimulationIncrease.map(key => ({
-          key,
-          value: d[key].toFixed(2)
-        })))
-        .enter()
-        .append("span")
-        .attr('class', 'simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc')
-        .transition()
-        .duration(durationTransition)
-        .text(({ value }) => value >= 0 ? `+${value}` : value)
+         .selectAll("span")
+         .data(d => keysSimulationPib.map(key => ({
+           key,
+           value: d[key]
+         })))
+         .enter()
+         .append("span")
+         .attr('class', 'dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc')
+         .transition()
+         .duration(durationTransition)
+         .text(({ value }) => locale.format(',.0f')(value))
 
+        simulation
+         .selectAll(".simulation-percentage")
+         .data(d => keysSimulationIncrease.map(key => ({
+           key,
+           value: d[key].toFixed(2)
+         })))
+         .enter()
+         .append("span")
+         .attr('class', 'simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc')
+         .transition()
+         .duration(durationTransition)
+         .text(({ value }) => value >= 0 ? `+${value}` : value)
 
+       let arrayDifNeta = []
+       let arrayDifAcumulada = []
+       let arrayDifNetaAcumula = []
+       const years = ["2019", "2020", "2021", "2022"]
+
+       for (let i = 0; i < data.length; i++) {
+         const difNeta = data[i].simulacionpib - data[i].prevision
+         arrayDifNeta.push(difNeta)
+       }
+
+       arrayDifAcumulada.push(arrayDifNeta[0])
+
+       const difAcumuladaValue2020 = arrayDifNeta[0] + arrayDifNeta[1]
+       arrayDifAcumulada.push(difAcumuladaValue2020)
+
+       const difAcumuladaValue2021 = difAcumuladaValue2020 + arrayDifNeta[2]
+       arrayDifAcumulada.push(difAcumuladaValue2021)
+
+       const difAcumuladaValue2022 = difAcumuladaValue2021 + arrayDifNeta[3]
+       arrayDifAcumulada.push(difAcumuladaValue2022)
+
+       arrayDifNetaAcumula = arrayDifNeta.map((value, index) => [years[index], arrayDifNeta[index], arrayDifAcumulada[index]])
+
+       dataz = arrayDifNetaAcumula
+
+        setupElements();
+        setupScales();
+        updateChart(dataz);
+      }
     });
-};
+  };
+
+  function type(d, i, columns) {
+    for (var i = 1, n = columns.length; i < n; ++i) d[columns[i]] = +d[columns[i]];
+    return d;
+  }
+
+  window.addEventListener('resize', resize);
+
+  loadData();
+}
 
 //We need store values from radio buttons
 function checkValues() {
@@ -257,30 +373,32 @@ function checkValues() {
       arrayCheckedValues.push(checkedValue)
     }
 
-    if (checkboxChecked === 3) {
+  }
 
-      const containerInit = document.getElementsByClassName("container-init");
+  if (checkboxChecked === 3) {
 
-      for (let i = 0; i < containerInit.length; i++) {
-        containerInit[i].style.width = 0;
-        setTimeout(() => {
-          containerInit[i].style.display = "none";
-        }, 150)
-      }
+    const containerInit = document.getElementsByClassName("container-init");
 
-      d3.selectAll('.container-chart')
-        .remove()
-        .exit()
-
-      const fileName = arrayCheckedValues.join('-');
-
-      const fileNamePib = `pib/${fileName}`
-      const fileNameEmpleo = `empleo/${fileName}`
-
-      barChart(idPib, fileNamePib, legendText[0], tablePib);
-      barChart(idEmpleo, fileNameEmpleo, legendText[1], tableEmpleo);
-
+    for (let i = 0; i < containerInit.length; i++) {
+      containerInit[i].style.width = 0;
+      setTimeout(() => {
+        containerInit[i].style.display = "none";
+      }, 150)
     }
+
+    const fileName = arrayCheckedValues.join('-');
+
+    d3.selectAll('.legend-top')
+      .remove()
+      .exit()
+
+    const fileNamePib = `pib/${fileName}`
+    const fileNameEmpleo = `empleo/${fileName}`
+
+    barChart(idPib, fileNamePib, legendText[0], tablePib);
+    barChart(idEmpleo, fileNameEmpleo, legendText[1], tableEmpleo);
+
+
   }
 }
 
