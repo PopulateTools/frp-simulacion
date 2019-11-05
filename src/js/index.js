@@ -435,8 +435,6 @@ function checkValues() {
         .exit()
       barChart(idPib, fileNamePib, legendText[0], tablePib)
       barChart(idEmpleo, fileNameEmpleo, legendText[1], tableEmpleo)
-    } else {
-      multipleLine(fileName)
     }
 
 
@@ -582,11 +580,57 @@ const multipleLine = (filter) => {
         .attr('d', line(d.values));
     });
 
-    d3.selectAll(`.${filter}`)
-      .attr('class', 'highlighted')
+
 
     drawAxes(g);
   };
+
+  function radioUpdate() {
+
+    d3.selectAll(".input-radio").on("change", function() {
+      let arrayCheckedValues = []
+      console.log('input controlado de d3')
+
+      const checkbox = document.getElementsByTagName('input');
+      let checkboxChecked = 0;
+      for (let i = 0; i < checkbox.length; i++) {
+
+        if (checkbox[i].checked) {
+          checkboxChecked++
+          let checkedValue = checkbox[i].id;
+          arrayCheckedValues.push(checkedValue)
+        }
+
+      }
+
+      if (checkboxChecked === 3 && simulationView === true) {
+        const fileName = arrayCheckedValues.join('-');
+        console.log('tres seleccionados')
+        update(fileName)
+      }
+    });
+  }
+
+  function update(filter) {
+    console.log('update')
+    console.log(filter)
+
+    d3.csv('csv/simulation-empleo-all.csv', (error, data) => {
+      if (error) {
+        console.log(error);
+      } else {
+        dataz = data.filter((d) => String(d.filter).match(filter));
+
+        d3.selectAll('.highlighted')
+          .attr('class', '')
+
+        d3.selectAll(`.${filter}`)
+          .attr('class', 'highlighted')
+
+        updateChart(dataz);
+      }
+    });
+  }
 
   const resize = () => {
     d3.csv('csv/simulation-empleo-all.csv', (error, data) => {
@@ -608,6 +652,8 @@ const multipleLine = (filter) => {
         d3.selectAll('.highlighted')
           .attr('class', '')
 
+
+
         setupElements();
         setupScales();
         updateChart(dataz);
@@ -618,4 +664,5 @@ const multipleLine = (filter) => {
   window.addEventListener('resize', resize);
 
   loadData();
+  radioUpdate()
 };

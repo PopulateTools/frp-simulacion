@@ -377,8 +377,6 @@ function checkValues() {
         d3.selectAll('.legend-top').remove().exit();
         barChart(idPib, fileNamePib, legendText[0], tablePib);
         barChart(idEmpleo, fileNameEmpleo, legendText[1], tableEmpleo);
-      } else {
-        multipleLine(fileName);
       }
     })();
   }
@@ -474,9 +472,48 @@ var multipleLine = function multipleLine(filter) {
         tooltipSimulation.transition().duration(200).style('opacity', 0);
       }).attr('class', 'line ' + d.key).style('stroke', '#DADADA').attr('d', line(d.values));
     });
-    d3.selectAll(".".concat(filter)).attr('class', 'highlighted');
     drawAxes(g);
   };
+
+  function radioUpdate() {
+    d3.selectAll(".input-radio").on("change", function () {
+      var arrayCheckedValues = [];
+      console.log('input controlado de d3');
+      var checkbox = document.getElementsByTagName('input');
+      var checkboxChecked = 0;
+
+      for (var i = 0; i < checkbox.length; i++) {
+        if (checkbox[i].checked) {
+          checkboxChecked++;
+          var checkedValue = checkbox[i].id;
+          arrayCheckedValues.push(checkedValue);
+        }
+      }
+
+      if (checkboxChecked === 3 && simulationView === true) {
+        var fileName = arrayCheckedValues.join('-');
+        console.log('tres seleccionados');
+        update(fileName);
+      }
+    });
+  }
+
+  function update(filter) {
+    console.log('update');
+    console.log(filter);
+    d3.csv('csv/simulation-empleo-all.csv', function (error, data) {
+      if (error) {
+        console.log(error);
+      } else {
+        dataz = data.filter(function (d) {
+          return String(d.filter).match(filter);
+        });
+        d3.selectAll('.highlighted').attr('class', '');
+        d3.selectAll(".".concat(filter)).attr('class', 'highlighted');
+        updateChart(dataz);
+      }
+    });
+  }
 
   var resize = function resize() {
     d3.csv('csv/simulation-empleo-all.csv', function (error, data) {
@@ -506,4 +543,5 @@ var multipleLine = function multipleLine(filter) {
 
   window.addEventListener('resize', resize);
   loadData();
+  radioUpdate();
 };
