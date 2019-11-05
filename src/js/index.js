@@ -315,7 +315,7 @@ const barChart = (id, csv, legend, tableClass) => {
          .attr('class', 'simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc')
          .transition()
          .duration(durationTransition)
-         .text(({ value }) => value >= 0 ? `+${value}` : value)
+         .text(({ value }) => value >= 0 ? `+${value}%` : `${value}%`)
 
        let arrayDifNeta = []
        let arrayDifAcumulada = []
