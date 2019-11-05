@@ -20,7 +20,7 @@ document.getElementById('button-view').addEventListener('click', function () {
   setTimeout(function () {
     document.getElementById('initial-view').style.display = 'none';
     document.getElementById('simulation-view').style.display = 'block';
-    multipleLine();
+    multipleLine(pibCsv, scalePib[0], scalePib[1]);
   }, 300);
   document.getElementById('simulation-view').style.opacity = '1';
   simulationView = true;
@@ -91,7 +91,12 @@ var idEmpleo = document.getElementById('empleo-chart');
 var tablePib = '.simulation-pib-data';
 var tableEmpleo = '.simulation-empleo-data';
 var legendText = ["Miles de M €", "Miles"];
-var simulationView = false; //Charts
+var simulationView = false;
+var locale = d3.formatDefaultLocale({
+  decimal: ',',
+  thousands: '.',
+  grouping: [3]
+}); //Charts
 
 var barChart = function barChart(id, csv, legend, tableClass) {
   var margin = {
@@ -112,11 +117,6 @@ var barChart = function barChart(id, csv, legend, tableClass) {
   var scales = {};
   var z = d3.scaleOrdinal().range(["#006D63", "#B8DF22"]);
   var legends = svg.append('text').attr('class', 'legend-top').attr("x", 10).attr("y", 20).text(legend);
-  var locale = d3.formatDefaultLocale({
-    decimal: ',',
-    thousands: '.',
-    grouping: [3]
-  });
 
   var setupScales = function setupScales() {
     var dataDifNetAcu = dataz.map(function (key) {
@@ -396,7 +396,7 @@ function getWidth() {
 
 getWidth();
 
-var multipleLine = function multipleLine(filter) {
+var multipleLine = function multipleLine(csv, scaleY1, scaleY2) {
   var margin = {
     top: 24,
     right: 24,
@@ -409,7 +409,7 @@ var multipleLine = function multipleLine(filter) {
   var svg = chart.select('svg');
   var scales = {};
   var dataz;
-  var tooltipSimulation = chart.append('div').attr('class', 'tooltip tooltip-simulation').style('opacity', 0);
+  var tooltipSimulation = chart.append('div').attr('class', 'tooltip-simulation').style('opacity', 0);
 
   var setupScales = function setupScales() {
     var countX = d3.scaleTime().domain([2019, 2022]);
@@ -460,18 +460,15 @@ var multipleLine = function multipleLine(filter) {
     });
     container.selectAll('.line').data(dataComb);
     dataComb.forEach(function (d) {
-      container.append('path').on('mouseover', function (d) {
-        var positionX = scales.count.x(d.key);
-        var postionWidthTooltip = positionX + 270;
-        var tooltipWidth = 210;
-        var positionleft = "".concat(d3.event.pageX, "px");
-        var positionright = "".concat(d3.event.pageX - tooltipWidth, "px");
-        tooltipSimulation.transition();
-        tooltipSimulation.attr('class', 'tooltip tooltip-scatter tooltip-min');
-        tooltipSimulation.style('opacity', 1).html("<p class=\"tooltip-scatter-text\">La temperatura m\xEDnima de ".concat(d.values, " en ").concat(d.key, " <p/>")).style('left', postionWidthTooltip > w ? positionright : positionleft).style('top', "".concat(d3.event.pageY - 28, "px"));
-      }).on('mouseout', function () {
-        tooltipSimulation.transition().duration(200).style('opacity', 0);
-      }).attr('class', 'line ' + d.key).style('stroke', '#DADADA').attr('d', line(d.values));
+      container.append('path').attr('class', 'line ' + d.key).style('stroke', '#DADADA').attr('d', line(d.values));
+    });
+    d3.select('.highlighted').data(dataComb).on('mouseover', function (d) {
+      var positionleft = "".concat(d3.event.pageX, "px");
+      console.log("positionleft", positionleft);
+      tooltipSimulation.style('opacity', 1).html("<div class=\"w-20 fl\">\n              <span class=\"f5 dib fw7 h2\"></span>\n              <span class=\"db\" style=\"height: 28px;\"></span>\n              <span class=\"f7 black50-txt bb tr greydark-50-bd db pv2 pr3\">2018</span>\n              <span class=\"f7 black50-txt bb tr greydark-50-bd db pv2 pr3\">2019</span>\n              <span class=\"f7 black50-txt bb tr greydark-50-bd db pv2 pr3\">2020</span>\n              <span class=\"f7 black50-txt bb tr greydark-50-bd db pv2 pr3\">2021</span>\n              <span class=\"f7 black50-txt bb tr greydark-50-bd db pv2 pr3\">2022</span>\n            </div>\n            <div class=\"w-40 fl relative\">\n              <span class=\"bd-dotted\"></span>\n              <span class=\"f5 dib vam rect-before h2\">Previsi\xF3n</span>\n              <div class=\"w-100 h2\">\n                <span class=\"f7 dib w-50 fl olivedark-txt fw7\">PIB</span>\n                <span class=\"f7 dib w-50 fl olivedark-txt fw7\">Crecimiento</span>\n              </div>\n              <div class=\"w-100 olive20-bgc fl\">\n                <span class=\"dib w-50 fl f7 black-text black-txt pv2 tc\">1.169.572</span>\n                <span class=\"dib w-50 fl f7 black-text black-txt pv2 tc\"></span>\n              </div>\n              <div class=\"w-100 olive20-bgc fl\">\n                <span class=\"dib w-50 fl f7 black-text bb bt greydark-50-bd black-txt pv2 tc\">1.195.302</span>\n                <span class=\"fw8 dib w-50 fl f7 black-text bb bt greydark-50-bd black-txt pv2 tc\">+2.2%</span>\n              </div>\n              <div class=\"w-100 olive20-bgc fl\">\n                <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">1.218.013</span>\n                <span class=\"fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">+1.9%</span>\n              </div>\n              <div class=\"w-100 olive20-bgc fl\">\n                <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">1.239.937</span>\n                <span class=\"fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">+1.8%</span>\n              </div>\n              <div class=\"w-100 olive20-bgc fl\">\n                <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">1.262.256</span>\n                <span class=\"fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">+1.8%</span>\n              </div>\n              <div class=\"w-100 fl\">\n                <span class=\"dib w-50 fl f7 black-text black50-txt pv2 tc\">Millones de \u20AC</span>\n              </div>\n            </div>\n            <div class=\"w-40 fl relative\">\n              <span class=\"f5 dib vam rect-before-fluor h2 pl3\">Simulacion</span>\n              <div class=\"w-100 h2\">\n                <span class=\"f7 dib w-50 fl olivedark-txt fw7 pl3\">PIB</span>\n                <span class=\"f7 dib w-50 fl olivedark-txt fw7\">Crecimiento</span>\n              </div>\n              <div class=\"w-100 turquoise20-bgc fl bb greydark-50-bd\">\n                <span class=\"dib w-50 fl f7 black-text black-txt pv2 tc\">1.169.572</span>\n              </div>\n              <div class=\"simulation-pib-data\">\n                <div class=\"simulation-pib-data-container w-100 turquoise20-bgc fl\">\n                  <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">".concat(d.values[0].simulacionpib, "</span>\n                  <span class=\"simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(d.values[0].simulacionpercentage, "%\n                  </span>\n                </div>\n                <div class=\"simulation-pib-data-container w-100 turquoise20-bgc fl\">\n                  <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(d.values[1].simulacionpib, "</span>\n                  <span class=\"simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(d.values[1].simulacionpercentage, "%\n                  </span>\n                </div>\n                <div class=\"simulation-pib-data-container w-100 turquoise20-bgc fl\">\n                  <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(d.values[2].simulacionpib, "</span></span>\n                  <span class=\"simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(d.values[2].simulacionpercentage, "%\n                  </span>\n                </div>\n                <div class=\"simulation-pib-data-container w-100 turquoise20-bgc fl\">\n                  <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(d.values[3].simulacionpib, "</span></span>\n                  <span class=\"simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(d.values[3].simulacionpercentage, "%\n                  </span>\n                </div>\n              </div>\n              <div class=\"w-100 fl\">\n                <span class=\"dib w-50 fl f7 black-text black50-txt pv2 tc\">Millones de \u20AC</span>\n              </div>\n            </div>")).style('left', positionleft).style('top', "".concat(d3.event.pageY - 28, "px"));
+    }).on('mouseout', function () {
+      console.log('salgo tooltip');
+      tooltipSimulation;
     });
     drawAxes(g);
   };
@@ -492,13 +489,13 @@ var multipleLine = function multipleLine(filter) {
 
       if (checkboxChecked === 3 && simulationView === true) {
         var fileName = arrayCheckedValues.join('-');
-        update(fileName);
+        update(fileName, csv);
       }
     });
   }
 
-  function update(filter) {
-    d3.csv('csv/simulation-empleo-all.csv', function (error, data) {
+  function update(filter, csv) {
+    d3.csv("csv/".concat(csv, ".csv"), function (error, data) {
       if (error) {
         console.log(error);
       } else {
@@ -513,7 +510,7 @@ var multipleLine = function multipleLine(filter) {
   }
 
   var resize = function resize() {
-    d3.csv('csv/simulation-pib-all.csv', function (error, data) {
+    d3.csv("csv/".concat(csv, ".csv"), function (error, data) {
       if (error) {
         console.log(error);
       } else {
@@ -523,14 +520,12 @@ var multipleLine = function multipleLine(filter) {
   };
 
   var loadData = function loadData() {
-    d3.csv('csv/simulation-pib-all.csv', function (error, data) {
+    d3.csv("csv/".concat(csv, ".csv"), function (error, data) {
       if (error) {
         console.log(error);
       } else {
-        dataz = data.filter(function (d) {
-          return String(d.filter).match(filter);
-        });
         d3.selectAll('.highlighted').attr('class', '');
+        dataz = data;
         setupElements();
         setupScales();
         updateChart(dataz);
@@ -542,3 +537,15 @@ var multipleLine = function multipleLine(filter) {
   loadData();
   radioUpdate();
 };
+
+var empleoCsv = 'simulation-empleo-all';
+var pibCsv = 'simulation-pib-all';
+var scalePib = ['1155302', '1292256'];
+var scaleEmpleo = ['20000', '22000'];
+document.getElementById('empleo-view').addEventListener('click', function () {
+  multipleLine(empleoCsv, scaleEmpleo[0], scaleEmpleo[1]);
+  console.log();
+});
+document.getElementById('pib-view').addEventListener('click', function () {
+  multipleLine(pibCsv, scalePib[0], scalePib[1]);
+});

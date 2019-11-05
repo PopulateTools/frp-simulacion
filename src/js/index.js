@@ -10,7 +10,7 @@ document.getElementById('button-view').addEventListener('click', () => {
   setTimeout(() => {
     document.getElementById('initial-view').style.display = 'none';
     document.getElementById('simulation-view').style.display = 'block';
-    multipleLine();
+    multipleLine(pibCsv, scalePib[0], scalePib[1]);
   }, 300)
   document.getElementById('simulation-view').style.opacity = '1';
 
@@ -91,6 +91,12 @@ const legendText = ["Miles de M €", "Miles"]
 
 let simulationView = false
 
+const locale = d3.formatDefaultLocale({
+  decimal: ',',
+  thousands: '.',
+  grouping: [3]
+});
+
 //Charts
 const barChart = (id, csv, legend, tableClass) => {
   const margin = { top: 32, right: 16, bottom: 16, left: 56 };
@@ -113,12 +119,6 @@ const barChart = (id, csv, legend, tableClass) => {
     .attr("x", 10)
     .attr("y", 20)
     .text(legend);
-
-  const locale = d3.formatDefaultLocale({
-    decimal: ',',
-    thousands: '.',
-    grouping: [3]
-  });
 
   const setupScales = () => {
 
@@ -455,7 +455,7 @@ function getWidth() {
 
 getWidth()
 
-const multipleLine = (filter) => {
+const multipleLine = (csv, scaleY1, scaleY2) => {
   const margin = { top: 24, right: 24, bottom: 32, left: 64 };
   let width = 0;
   let height = 0;
@@ -465,7 +465,7 @@ const multipleLine = (filter) => {
   let dataz;
   const tooltipSimulation = chart
     .append('div')
-    .attr('class', 'tooltip tooltip-simulation')
+    .attr('class', 'tooltip-simulation')
     .style('opacity', 0);
 
   const setupScales = () => {
@@ -551,35 +551,103 @@ const multipleLine = (filter) => {
     dataComb.forEach((d) => {
       container
         .append('path')
-        .on('mouseover', (d) => {
-          const positionX = scales.count.x(d.key);
-          const postionWidthTooltip = positionX + 270;
-          const tooltipWidth = 210;
-          const positionleft = `${d3.event.pageX}px`;
-          const positionright = `${d3.event.pageX - tooltipWidth}px`;
-          tooltipSimulation.transition();
-          tooltipSimulation.attr('class', 'tooltip tooltip-scatter tooltip-min');
-          tooltipSimulation
-            .style('opacity', 1)
-            .html(
-              `<p class="tooltip-scatter-text">La temperatura mínima de ${d.values} en ${d.key} <p/>`
-            )
-            .style(
-              'left',
-              postionWidthTooltip > w ? positionright : positionleft
-            )
-            .style('top', `${d3.event.pageY - 28}px`);
-        })
-        .on('mouseout', () => {
-          tooltipSimulation
-            .transition()
-            .duration(200)
-            .style('opacity', 0);
-        })
+
         .attr('class', 'line ' + d.key)
         .style('stroke', '#DADADA')
         .attr('d', line(d.values));
     });
+
+    d3.select('.highlighted')
+      .data(dataComb)
+      .on('mouseover', (d) => {
+        const positionleft = `${d3.event.pageX}px`;
+        console.log("positionleft", positionleft);
+        tooltipSimulation
+          .style('opacity', 1)
+          .html(
+            `<div class="w-20 fl">
+              <span class="f5 dib fw7 h2"></span>
+              <span class="db" style="height: 28px;"></span>
+              <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2018</span>
+              <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2019</span>
+              <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2020</span>
+              <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2021</span>
+              <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2022</span>
+            </div>
+            <div class="w-40 fl relative">
+              <span class="bd-dotted"></span>
+              <span class="f5 dib vam rect-before h2">Previsión</span>
+              <div class="w-100 h2">
+                <span class="f7 dib w-50 fl olivedark-txt fw7">PIB</span>
+                <span class="f7 dib w-50 fl olivedark-txt fw7">Crecimiento</span>
+              </div>
+              <div class="w-100 olive20-bgc fl">
+                <span class="dib w-50 fl f7 black-text black-txt pv2 tc">1.169.572</span>
+                <span class="dib w-50 fl f7 black-text black-txt pv2 tc"></span>
+              </div>
+              <div class="w-100 olive20-bgc fl">
+                <span class="dib w-50 fl f7 black-text bb bt greydark-50-bd black-txt pv2 tc">1.195.302</span>
+                <span class="fw8 dib w-50 fl f7 black-text bb bt greydark-50-bd black-txt pv2 tc">+2.2%</span>
+              </div>
+              <div class="w-100 olive20-bgc fl">
+                <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">1.218.013</span>
+                <span class="fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">+1.9%</span>
+              </div>
+              <div class="w-100 olive20-bgc fl">
+                <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">1.239.937</span>
+                <span class="fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">+1.8%</span>
+              </div>
+              <div class="w-100 olive20-bgc fl">
+                <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">1.262.256</span>
+                <span class="fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">+1.8%</span>
+              </div>
+              <div class="w-100 fl">
+                <span class="dib w-50 fl f7 black-text black50-txt pv2 tc">Millones de €</span>
+              </div>
+            </div>
+            <div class="w-40 fl relative">
+              <span class="f5 dib vam rect-before-fluor h2 pl3">Simulacion</span>
+              <div class="w-100 h2">
+                <span class="f7 dib w-50 fl olivedark-txt fw7 pl3">PIB</span>
+                <span class="f7 dib w-50 fl olivedark-txt fw7">Crecimiento</span>
+              </div>
+              <div class="w-100 turquoise20-bgc fl bb greydark-50-bd">
+                <span class="dib w-50 fl f7 black-text black-txt pv2 tc">1.169.572</span>
+              </div>
+              <div class="simulation-pib-data">
+                <div class="simulation-pib-data-container w-100 turquoise20-bgc fl">
+                  <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${d.values[0].simulacionpib}</span>
+                  <span class="simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${d.values[0].simulacionpercentage}%
+                  </span>
+                </div>
+                <div class="simulation-pib-data-container w-100 turquoise20-bgc fl">
+                  <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${d.values[1].simulacionpib}</span>
+                  <span class="simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${d.values[1].simulacionpercentage}%
+                  </span>
+                </div>
+                <div class="simulation-pib-data-container w-100 turquoise20-bgc fl">
+                  <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${d.values[2].simulacionpib}</span></span>
+                  <span class="simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${d.values[2].simulacionpercentage}%
+                  </span>
+                </div>
+                <div class="simulation-pib-data-container w-100 turquoise20-bgc fl">
+                  <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${d.values[3].simulacionpib}</span></span>
+                  <span class="simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${d.values[3].simulacionpercentage}%
+                  </span>
+                </div>
+              </div>
+              <div class="w-100 fl">
+                <span class="dib w-50 fl f7 black-text black50-txt pv2 tc">Millones de €</span>
+              </div>
+            </div>`
+          )
+          .style('left', positionleft)
+          .style('top', `${d3.event.pageY - 28}px`);
+      })
+      .on('mouseout', () => {
+        console.log('salgo tooltip')
+        tooltipSimulation
+      })
 
 
 
@@ -605,13 +673,13 @@ const multipleLine = (filter) => {
 
       if (checkboxChecked === 3 && simulationView === true) {
         const fileName = arrayCheckedValues.join('-');
-        update(fileName)
+        update(fileName, csv)
       }
     });
   }
 
-  function update(filter) {
-    d3.csv('csv/simulation-empleo-all.csv', (error, data) => {
+  function update(filter, csv) {
+    d3.csv(`csv/${csv}.csv`, (error, data) => {
       if (error) {
         console.log(error);
       } else {
@@ -619,6 +687,7 @@ const multipleLine = (filter) => {
 
         d3.selectAll('.highlighted')
           .attr('class', '')
+
 
         d3.selectAll(`.${filter}`)
           .attr('class', 'highlighted')
@@ -629,7 +698,7 @@ const multipleLine = (filter) => {
   }
 
   const resize = () => {
-    d3.csv('csv/simulation-pib-all.csv', (error, data) => {
+    d3.csv(`csv/${csv}.csv`, (error, data) => {
       if (error) {
         console.log(error);
       } else {
@@ -639,16 +708,14 @@ const multipleLine = (filter) => {
   };
 
   const loadData = () => {
-    d3.csv('csv/simulation-pib-all.csv', (error, data) => {
+    d3.csv(`csv/${csv}.csv`, (error, data) => {
       if (error) {
         console.log(error);
       } else {
-        dataz = data.filter((d) => String(d.filter).match(filter));
 
         d3.selectAll('.highlighted')
           .attr('class', '')
-
-
+        dataz = data
 
         setupElements();
         setupScales();
@@ -662,3 +729,18 @@ const multipleLine = (filter) => {
   loadData();
   radioUpdate()
 };
+
+const empleoCsv = 'simulation-empleo-all'
+const pibCsv = 'simulation-pib-all'
+
+const scalePib = ['1155302', '1292256']
+const scaleEmpleo = ['20000', '22000']
+
+document.getElementById('empleo-view').addEventListener('click', () => {
+  multipleLine(empleoCsv, scaleEmpleo[0], scaleEmpleo[1])
+  console.log()
+});
+
+document.getElementById('pib-view').addEventListener('click', () => {
+  multipleLine(pibCsv, scalePib[0], scalePib[1]);
+});

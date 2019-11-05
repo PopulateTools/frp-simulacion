@@ -10768,6 +10768,7 @@ html {
 #multiline-simulation-empleo .line,
 #multiline-simulation-empleo path {
   fill: none;
+  pointer-events: none;
 }
 
 #multiline-simulation-empleo .prevision {
@@ -10812,8 +10813,20 @@ html {
   color: var(--white);
 }
 
-.highlighted {
+#multiline-simulation-empleo .highlighted {
   stroke: var(--greenlight) !important;
   stroke-width: 5px;
   fill: none;
+  pointer-events: initial;
+}
+
+.tooltip-simulation {
+  position: absolute;
+  padding: .5rem;
+  background-color: #F9F9F9;
+  border-radius: 2px;
+  width: max-content;
+  max-width: 25rem;
+  z-index: 1;
+  font-size: 1rem;
 }

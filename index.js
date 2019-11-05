@@ -1,6 +1,6 @@
 import 'd3-transition';
 
-export { select, selectAll } from 'd3-selection';
+export { select, selectAll, mouse, event } from 'd3-selection';
 
 export { min, max, extent } from 'd3-array';
 
