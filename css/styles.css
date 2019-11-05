@@ -10715,7 +10715,7 @@ html {
 .tooltip {
   background: #fff;
   background: var(--white);
-  max-width: 300px;
+  max-width: 200px;
   border-radius: 4px;
   padding: .75rem;
   font-size: 14px;
