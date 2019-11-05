@@ -560,8 +560,12 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
     d3.select('.highlighted')
       .data(dataComb)
       .on('mouseover', (d) => {
-        const positionleft = `${d3.event.pageX}px`;
-        console.log("positionleft", positionleft);
+        const positionleft = `${d3.event.pageX}`;
+        const positionTop = `${d3.event.pageY}`;
+        const tooltipWidth = d3.select('.tooltip-simulation').node().getBoundingClientRect().width;
+        const tooltipHeight = d3.select('.tooltip-simulation').node().getBoundingClientRect().height;
+        const positionTopTooltip = positionTop - tooltipHeight
+        const positionleftTooltip = positionleft - (tooltipWidth/2)
         tooltipSimulation
           .style('opacity', 1)
           .html(
@@ -641,12 +645,12 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
               </div>
             </div>`
           )
-          .style('left', positionleft)
-          .style('top', `${d3.event.pageY - 28}px`);
+          .style('left', `${positionleftTooltip}px`)
+          .style('top', `${positionTopTooltip + 10}px `);
       })
       .on('mouseout', () => {
-        console.log('salgo tooltip')
         tooltipSimulation
+          .style('opacity', 1)
       })
 
 
