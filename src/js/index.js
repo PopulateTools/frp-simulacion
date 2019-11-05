@@ -22,7 +22,6 @@ document.getElementById('back-view').addEventListener("click", () => {
   setTimeout(() => {
     document.getElementById('initial-view').style.display = 'block';
     document.getElementById('simulation-view').style.display = 'none';
-    multipleLine();
   }, 300)
   document.getElementById('simulation-view').style.opacity = '0';
 
@@ -775,6 +774,7 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
       .remove()
       .exit()
      multipleLine(empleoCsv, scaleEmpleo[0], scaleEmpleo[1])
+
     });
   d3.select("#pib-view")
     .on("click", function() {

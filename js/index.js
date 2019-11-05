@@ -30,7 +30,6 @@ document.getElementById('back-view').addEventListener("click", function () {
   setTimeout(function () {
     document.getElementById('initial-view').style.display = 'block';
     document.getElementById('simulation-view').style.display = 'none';
-    multipleLine();
   }, 300);
   document.getElementById('simulation-view').style.opacity = '0';
   document.querySelectorAll(".input-radio").checked = false;
