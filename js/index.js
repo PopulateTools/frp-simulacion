@@ -15,10 +15,33 @@ document.querySelectorAll(".input-radio").forEach(function (input) {
     checkValues();
   });
 });
-document.getElementById("button-view").addEventListener("click", function () {
-  document.getElementById("initial-view").style.display = "none";
-  document.getElementById("simulation-view").style.display = "block";
-  multipleLine();
+document.getElementById('button-view').addEventListener('click', function () {
+  document.getElementById('initial-view').style.opacity = '0';
+  setTimeout(function () {
+    document.getElementById('initial-view').style.display = 'none';
+    document.getElementById('simulation-view').style.display = 'block';
+    multipleLine();
+  }, 300);
+  document.getElementById('simulation-view').style.opacity = '1';
+  simulationView = true;
+});
+document.getElementById('back-view').addEventListener("click", function () {
+  document.getElementById('initial-view').style.opacity = '1';
+  setTimeout(function () {
+    document.getElementById('initial-view').style.display = 'block';
+    document.getElementById('simulation-view').style.display = 'none';
+    multipleLine();
+  }, 300);
+  document.getElementById('simulation-view').style.opacity = '0';
+  simulationView = false;
+});
+document.getElementById('empleo-view').addEventListener("click", function () {
+  document.getElementById('pib-view').classList.remove('btn-view-active');
+  document.getElementById('empleo-view').classList.add('btn-view-active');
+});
+document.getElementById('pib-view').addEventListener("click", function () {
+  document.getElementById('empleo-view').classList.remove('btn-view-active');
+  document.getElementById('pib-view').classList.add('btn-view-active');
 }); //Get the name for every group of radio buttons
 
 function getName() {
@@ -67,7 +90,7 @@ var idEmpleo = document.getElementById('empleo-chart');
 var tablePib = '.simulation-pib-data';
 var tableEmpleo = '.simulation-empleo-data';
 var legendText = ["Miles de M €", "Miles"];
-var firstUpdate = false; //Charts
+var simulationView = false; //Charts
 
 var barChart = function barChart(id, csv, legend, tableClass) {
   var margin = {
@@ -347,11 +370,16 @@ function checkValues() {
       }
 
       var fileName = arrayCheckedValues.join('-');
-      d3.selectAll('.legend-top').remove().exit();
       var fileNamePib = "pib/".concat(fileName);
       var fileNameEmpleo = "empleo/".concat(fileName);
-      barChart(idPib, fileNamePib, legendText[0], tablePib);
-      barChart(idEmpleo, fileNameEmpleo, legendText[1], tableEmpleo);
+
+      if (simulationView === false) {
+        d3.selectAll('.legend-top').remove().exit();
+        barChart(idPib, fileNamePib, legendText[0], tablePib);
+        barChart(idEmpleo, fileNameEmpleo, legendText[1], tableEmpleo);
+      } else {
+        multipleLine(fileName);
+      }
     })();
   }
 }
@@ -369,7 +397,7 @@ function getWidth() {
 
 getWidth();
 
-var multipleLine = function multipleLine() {
+var multipleLine = function multipleLine(filter) {
   var margin = {
     top: 24,
     right: 24,
@@ -425,15 +453,13 @@ var multipleLine = function multipleLine() {
     var dataComb = d3.nest().key(function (d) {
       return d.filter;
     }).entries(data);
-    console.log("dataComb", dataComb);
     var container = chart.select('.multiline-simulation-empleo-container-dos');
     var line = d3.line().x(function (d) {
       return scales.count.x(d.year);
     }).y(function (d) {
       return scales.count.y(d.simulacionpib);
     });
-    container.selectAll('.line').remove().exit().data(dataComb);
-    console.log("dataComb", dataComb);
+    container.selectAll('.line').data(dataComb);
     dataComb.forEach(function (d) {
       container.append('path').on('mouseover', function (d) {
         var positionX = scales.count.x(d.key);
@@ -448,6 +474,7 @@ var multipleLine = function multipleLine() {
         tooltipSimulation.transition().duration(200).style('opacity', 0);
       }).attr('class', 'line ' + d.key).style('stroke', '#DADADA').attr('d', line(d.values));
     });
+    d3.selectAll(".".concat(filter)).attr('class', 'highlighted');
     drawAxes(g);
   };
 
@@ -466,9 +493,13 @@ var multipleLine = function multipleLine() {
       if (error) {
         console.log(error);
       } else {
+        dataz = data.filter(function (d) {
+          return String(d.filter).match(filter);
+        });
+        d3.selectAll('.highlighted').attr('class', '');
         setupElements();
         setupScales();
-        updateChart(data);
+        updateChart(dataz);
       }
     });
   };

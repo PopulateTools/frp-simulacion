@@ -10812,17 +10812,63 @@ html {
   cursor: pointer;
 }
 
-#multiline-simulation-empleo .line {
+#multiline-simulation-empleo .line,
+#multiline-simulation-empleo path {
   fill: none;
 }
 
-.prevision {
-  stroke: green !important;
+#multiline-simulation-empleo .prevision {
+  stroke: #006C61 !important;
+  stroke: var(--olive) !important;
   stroke-width: 5px;
 }
 
 #simulation-view {
   display: none;
+  opacity: 0;
+  transition: opacity .3s ease-in;
+}
+
+#initial-view {
+  opacity: 1;
+  transition: opacity .3s ease-in;
+}
+
+.legends-element:before {
+  content: '';
+  width: 1rem;
+  height: .5rem;
+  background-color: #006C61;
+  background-color: var(--olive);
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.legends-element-simulation:before {
+  background-color: #B8DF22;
+  background-color: var(--greenlight);
+}
+
+#pib-view,
+#empleo-view {
+  border: 0;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: .5rem 1.5rem;
+}
+
+.btn-view-active {
+  background-color: #006C61;
+  background-color: var(--olive);
+  color: #fff;
+  color: var(--white);
+}
+
+.highlighted {
+  stroke: #B8DF22 !important;
+  stroke: var(--greenlight) !important;
+  stroke-width: 5px;
+  fill: none;
 }
 
 /*# sourceMappingURL=styles.css.map */

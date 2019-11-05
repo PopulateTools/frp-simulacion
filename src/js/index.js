@@ -5,10 +5,38 @@ document.querySelectorAll(".input-radio").forEach(input => input.addEventListene
 }));
 
 
-document.getElementById("button-view").addEventListener("click", () => {
-  document.getElementById("initial-view").style.display = "none";
-  document.getElementById("simulation-view").style.display = "block";
-  multipleLine();
+document.getElementById('button-view').addEventListener('click', () => {
+  document.getElementById('initial-view').style.opacity = '0';
+  setTimeout(() => {
+    document.getElementById('initial-view').style.display = 'none';
+    document.getElementById('simulation-view').style.display = 'block';
+    multipleLine();
+  }, 300)
+  document.getElementById('simulation-view').style.opacity = '1';
+
+  simulationView = true
+});
+
+document.getElementById('back-view').addEventListener("click", () => {
+  document.getElementById('initial-view').style.opacity = '1';
+  setTimeout(() => {
+    document.getElementById('initial-view').style.display = 'block';
+    document.getElementById('simulation-view').style.display = 'none';
+    multipleLine();
+  }, 300)
+  document.getElementById('simulation-view').style.opacity = '0';
+
+  simulationView = false
+});
+
+document.getElementById('empleo-view').addEventListener("click", () => {
+  document.getElementById('pib-view').classList.remove('btn-view-active')
+  document.getElementById('empleo-view').classList.add('btn-view-active')
+});
+
+document.getElementById('pib-view').addEventListener("click", () => {
+  document.getElementById('empleo-view').classList.remove('btn-view-active')
+  document.getElementById('pib-view').classList.add('btn-view-active')
 });
 
 //Get the name for every group of radio buttons
@@ -60,7 +88,7 @@ const tableEmpleo = '.simulation-empleo-data'
 
 const legendText = ["Miles de M €", "Miles"]
 
-let firstUpdate = false
+let simulationView = false
 
 //Charts
 const barChart = (id, csv, legend, tableClass) => {
@@ -395,15 +423,21 @@ function checkValues() {
 
     const fileName = arrayCheckedValues.join('-');
 
-    d3.selectAll('.legend-top')
-      .remove()
-      .exit()
 
     const fileNamePib = `pib/${fileName}`
     const fileNameEmpleo = `empleo/${fileName}`
 
-    barChart(idPib, fileNamePib, legendText[0], tablePib);
-    barChart(idEmpleo, fileNameEmpleo, legendText[1], tableEmpleo);
+
+
+    if (simulationView === false) {
+      d3.selectAll('.legend-top')
+        .remove()
+        .exit()
+      barChart(idPib, fileNamePib, legendText[0], tablePib)
+      barChart(idEmpleo, fileNameEmpleo, legendText[1], tableEmpleo)
+    } else {
+      multipleLine(fileName)
+    }
 
 
   }
@@ -422,8 +456,7 @@ function getWidth() {
 
 getWidth()
 
-
-const multipleLine = () => {
+const multipleLine = (filter) => {
   const margin = { top: 24, right: 24, bottom: 32, left: 48 };
   let width = 0;
   let height = 0;
@@ -504,7 +537,6 @@ const multipleLine = () => {
       .nest()
       .key((d) => d.filter)
       .entries(data);
-    console.log("dataComb", dataComb);
 
     const container = chart.select('.multiline-simulation-empleo-container-dos');
 
@@ -515,10 +547,7 @@ const multipleLine = () => {
 
     container
       .selectAll('.line')
-      .remove()
-      .exit()
       .data(dataComb);
-    console.log("dataComb", dataComb);
 
     dataComb.forEach((d) => {
       container
@@ -553,6 +582,9 @@ const multipleLine = () => {
         .attr('d', line(d.values));
     });
 
+    d3.selectAll(`.${filter}`)
+      .attr('class', 'highlighted')
+
     drawAxes(g);
   };
 
@@ -571,10 +603,14 @@ const multipleLine = () => {
       if (error) {
         console.log(error);
       } else {
+        dataz = data.filter((d) => String(d.filter).match(filter));
+
+        d3.selectAll('.highlighted')
+          .attr('class', '')
 
         setupElements();
         setupScales();
-        updateChart(data);
+        updateChart(dataz);
       }
     });
   };
