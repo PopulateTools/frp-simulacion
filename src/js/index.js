@@ -26,6 +26,7 @@ document.getElementById('back-view').addEventListener("click", () => {
   }, 300)
   document.getElementById('simulation-view').style.opacity = '0';
 
+  document.querySelectorAll(".input-radio").checked = false;
   simulationView = false
 });
 
@@ -455,7 +456,7 @@ function getWidth() {
 getWidth()
 
 const multipleLine = (filter) => {
-  const margin = { top: 24, right: 24, bottom: 32, left: 48 };
+  const margin = { top: 24, right: 24, bottom: 32, left: 64 };
   let width = 0;
   let height = 0;
   const chart = d3.select('#multiline-simulation-empleo');
@@ -476,8 +477,8 @@ const multipleLine = (filter) => {
 
     const countY = d3.scaleLinear()
       .domain([
-        19000,
-        22000
+        1155302,
+        1292256
       ]);
 
     scales.count = { x: countX, y: countY };
@@ -589,7 +590,6 @@ const multipleLine = (filter) => {
 
     d3.selectAll(".input-radio").on("change", function() {
       let arrayCheckedValues = []
-      console.log('input controlado de d3')
 
       const checkbox = document.getElementsByTagName('input');
       let checkboxChecked = 0;
@@ -605,16 +605,12 @@ const multipleLine = (filter) => {
 
       if (checkboxChecked === 3 && simulationView === true) {
         const fileName = arrayCheckedValues.join('-');
-        console.log('tres seleccionados')
         update(fileName)
       }
     });
   }
 
   function update(filter) {
-    console.log('update')
-    console.log(filter)
-
     d3.csv('csv/simulation-empleo-all.csv', (error, data) => {
       if (error) {
         console.log(error);
@@ -633,7 +629,7 @@ const multipleLine = (filter) => {
   }
 
   const resize = () => {
-    d3.csv('csv/simulation-empleo-all.csv', (error, data) => {
+    d3.csv('csv/simulation-pib-all.csv', (error, data) => {
       if (error) {
         console.log(error);
       } else {
@@ -643,7 +639,7 @@ const multipleLine = (filter) => {
   };
 
   const loadData = () => {
-    d3.csv('csv/simulation-empleo-all.csv', (error, data) => {
+    d3.csv('csv/simulation-pib-all.csv', (error, data) => {
       if (error) {
         console.log(error);
       } else {

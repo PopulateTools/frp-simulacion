@@ -33,6 +33,7 @@ document.getElementById('back-view').addEventListener("click", function () {
     multipleLine();
   }, 300);
   document.getElementById('simulation-view').style.opacity = '0';
+  document.querySelectorAll(".input-radio").checked = false;
   simulationView = false;
 });
 document.getElementById('empleo-view').addEventListener("click", function () {
@@ -400,7 +401,7 @@ var multipleLine = function multipleLine(filter) {
     top: 24,
     right: 24,
     bottom: 32,
-    left: 48
+    left: 64
   };
   var width = 0;
   var height = 0;
@@ -412,7 +413,7 @@ var multipleLine = function multipleLine(filter) {
 
   var setupScales = function setupScales() {
     var countX = d3.scaleTime().domain([2019, 2022]);
-    var countY = d3.scaleLinear().domain([19000, 22000]);
+    var countY = d3.scaleLinear().domain([1155302, 1292256]);
     scales.count = {
       x: countX,
       y: countY
@@ -478,7 +479,6 @@ var multipleLine = function multipleLine(filter) {
   function radioUpdate() {
     d3.selectAll(".input-radio").on("change", function () {
       var arrayCheckedValues = [];
-      console.log('input controlado de d3');
       var checkbox = document.getElementsByTagName('input');
       var checkboxChecked = 0;
 
@@ -492,15 +492,12 @@ var multipleLine = function multipleLine(filter) {
 
       if (checkboxChecked === 3 && simulationView === true) {
         var fileName = arrayCheckedValues.join('-');
-        console.log('tres seleccionados');
         update(fileName);
       }
     });
   }
 
   function update(filter) {
-    console.log('update');
-    console.log(filter);
     d3.csv('csv/simulation-empleo-all.csv', function (error, data) {
       if (error) {
         console.log(error);
@@ -516,7 +513,7 @@ var multipleLine = function multipleLine(filter) {
   }
 
   var resize = function resize() {
-    d3.csv('csv/simulation-empleo-all.csv', function (error, data) {
+    d3.csv('csv/simulation-pib-all.csv', function (error, data) {
       if (error) {
         console.log(error);
       } else {
@@ -526,7 +523,7 @@ var multipleLine = function multipleLine(filter) {
   };
 
   var loadData = function loadData() {
-    d3.csv('csv/simulation-empleo-all.csv', function (error, data) {
+    d3.csv('csv/simulation-pib-all.csv', function (error, data) {
       if (error) {
         console.log(error);
       } else {
