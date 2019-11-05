@@ -597,7 +597,9 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
 
         for (let i = 0; i < d.values.length; i++) {
          const element = d.values[i].simulacionpercentage
-         const valueToFixed = Number(element).toFixed(2)
+         let valueToFixed = Number(element).toFixed(2)
+         valueToFixed = (valueToFixed >= 0 ? '+' : '' ) + valueToFixed
+
          percentageFormat.push(valueToFixed)
          console.log("percentageFormat", percentageFormat);
         }

@@ -502,6 +502,7 @@ var multipleLine = function multipleLine(csv, scaleY1, scaleY2) {
 
         var _valueToFixed = Number(_element).toFixed(2);
 
+        _valueToFixed = (_valueToFixed >= 0 ? '+' : '') + _valueToFixed;
         percentageFormat.push(_valueToFixed);
         console.log("percentageFormat", percentageFormat);
       }
