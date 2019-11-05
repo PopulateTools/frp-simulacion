@@ -10773,3 +10773,7 @@ html {
   stroke: green !important;
   stroke-width: 5px;
 }
+
+#simulation-view {
+  display: none;
+}

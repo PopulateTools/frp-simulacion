@@ -4,6 +4,13 @@ document.querySelectorAll(".input-radio").forEach(input => input.addEventListene
   checkValues();
 }));
 
+
+document.getElementById("button-view").addEventListener("click", () => {
+  document.getElementById("initial-view").style.display = "none";
+  document.getElementById("simulation-view").style.display = "block";
+  multipleLine();
+});
+
 //Get the name for every group of radio buttons
 function getName() {
   const targetElement = event.target;
@@ -576,5 +583,3 @@ const multipleLine = () => {
 
   loadData();
 };
-
-multipleLine();

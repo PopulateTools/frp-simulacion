@@ -10821,4 +10821,8 @@ html {
   stroke-width: 5px;
 }
 
+#simulation-view {
+  display: none;
+}
+
 /*# sourceMappingURL=styles.css.map */

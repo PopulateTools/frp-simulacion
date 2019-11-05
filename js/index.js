@@ -14,6 +14,11 @@ document.querySelectorAll(".input-radio").forEach(function (input) {
     getName();
     checkValues();
   });
+});
+document.getElementById("button-view").addEventListener("click", function () {
+  document.getElementById("initial-view").style.display = "none";
+  document.getElementById("simulation-view").style.display = "block";
+  multipleLine();
 }); //Get the name for every group of radio buttons
 
 function getName() {
@@ -471,5 +476,3 @@ var multipleLine = function multipleLine() {
   window.addEventListener('resize', resize);
   loadData();
 };
-
-multipleLine();
