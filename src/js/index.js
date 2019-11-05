@@ -477,8 +477,8 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
 
     const countY = d3.scaleLinear()
       .domain([
-        1155302,
-        1292256
+        scaleY1,
+        scaleY2
       ]);
 
     scales.count = { x: countX, y: countY };
@@ -601,7 +601,6 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
          valueToFixed = (valueToFixed >= 0 ? '+' : '' ) + valueToFixed
 
          percentageFormat.push(valueToFixed)
-         console.log("percentageFormat", percentageFormat);
         }
 
         tooltipSimulation
@@ -691,8 +690,6 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
           .style('opacity', 0)
       })
 
-
-
     drawAxes(g);
   };
 
@@ -766,6 +763,69 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
     });
   };
 
+  d3.select("#empleo-view")
+    .on("click", function() {
+      d3.csv('csv/simulation-empleo-all.csv', (error, data) => {
+        if (error) {
+          console.log(error);
+        } else {
+
+          const countX = d3.scaleTime()
+            .domain([
+              2019,
+              2022
+            ]);
+
+          const countY = d3.scaleLinear()
+            .domain([
+              20000,
+              22000
+            ]);
+
+            d3.selectAll('.line')
+            .remove()
+            .exit()
+
+          scales.count = { x: countX, y: countY };
+
+          d3.selectAll('.highlighted')
+            .attr('class', '')
+          updateChart(data);
+        }
+      });
+    });
+  d3.select("#pib-view")
+    .on("click", function() {
+      d3.csv('csv/simulation-pib-all.csv', (error, data) => {
+        if (error) {
+          console.log(error);
+        } else {
+
+          const countX = d3.scaleTime()
+            .domain([
+              2019,
+              2022
+            ]);
+
+          const countY = d3.scaleLinear()
+            .domain([
+              1155302,
+              1292256
+            ]);
+
+          d3.selectAll('.line')
+          .remove()
+          .exit()
+
+          scales.count = { x: countX, y: countY };
+
+          d3.selectAll('.highlighted')
+            .attr('class', '')
+          updateChart(data);
+        }
+      });
+    });
+
   window.addEventListener('resize', resize);
 
   loadData();
@@ -777,12 +837,3 @@ const pibCsv = 'simulation-pib-all'
 
 const scalePib = ['1155302', '1292256']
 const scaleEmpleo = ['20000', '22000']
-
-document.getElementById('empleo-view').addEventListener('click', () => {
-  multipleLine(empleoCsv, scaleEmpleo[0], scaleEmpleo[1])
-  console.log()
-});
-
-document.getElementById('pib-view').addEventListener('click', () => {
-  multipleLine(pibCsv, scalePib[0], scalePib[1]);
-});

@@ -413,7 +413,7 @@ var multipleLine = function multipleLine(csv, scaleY1, scaleY2) {
 
   var setupScales = function setupScales() {
     var countX = d3.scaleTime().domain([2019, 2022]);
-    var countY = d3.scaleLinear().domain([1155302, 1292256]);
+    var countY = d3.scaleLinear().domain([scaleY1, scaleY2]);
     scales.count = {
       x: countX,
       y: countY
@@ -504,7 +504,6 @@ var multipleLine = function multipleLine(csv, scaleY1, scaleY2) {
 
         _valueToFixed = (_valueToFixed >= 0 ? '+' : '') + _valueToFixed;
         percentageFormat.push(_valueToFixed);
-        console.log("percentageFormat", percentageFormat);
       }
 
       tooltipSimulation.style('opacity', 1).html("<div class=\"w-20 fl\">\n              <span class=\"f5 dib fw7 h2\"></span>\n              <span class=\"db\" style=\"height: 28px;\"></span>\n              <span class=\"f7 black50-txt bb tr greydark-50-bd db pv2 pr3\">2018</span>\n              <span class=\"f7 black50-txt bb tr greydark-50-bd db pv2 pr3\">2019</span>\n              <span class=\"f7 black50-txt bb tr greydark-50-bd db pv2 pr3\">2020</span>\n              <span class=\"f7 black50-txt bb tr greydark-50-bd db pv2 pr3\">2021</span>\n              <span class=\"f7 black50-txt bb tr greydark-50-bd db pv2 pr3\">2022</span>\n            </div>\n            <div class=\"w-40 fl relative\">\n              <span class=\"bd-dotted\"></span>\n              <span class=\"f5 dib vam rect-before h2\">Previsi\xF3n</span>\n              <div class=\"w-100 h2\">\n                <span class=\"f7 dib w-50 fl olivedark-txt fw7\">PIB</span>\n                <span class=\"f7 dib w-50 fl olivedark-txt fw7\">Crecimiento</span>\n              </div>\n              <div class=\"w-100 olive20-bgc fl\">\n                <span class=\"dib w-50 fl f7 black-text black-txt pv2 tc\">1.169.572</span>\n                <span class=\"dib w-50 fl f7 black-text black-txt pv2 tc\"></span>\n              </div>\n              <div class=\"w-100 olive20-bgc fl\">\n                <span class=\"dib w-50 fl f7 black-text bb bt greydark-50-bd black-txt pv2 tc\">1.195.302</span>\n                <span class=\"fw8 dib w-50 fl f7 black-text bb bt greydark-50-bd black-txt pv2 tc\">+2.2%</span>\n              </div>\n              <div class=\"w-100 olive20-bgc fl\">\n                <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">1.218.013</span>\n                <span class=\"fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">+1.9%</span>\n              </div>\n              <div class=\"w-100 olive20-bgc fl\">\n                <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">1.239.937</span>\n                <span class=\"fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">+1.8%</span>\n              </div>\n              <div class=\"w-100 olive20-bgc fl\">\n                <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">1.262.256</span>\n                <span class=\"fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">+1.8%</span>\n              </div>\n              <div class=\"w-100 fl\">\n                <span class=\"dib w-50 fl f7 black-text black50-txt pv2 tc\">Millones de \u20AC</span>\n              </div>\n            </div>\n            <div class=\"w-40 fl relative\">\n              <span class=\"f5 dib vam rect-before-fluor h2 pl3\">Simulacion</span>\n              <div class=\"w-100 h2\">\n                <span class=\"f7 dib w-50 fl olivedark-txt fw7 pl3\">PIB</span>\n                <span class=\"f7 dib w-50 fl olivedark-txt fw7\">Crecimiento</span>\n              </div>\n              <div class=\"w-100 turquoise20-bgc fl bb greydark-50-bd\">\n                <span class=\"dib w-50 fl f7 black-text black-txt pv2 tc\">1.169.572</span>\n              </div>\n              <div class=\"simulation-pib-data\">\n                <div class=\"simulation-pib-data-container w-100 turquoise20-bgc fl\">\n                  <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">".concat(pibFormat[0], "</span>\n                  <span class=\"simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(percentageFormat[0], "%\n                  </span>\n                </div>\n                <div class=\"simulation-pib-data-container w-100 turquoise20-bgc fl\">\n                  <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(pibFormat[1], "</span>\n                  <span class=\"simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(percentageFormat[1], "%\n                  </span>\n                </div>\n                <div class=\"simulation-pib-data-container w-100 turquoise20-bgc fl\">\n                  <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(pibFormat[2], "</span></span>\n                  <span class=\"simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(percentageFormat[2], "%\n                  </span>\n                </div>\n                <div class=\"simulation-pib-data-container w-100 turquoise20-bgc fl\">\n                  <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(pibFormat[3], "</span></span>\n                  <span class=\"simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(percentageFormat[3], "%\n                  </span>\n                </div>\n              </div>\n              <div class=\"w-100 fl\">\n                <span class=\"dib w-50 fl f7 black-text black50-txt pv2 tc\">Millones de \u20AC</span>\n              </div>\n            </div>")).style('left', "".concat(positionleftTooltip, "px")).style('top', "".concat(positionTopTooltip - 35, "px "));
@@ -574,6 +573,40 @@ var multipleLine = function multipleLine(csv, scaleY1, scaleY2) {
     });
   };
 
+  d3.select("#empleo-view").on("click", function () {
+    d3.csv('csv/simulation-empleo-all.csv', function (error, data) {
+      if (error) {
+        console.log(error);
+      } else {
+        var countX = d3.scaleTime().domain([2019, 2022]);
+        var countY = d3.scaleLinear().domain([20000, 22000]);
+        d3.selectAll('.line').remove().exit();
+        scales.count = {
+          x: countX,
+          y: countY
+        };
+        d3.selectAll('.highlighted').attr('class', '');
+        updateChart(data);
+      }
+    });
+  });
+  d3.select("#pib-view").on("click", function () {
+    d3.csv('csv/simulation-pib-all.csv', function (error, data) {
+      if (error) {
+        console.log(error);
+      } else {
+        var countX = d3.scaleTime().domain([2019, 2022]);
+        var countY = d3.scaleLinear().domain([1155302, 1292256]);
+        d3.selectAll('.line').remove().exit();
+        scales.count = {
+          x: countX,
+          y: countY
+        };
+        d3.selectAll('.highlighted').attr('class', '');
+        updateChart(data);
+      }
+    });
+  });
   window.addEventListener('resize', resize);
   loadData();
   radioUpdate();
@@ -583,10 +616,3 @@ var empleoCsv = 'simulation-empleo-all';
 var pibCsv = 'simulation-pib-all';
 var scalePib = ['1155302', '1292256'];
 var scaleEmpleo = ['20000', '22000'];
-document.getElementById('empleo-view').addEventListener('click', function () {
-  multipleLine(empleoCsv, scaleEmpleo[0], scaleEmpleo[1]);
-  console.log();
-});
-document.getElementById('pib-view').addEventListener('click', function () {
-  multipleLine(pibCsv, scalePib[0], scalePib[1]);
-});
