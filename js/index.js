@@ -435,7 +435,7 @@ var multipleLine = function multipleLine(csv, scaleY1, scaleY2) {
   var drawAxes = function drawAxes(g) {
     var axisX = d3.axisBottom(scales.count.x).tickFormat(d3.format('d'));
     g.select('.axis-x').attr('transform', "translate(0,".concat(height, ")")).call(axisX);
-    var axisY = d3.axisLeft(scales.count.y).tickFormat(d3.format('d')).ticks(5).tickSizeInner(-width);
+    var axisY = d3.axisLeft(scales.count.y).tickFormat(locale.format(',.0f')).ticks(5).tickSizeInner(-width);
     g.select('.axis-y').call(axisY);
   };
 
@@ -574,38 +574,14 @@ var multipleLine = function multipleLine(csv, scaleY1, scaleY2) {
   };
 
   d3.select("#empleo-view").on("click", function () {
-    d3.csv('csv/simulation-empleo-all.csv', function (error, data) {
-      if (error) {
-        console.log(error);
-      } else {
-        var countX = d3.scaleTime().domain([2019, 2022]);
-        var countY = d3.scaleLinear().domain([20000, 22000]);
-        d3.selectAll('.line').remove().exit();
-        scales.count = {
-          x: countX,
-          y: countY
-        };
-        d3.selectAll('.highlighted').attr('class', '');
-        updateChart(data);
-      }
-    });
+    d3.selectAll('.line').remove().exit();
+    d3.selectAll('.tooltip-simulation').remove().exit();
+    multipleLine(empleoCsv, scaleEmpleo[0], scaleEmpleo[1]);
   });
   d3.select("#pib-view").on("click", function () {
-    d3.csv('csv/simulation-pib-all.csv', function (error, data) {
-      if (error) {
-        console.log(error);
-      } else {
-        var countX = d3.scaleTime().domain([2019, 2022]);
-        var countY = d3.scaleLinear().domain([1155302, 1292256]);
-        d3.selectAll('.line').remove().exit();
-        scales.count = {
-          x: countX,
-          y: countY
-        };
-        d3.selectAll('.highlighted').attr('class', '');
-        updateChart(data);
-      }
-    });
+    d3.selectAll('.line').remove().exit();
+    d3.selectAll('.tooltip-simulation').remove().exit();
+    multipleLine(pibCsv, scalePib[0], scalePib[1]);
   });
   window.addEventListener('resize', resize);
   loadData();

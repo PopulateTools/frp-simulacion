@@ -508,7 +508,7 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
 
     const axisY = d3
       .axisLeft(scales.count.y)
-      .tickFormat(d3.format('d'))
+      .tickFormat(locale.format(',.0f'))
       .ticks(5)
       .tickSizeInner(-width);
 
@@ -586,6 +586,7 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
         const tooltipHeight = d3.select('.tooltip-simulation').node().getBoundingClientRect().height;
         const positionTopTooltip = positionTop - tooltipHeight
         const positionleftTooltip = positionleft - (tooltipWidth / 2)
+
         let pibFormat = []
         let percentageFormat = []
 
@@ -765,65 +766,26 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
 
   d3.select("#empleo-view")
     .on("click", function() {
-      d3.csv('csv/simulation-empleo-all.csv', (error, data) => {
-        if (error) {
-          console.log(error);
-        } else {
 
-          const countX = d3.scaleTime()
-            .domain([
-              2019,
-              2022
-            ]);
+      d3.selectAll('.line')
+      .remove()
+      .exit()
 
-          const countY = d3.scaleLinear()
-            .domain([
-              20000,
-              22000
-            ]);
-
-            d3.selectAll('.line')
-            .remove()
-            .exit()
-
-          scales.count = { x: countX, y: countY };
-
-          d3.selectAll('.highlighted')
-            .attr('class', '')
-          updateChart(data);
-        }
-      });
+      d3.selectAll('.tooltip-simulation')
+      .remove()
+      .exit()
+     multipleLine(empleoCsv, scaleEmpleo[0], scaleEmpleo[1])
     });
   d3.select("#pib-view")
     .on("click", function() {
-      d3.csv('csv/simulation-pib-all.csv', (error, data) => {
-        if (error) {
-          console.log(error);
-        } else {
+       d3.selectAll('.line')
+       .remove()
+       .exit()
 
-          const countX = d3.scaleTime()
-            .domain([
-              2019,
-              2022
-            ]);
-
-          const countY = d3.scaleLinear()
-            .domain([
-              1155302,
-              1292256
-            ]);
-
-          d3.selectAll('.line')
-          .remove()
-          .exit()
-
-          scales.count = { x: countX, y: countY };
-
-          d3.selectAll('.highlighted')
-            .attr('class', '')
-          updateChart(data);
-        }
-      });
+       d3.selectAll('.tooltip-simulation')
+       .remove()
+       .exit()
+      multipleLine(pibCsv, scalePib[0], scalePib[1])
     });
 
   window.addEventListener('resize', resize);
