@@ -10812,4 +10812,8 @@ html {
   cursor: pointer;
 }
 
+#multiline-simulation-empleo .line {
+  fill: none;
+}
+
 /*# sourceMappingURL=styles.css.map */

@@ -10764,3 +10764,7 @@ html {
 .container-radio label {
   cursor: pointer;
 }
+
+#multiline-simulation-empleo .line {
+  fill: none;
+}

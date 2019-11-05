@@ -363,3 +363,104 @@ function getWidth() {
 }
 
 getWidth();
+
+var multipleLine = function multipleLine() {
+  var margin = {
+    top: 24,
+    right: 24,
+    bottom: 24,
+    left: 24
+  };
+  var width = 0;
+  var height = 0;
+  var chart = d3.select('#multiline-simulation-empleo');
+  var svg = chart.select('svg');
+  var scales = {};
+  var dataz;
+
+  var setupScales = function setupScales() {
+    var countX = d3.scaleTime().domain([2019, 2022]);
+    var countY = d3.scaleLinear().domain([18000, 22000]);
+    scales.count = {
+      x: countX,
+      y: countY
+    };
+  };
+
+  var setupElements = function setupElements() {
+    var g = svg.select('.multiline-simulation-empleo-container');
+    g.append('g').attr('class', 'axis axis-x');
+    g.append('g').attr('class', 'axis axis-y');
+    g.append('g').attr('class', 'multiline-simulation-empleo-container-dos');
+  };
+
+  var updateScales = function updateScales(width, height) {
+    scales.count.x.range([0, width]);
+    scales.count.y.range([height, 0]);
+  };
+
+  var drawAxes = function drawAxes(g) {
+    var axisX = d3.axisBottom(scales.count.x).tickFormat(d3.format('d'));
+    g.select('.axis-x').attr('transform', "translate(0,".concat(height, ")")).call(axisX);
+    var axisY = d3.axisLeft(scales.count.y).tickFormat(d3.format('d')).ticks(5).tickSizeInner(-width);
+    g.select('.axis-y').call(axisY);
+  };
+
+  var updateChart = function updateChart(data) {
+    var w = chart.node().offsetWidth;
+    var h = 600;
+    width = w - margin.left - margin.right;
+    height = h - margin.top - margin.bottom;
+    svg.attr('width', w).attr('height', h);
+    var translate = "translate(".concat(margin.left, ",").concat(margin.top, ")");
+    var g = svg.select('.multiline-simulation-empleo-container');
+    g.attr('transform', translate);
+    updateScales(width, height);
+    var dataComb = d3.nest().key(function (d) {
+      return d.filter;
+    }).entries(data);
+    console.log("dataComb", dataComb);
+    var container = chart.select('.multiline-simulation-empleo-container-dos');
+    var colors = ['#b114c0', '#9C1B12', '#759CA7', '#CEBAC6', '#2D3065'];
+    var color = d3.scaleOrdinal(colors);
+    var line = d3.line().x(function (d) {
+      return scales.count.x(d.year);
+    }).y(function (d) {
+      return scales.count.y(d.simulacionpib);
+    });
+    container.selectAll('.line').remove().exit().data(dataComb);
+    dataComb.forEach(function (d) {
+      container.append('path').attr('class', 'line ' + d.key).style('stroke', function () {
+        return d.color = color(d.key);
+      }).attr('d', line(d.values));
+    });
+    drawAxes(g);
+  };
+
+  var resize = function resize() {
+    d3.csv('csv/simulation-empleo-all.csv', function (error, data) {
+      if (error) {
+        console.log(error);
+      } else {
+        updateChart(data);
+      }
+    });
+  };
+
+  var loadData = function loadData() {
+    d3.csv('csv/simulation-empleo-all.csv', function (error, data) {
+      if (error) {
+        console.log(error);
+      } else {
+        setupElements();
+        setupScales();
+        updateChart(data);
+      }
+    });
+  };
+
+  window.addEventListener('resize', resize);
+  loadData();
+};
+
+multipleLine();
