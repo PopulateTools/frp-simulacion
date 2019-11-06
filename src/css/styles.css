@@ -10833,6 +10833,7 @@ html {
   font-size: 1rem;
   box-shadow: 1px 2px 3px 0 rgba(0, 0, 0, .4);
   pointer-events: none;
+  transition: opacity .3s ease-in;
 }
 
 .tooltip-simulation:after {

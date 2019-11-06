@@ -20,7 +20,7 @@ document.getElementById('button-view').addEventListener('click', function () {
   setTimeout(function () {
     document.getElementById('initial-view').style.display = 'none';
     document.getElementById('simulation-view').style.display = 'block';
-    multipleLine(pibCsv, scalePib[0], scalePib[1]);
+    multipleLine(pibCsv);
   }, 300);
   document.getElementById('simulation-view').style.opacity = '1';
   simulationView = true;
@@ -398,7 +398,7 @@ function getWidth() {
 
 getWidth();
 
-var multipleLine = function multipleLine(csv, scaleY1, scaleY2) {
+var multipleLine = function multipleLine(csv) {
   var margin = {
     top: 24,
     right: 24,
@@ -448,8 +448,20 @@ var multipleLine = function multipleLine(csv, scaleY1, scaleY2) {
   };
 
   var updateChart = function updateChart(data) {
+    var radio1 = document.getElementById("radio-buttons-first");
+    var radio2 = document.getElementById("radio-buttons-second");
+    var radio3 = document.getElementById("radio-buttons-third");
+
+    function getAbsoluteHeight(el) {
+      // Get the DOM Node if you pass in a string
+      el = typeof el === 'string' ? document.querySelector(el) : el;
+      var styles = window.getComputedStyle(el);
+      var margin = parseFloat(styles['marginTop']) + parseFloat(styles['marginBottom']);
+      return el.offsetHeight + margin;
+    }
+
     var w = chart.node().offsetWidth;
-    var h = 600;
+    var h = getAbsoluteHeight(radio1) + getAbsoluteHeight(radio2) + getAbsoluteHeight(radio3);
     width = w - margin.left - margin.right;
     height = h - margin.top - margin.bottom;
     svg.attr('width', w).attr('height', h);
@@ -468,7 +480,7 @@ var multipleLine = function multipleLine(csv, scaleY1, scaleY2) {
     });
     container.selectAll('.line').remove().exit().data(dataComb);
     dataComb.forEach(function (d) {
-      container.append('path').attr('class', 'line ' + d.key).style('stroke', '#DADADA').attr('d', line(d.values));
+      container.append('path').attr('class', 'line ' + d.key).attr('id', d.key).style('stroke', '#DADADA').attr('d', line(d.values));
     });
     d3.selectAll('.line').data(dataComb).on('mouseover', function (d) {
       d3.select(this).attr('class', 'highlighted');
@@ -560,7 +572,7 @@ var multipleLine = function multipleLine(csv, scaleY1, scaleY2) {
   }
 
   var resize = function resize() {
-    d3.csv("csv/".concat(csv, ".csv"), function (error, data) {
+    d3.csv('csv/simulation-pib-all.csv', function (error, data) {
       if (error) {
         console.log(error);
       } else {
@@ -639,7 +651,4 @@ var multipleLine = function multipleLine(csv, scaleY1, scaleY2) {
   radioUpdate();
 };
 
-var empleoCsv = 'simulation-empleo-all';
 var pibCsv = 'simulation-pib-all';
-var scalePib = ['1155302', '1292256'];
-var scaleEmpleo = ['20000', '22000'];

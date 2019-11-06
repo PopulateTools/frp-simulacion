@@ -9,7 +9,7 @@ document.getElementById('button-view').addEventListener('click', () => {
   setTimeout(() => {
     document.getElementById('initial-view').style.display = 'none';
     document.getElementById('simulation-view').style.display = 'block';
-    multipleLine(pibCsv, scalePib[0], scalePib[1]);
+    multipleLine(pibCsv);
   }, 300)
   document.getElementById('simulation-view').style.opacity = '1';
 
@@ -460,7 +460,7 @@ function getWidth() {
 
 getWidth()
 
-const multipleLine = (csv, scaleY1, scaleY2) => {
+const multipleLine = (csv) => {
   const margin = { top: 24, right: 24, bottom: 32, left: 64 };
   let width = 0;
   let height = 0;
@@ -523,8 +523,24 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
   };
 
   const updateChart = (data) => {
+
+    const radio1 = document.getElementById("radio-buttons-first")
+    const radio2 = document.getElementById("radio-buttons-second")
+    const radio3 = document.getElementById("radio-buttons-third")
+
+    function getAbsoluteHeight(el) {
+      // Get the DOM Node if you pass in a string
+      el = (typeof el === 'string') ? document.querySelector(el) : el;
+
+      var styles = window.getComputedStyle(el);
+      var margin = parseFloat(styles['marginTop']) +
+                   parseFloat(styles['marginBottom']);
+
+      return el.offsetHeight + margin;
+    }
+
     const w = chart.node().offsetWidth;
-    const h = 600;
+    const h = getAbsoluteHeight(radio1) + getAbsoluteHeight(radio2) + getAbsoluteHeight(radio3)
 
     width = w - margin.left - margin.right;
     height = h - margin.top - margin.bottom;
@@ -561,6 +577,7 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
       container
         .append('path')
         .attr('class', 'line ' + d.key)
+        .attr('id', d.key)
         .style('stroke', '#DADADA')
         .attr('d', line(d.values));
     });
@@ -683,6 +700,7 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
             .attr('class', 'line')
             .moveToFront()
 
+
           tooltipSimulation
             .style('opacity', 0)
       })
@@ -750,7 +768,7 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
   }
 
   const resize = () => {
-    d3.csv(`csv/${csv}.csv`, (error, data) => {
+    d3.csv('csv/simulation-pib-all.csv', (error, data) => {
       if (error) {
         console.log(error);
       } else {
@@ -833,8 +851,4 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
   radioUpdate()
 };
 
-const empleoCsv = 'simulation-empleo-all'
 const pibCsv = 'simulation-pib-all'
-
-const scalePib = ['1155302', '1292256']
-const scaleEmpleo = ['20000', '22000']
