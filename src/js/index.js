@@ -4,7 +4,6 @@ document.querySelectorAll(".input-radio").forEach(input => input.addEventListene
   checkValues();
 }));
 
-
 document.getElementById('button-view').addEventListener('click', () => {
   document.getElementById('initial-view').style.opacity = '0';
   setTimeout(() => {
@@ -32,11 +31,17 @@ document.getElementById('back-view').addEventListener("click", () => {
 document.getElementById('empleo-view').addEventListener("click", () => {
   document.getElementById('pib-view').classList.remove('btn-view-active')
   document.getElementById('empleo-view').classList.add('btn-view-active')
+
+  valueFilter = 'empleo'
 });
 
 document.getElementById('pib-view').addEventListener("click", () => {
   document.getElementById('empleo-view').classList.remove('btn-view-active')
   document.getElementById('pib-view').classList.add('btn-view-active')
+
+  valueFilter = 'pib'
+
+
 });
 
 //Get the name for every group of radio buttons
@@ -89,6 +94,7 @@ const tableEmpleo = '.simulation-empleo-data'
 const legendText = ["Miles de M €", "Miles"]
 
 let simulationView = false
+let valueFilter = 'pib'
 
 const locale = d3.formatDefaultLocale({
   decimal: ',',
@@ -468,17 +474,14 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
     .style('opacity', 0);
 
   const setupScales = () => {
-    const countX = d3.scaleTime()
-      .domain([
-        2019,
-        2022
-      ]);
+    const countX = d3.scaleTime().domain(d3.extent(dataz, (d) => d.year));
 
-    const countY = d3.scaleLinear()
-      .domain([
-        scaleY1,
-        scaleY2
-      ]);
+    const countY = d3
+        .scaleLinear()
+        .domain([
+            d3.min(dataz, (d) => d.simulacionpib),
+            d3.max(dataz, (d) => d.simulacionpib)
+        ]).nice();
 
     scales.count = { x: countX, y: countY };
   };
@@ -503,6 +506,8 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
 
     g.select('.axis-x')
       .attr('transform', `translate(0,${height})`)
+      .transition()
+      .duration(300)
       .call(axisX);
 
     const axisY = d3
@@ -511,7 +516,10 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
       .ticks(5)
       .tickSizeInner(-width);
 
-    g.select('.axis-y').call(axisY);
+    g.select('.axis-y')
+      .transition()
+      .duration(300)
+      .call(axisY);
   };
 
   const updateChart = (data) => {
@@ -545,12 +553,13 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
 
     container
       .selectAll('.line')
+      .remove()
+      .exit()
       .data(dataComb);
 
     dataComb.forEach((d) => {
       container
         .append('path')
-
         .attr('class', 'line ' + d.key)
         .style('stroke', '#DADADA')
         .attr('d', line(d.values));
@@ -712,17 +721,18 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
 
       if (checkboxChecked === 3 && simulationView === true) {
         const fileName = arrayCheckedValues.join('-');
-        update(fileName, csv)
+        update(fileName)
       }
     });
   }
 
-  function update(filter, csv) {
-    d3.csv(`csv/${csv}.csv`, (error, data) => {
+  function update(filter) {
+    d3.csv('csv/simulation-pib-all.csv', (error, data) => {
       if (error) {
         console.log(error);
       } else {
-        dataz = data.filter((d) => String(d.filter).match(filter));
+        console.log(filter)
+        dataz = data.filter((d) => String(d.type).match(valueFilter));
 
         d3.selectAll('.highlighted')
           .attr('class', '')
@@ -747,10 +757,12 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
   };
 
   const loadData = () => {
-    d3.csv(`csv/${csv}.csv`, (error, data) => {
+    d3.csv('csv/simulation-pib-all.csv', (error, data) => {
       if (error) {
         console.log(error);
       } else {
+
+        data = data.filter((d) => String(d.type).match('pib'));
 
         d3.selectAll('.highlighted')
           .attr('class', '')
@@ -765,27 +777,51 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
 
   d3.select("#empleo-view")
     .on("click", function() {
+      d3.csv('csv/simulation-pib-all.csv', (error, data) => {
+        if (error) {
+          console.log(error);
+        } else {
+          data = data.filter((d) => String(d.type).match('empleo'));
 
-      d3.selectAll('.line')
-      .remove()
-      .exit()
 
-      d3.selectAll('.tooltip-simulation')
-      .remove()
-      .exit()
-     multipleLine(empleoCsv, scaleEmpleo[0], scaleEmpleo[1])
+         const countX = d3.scaleTime().domain(d3.extent(data, (d) => d.year));
 
+         const countY = d3
+             .scaleLinear()
+             .domain([
+                 d3.min(data, (d) => d.simulacionpib),
+                 d3.max(data, (d) => d.simulacionpib)
+             ]).nice();
+
+         scales.count = { x: countX, y: countY };
+          updateChart(data);
+        }
+      });
     });
+
   d3.select("#pib-view")
     .on("click", function() {
-       d3.selectAll('.line')
-       .remove()
-       .exit()
 
-       d3.selectAll('.tooltip-simulation')
-       .remove()
-       .exit()
-      multipleLine(pibCsv, scalePib[0], scalePib[1])
+      d3.csv('csv/simulation-pib-all.csv', (error, data) => {
+        if (error) {
+          console.log(error);
+        } else {
+
+          data = data.filter((d) => String(d.type).match('pib'));
+
+          const countX = d3.scaleTime().domain(d3.extent(data, (d) => d.year));
+
+          const countY = d3
+              .scaleLinear()
+              .domain([
+                  d3.min(data, (d) => d.simulacionpib),
+                  d3.max(data, (d) => d.simulacionpib)
+              ]).nice();
+
+          scales.count = { x: countX, y: countY };
+          updateChart(data);
+        }
+      });
     });
 
   window.addEventListener('resize', resize);

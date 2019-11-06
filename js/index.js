@@ -38,10 +38,12 @@ document.getElementById('back-view').addEventListener("click", function () {
 document.getElementById('empleo-view').addEventListener("click", function () {
   document.getElementById('pib-view').classList.remove('btn-view-active');
   document.getElementById('empleo-view').classList.add('btn-view-active');
+  valueFilter = 'empleo';
 });
 document.getElementById('pib-view').addEventListener("click", function () {
   document.getElementById('empleo-view').classList.remove('btn-view-active');
   document.getElementById('pib-view').classList.add('btn-view-active');
+  valueFilter = 'pib';
 }); //Get the name for every group of radio buttons
 
 function getName() {
@@ -91,6 +93,7 @@ var tablePib = '.simulation-pib-data';
 var tableEmpleo = '.simulation-empleo-data';
 var legendText = ["Miles de M €", "Miles"];
 var simulationView = false;
+var valueFilter = 'pib';
 var locale = d3.formatDefaultLocale({
   decimal: ',',
   thousands: '.',
@@ -411,8 +414,14 @@ var multipleLine = function multipleLine(csv, scaleY1, scaleY2) {
   var tooltipSimulation = chart.append('div').attr('class', 'tooltip-simulation').style('opacity', 0);
 
   var setupScales = function setupScales() {
-    var countX = d3.scaleTime().domain([2019, 2022]);
-    var countY = d3.scaleLinear().domain([scaleY1, scaleY2]);
+    var countX = d3.scaleTime().domain(d3.extent(dataz, function (d) {
+      return d.year;
+    }));
+    var countY = d3.scaleLinear().domain([d3.min(dataz, function (d) {
+      return d.simulacionpib;
+    }), d3.max(dataz, function (d) {
+      return d.simulacionpib;
+    })]).nice();
     scales.count = {
       x: countX,
       y: countY
@@ -433,9 +442,9 @@ var multipleLine = function multipleLine(csv, scaleY1, scaleY2) {
 
   var drawAxes = function drawAxes(g) {
     var axisX = d3.axisBottom(scales.count.x).tickFormat(d3.format('d'));
-    g.select('.axis-x').attr('transform', "translate(0,".concat(height, ")")).call(axisX);
+    g.select('.axis-x').attr('transform', "translate(0,".concat(height, ")")).transition().duration(300).call(axisX);
     var axisY = d3.axisLeft(scales.count.y).tickFormat(locale.format(',.0f')).ticks(5).tickSizeInner(-width);
-    g.select('.axis-y').call(axisY);
+    g.select('.axis-y').transition().duration(300).call(axisY);
   };
 
   var updateChart = function updateChart(data) {
@@ -457,7 +466,7 @@ var multipleLine = function multipleLine(csv, scaleY1, scaleY2) {
     }).y(function (d) {
       return scales.count.y(d.simulacionpib);
     });
-    container.selectAll('.line').data(dataComb);
+    container.selectAll('.line').remove().exit().data(dataComb);
     dataComb.forEach(function (d) {
       container.append('path').attr('class', 'line ' + d.key).style('stroke', '#DADADA').attr('d', line(d.values));
     });
@@ -528,18 +537,19 @@ var multipleLine = function multipleLine(csv, scaleY1, scaleY2) {
 
       if (checkboxChecked === 3 && simulationView === true) {
         var fileName = arrayCheckedValues.join('-');
-        update(fileName, csv);
+        update(fileName);
       }
     });
   }
 
-  function update(filter, csv) {
-    d3.csv("csv/".concat(csv, ".csv"), function (error, data) {
+  function update(filter) {
+    d3.csv('csv/simulation-pib-all.csv', function (error, data) {
       if (error) {
         console.log(error);
       } else {
+        console.log(filter);
         dataz = data.filter(function (d) {
-          return String(d.filter).match(filter);
+          return String(d.type).match(valueFilter);
         });
         d3.selectAll('.highlighted').attr('class', '');
         d3.selectAll(".".concat(filter)).attr('class', 'highlighted');
@@ -559,10 +569,13 @@ var multipleLine = function multipleLine(csv, scaleY1, scaleY2) {
   };
 
   var loadData = function loadData() {
-    d3.csv("csv/".concat(csv, ".csv"), function (error, data) {
+    d3.csv('csv/simulation-pib-all.csv', function (error, data) {
       if (error) {
         console.log(error);
       } else {
+        data = data.filter(function (d) {
+          return String(d.type).match('pib');
+        });
         d3.selectAll('.highlighted').attr('class', '');
         dataz = data;
         setupElements();
@@ -573,14 +586,52 @@ var multipleLine = function multipleLine(csv, scaleY1, scaleY2) {
   };
 
   d3.select("#empleo-view").on("click", function () {
-    d3.selectAll('.line').remove().exit();
-    d3.selectAll('.tooltip-simulation').remove().exit();
-    multipleLine(empleoCsv, scaleEmpleo[0], scaleEmpleo[1]);
+    d3.csv('csv/simulation-pib-all.csv', function (error, data) {
+      if (error) {
+        console.log(error);
+      } else {
+        data = data.filter(function (d) {
+          return String(d.type).match('empleo');
+        });
+        var countX = d3.scaleTime().domain(d3.extent(data, function (d) {
+          return d.year;
+        }));
+        var countY = d3.scaleLinear().domain([d3.min(data, function (d) {
+          return d.simulacionpib;
+        }), d3.max(data, function (d) {
+          return d.simulacionpib;
+        })]).nice();
+        scales.count = {
+          x: countX,
+          y: countY
+        };
+        updateChart(data);
+      }
+    });
   });
   d3.select("#pib-view").on("click", function () {
-    d3.selectAll('.line').remove().exit();
-    d3.selectAll('.tooltip-simulation').remove().exit();
-    multipleLine(pibCsv, scalePib[0], scalePib[1]);
+    d3.csv('csv/simulation-pib-all.csv', function (error, data) {
+      if (error) {
+        console.log(error);
+      } else {
+        data = data.filter(function (d) {
+          return String(d.type).match('pib');
+        });
+        var countX = d3.scaleTime().domain(d3.extent(data, function (d) {
+          return d.year;
+        }));
+        var countY = d3.scaleLinear().domain([d3.min(data, function (d) {
+          return d.simulacionpib;
+        }), d3.max(data, function (d) {
+          return d.simulacionpib;
+        })]).nice();
+        scales.count = {
+          x: countX,
+          y: countY
+        };
+        updateChart(data);
+      }
+    });
   });
   window.addEventListener('resize', resize);
   loadData();
