@@ -10840,3 +10840,9 @@ html {
   bottom: -30px;
   border-color: transparent transparent #F9F9F9 #F9F9F9;
 }
+
+#back-view {
+  display: none;
+  transition: opacity .3s ease-in;
+  opacity: 0;
+}

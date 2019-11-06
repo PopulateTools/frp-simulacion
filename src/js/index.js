@@ -8,10 +8,13 @@ document.getElementById('button-view').addEventListener('click', () => {
   document.getElementById('initial-view').style.opacity = '0';
   setTimeout(() => {
     document.getElementById('initial-view').style.display = 'none';
+    document.getElementById('text-back').style.display = 'none';
     document.getElementById('simulation-view').style.display = 'block';
+    document.getElementById('back-view').style.display = 'block';
     multipleLine(pibCsv);
   }, 300)
   document.getElementById('simulation-view').style.opacity = '1';
+  document.getElementById('back-view').style.opacity = '1';
 
   simulationView = true
 });
@@ -20,9 +23,12 @@ document.getElementById('back-view').addEventListener("click", () => {
   document.getElementById('initial-view').style.opacity = '1';
   setTimeout(() => {
     document.getElementById('initial-view').style.display = 'block';
+    document.getElementById('text-back').style.display = 'block';
     document.getElementById('simulation-view').style.display = 'none';
+    document.getElementById('back-view').style.display = 'none';
   }, 300)
   document.getElementById('simulation-view').style.opacity = '0';
+  document.getElementById('back-view').style.opacity = '0';
 
   document.querySelectorAll(".input-radio").checked = false;
   simulationView = false
@@ -465,6 +471,13 @@ const multipleLine = (csv) => {
     .attr('class', 'tooltip-simulation')
     .style('opacity', 0);
 
+  const legends = svg
+    .append('text')
+    .attr('class', 'legend-top')
+    .attr("x", 0)
+    .attr("y", 20)
+    .text('Miles de M €');
+
   const setupScales = () => {
     const countX = d3.scaleTime().domain(d3.extent(dataz, (d) => d.year));
 
@@ -853,7 +866,19 @@ const multipleLine = (csv) => {
              ]).nice();
 
          scales.count = { x: countX, y: countY };
+
+         d3.select('.legend-top')
+          .remove()
+
+          const legends = svg
+            .append('text')
+            .attr('class', 'legend-top')
+            .attr("x", 0)
+            .attr("y", 20)
+            .text('Miles');
+
           updateChart(data);
+
         }
       });
     });
@@ -878,6 +903,17 @@ const multipleLine = (csv) => {
               ]).nice();
 
           scales.count = { x: countX, y: countY };
+
+          d3.select('.legend-top')
+           .remove()
+
+           const legends = svg
+             .append('text')
+             .attr('class', 'legend-top')
+             .attr("x", 0)
+             .attr("y", 20)
+              .text('Miles de M €')
+
           updateChart(data);
         }
       });
