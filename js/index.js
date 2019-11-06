@@ -483,6 +483,20 @@ var multipleLine = function multipleLine(csv) {
     });
     d3.selectAll('.line').data(dataComb).on('mouseover', function (d) {
       d3.select(this).attr('class', 'highlighted');
+      var element = d3.select(this).attr("id");
+      var elementSplit = element.split('-');
+      var firstOption = elementSplit[0] + '-' + elementSplit[1];
+      var secondOption = elementSplit[2] + '-' + elementSplit[3];
+      var thirdOption = elementSplit[4] + '-' + elementSplit[5];
+      var firstRadio = document.getElementById(firstOption).parentNode;
+      var secondRadio = document.getElementById(secondOption).parentNode;
+      var thirdRadio = document.getElementById(thirdOption).parentNode;
+      document.getElementById(firstOption).checked = true;
+      document.getElementById(secondOption).checked = true;
+      document.getElementById(thirdOption).checked = true;
+      firstRadio.classList.add('active-checkbox');
+      secondRadio.classList.add('active-checkbox');
+      thirdRadio.classList.add('active-checkbox');
       var formatValues = locale.format(',.0f');
       var positionleft = "".concat(d3.event.pageX);
       var positionTop = "".concat(d3.event.pageY);
@@ -494,15 +508,15 @@ var multipleLine = function multipleLine(csv) {
       var percentageFormat = [];
 
       for (var i = 0; i < d.values.length; i++) {
-        var element = d.values[i].simulacionpib;
-        var valueToFixed = formatValues(element);
+        var _element = d.values[i].simulacionpib;
+        var valueToFixed = formatValues(_element);
         pibFormat.push(valueToFixed);
       }
 
       for (var _i3 = 0; _i3 < d.values.length; _i3++) {
-        var _element = d.values[_i3].simulacionpercentage;
+        var _element2 = d.values[_i3].simulacionpercentage;
 
-        var _valueToFixed = Number(_element).toFixed(2);
+        var _valueToFixed = Number(_element2).toFixed(2);
 
         _valueToFixed = (_valueToFixed >= 0 ? '+' : '') + _valueToFixed;
         percentageFormat.push(_valueToFixed);
@@ -511,6 +525,15 @@ var multipleLine = function multipleLine(csv) {
       tooltipSimulation.style('opacity', 1).html("<div class=\"w-20 fl\">\n                <span class=\"f5 dib fw7 h2\"></span>\n                <span class=\"db\" style=\"height: 28px;\"></span>\n                <span class=\"f7 black50-txt bb tr greydark-50-bd db pv2 pr3\">2018</span>\n                <span class=\"f7 black50-txt bb tr greydark-50-bd db pv2 pr3\">2019</span>\n                <span class=\"f7 black50-txt bb tr greydark-50-bd db pv2 pr3\">2020</span>\n                <span class=\"f7 black50-txt bb tr greydark-50-bd db pv2 pr3\">2021</span>\n                <span class=\"f7 black50-txt bb tr greydark-50-bd db pv2 pr3\">2022</span>\n              </div>\n              <div class=\"w-40 fl relative\">\n                <span class=\"bd-dotted\"></span>\n                <span class=\"f5 dib vam rect-before h2\">Previsi\xF3n</span>\n                <div class=\"w-100 h2\">\n                  <span class=\"f7 dib w-50 fl olivedark-txt fw7\">PIB</span>\n                  <span class=\"f7 dib w-50 fl olivedark-txt fw7\">Crecimiento</span>\n                </div>\n                <div class=\"w-100 olive20-bgc fl\">\n                  <span class=\"dib w-50 fl f7 black-text black-txt pv2 tc\">1.169.572</span>\n                  <span class=\"dib w-50 fl f7 black-text black-txt pv2 tc\"></span>\n                </div>\n                <div class=\"w-100 olive20-bgc fl\">\n                  <span class=\"dib w-50 fl f7 black-text bb bt greydark-50-bd black-txt pv2 tc\">1.195.302</span>\n                  <span class=\"fw8 dib w-50 fl f7 black-text bb bt greydark-50-bd black-txt pv2 tc\">+2.2%</span>\n                </div>\n                <div class=\"w-100 olive20-bgc fl\">\n                  <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">1.218.013</span>\n                  <span class=\"fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">+1.9%</span>\n                </div>\n                <div class=\"w-100 olive20-bgc fl\">\n                  <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">1.239.937</span>\n                  <span class=\"fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">+1.8%</span>\n                </div>\n                <div class=\"w-100 olive20-bgc fl\">\n                  <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">1.262.256</span>\n                  <span class=\"fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">+1.8%</span>\n                </div>\n                <div class=\"w-100 fl\">\n                  <span class=\"dib w-50 fl f7 black-text black50-txt pv2 tc\">Millones de \u20AC</span>\n                </div>\n              </div>\n              <div class=\"w-40 fl relative\">\n                <span class=\"f5 dib vam rect-before-fluor h2 pl3\">Simulacion</span>\n                <div class=\"w-100 h2\">\n                  <span class=\"f7 dib w-50 fl olivedark-txt fw7 pl3\">PIB</span>\n                  <span class=\"f7 dib w-50 fl olivedark-txt fw7\">Crecimiento</span>\n                </div>\n                <div class=\"w-100 turquoise20-bgc fl bb greydark-50-bd\">\n                  <span class=\"dib w-50 fl f7 black-text black-txt pv2 tc\">1.169.572</span>\n                </div>\n                <div class=\"simulation-pib-data\">\n                  <div class=\"simulation-pib-data-container w-100 turquoise20-bgc fl\">\n                    <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">".concat(pibFormat[0], "</span>\n                    <span class=\"simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(percentageFormat[0], "%\n                    </span>\n                  </div>\n                  <div class=\"simulation-pib-data-container w-100 turquoise20-bgc fl\">\n                    <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(pibFormat[1], "</span>\n                    <span class=\"simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(percentageFormat[1], "%\n                    </span>\n                  </div>\n                  <div class=\"simulation-pib-data-container w-100 turquoise20-bgc fl\">\n                    <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(pibFormat[2], "</span></span>\n                    <span class=\"simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(percentageFormat[2], "%\n                    </span>\n                  </div>\n                  <div class=\"simulation-pib-data-container w-100 turquoise20-bgc fl\">\n                    <span class=\"dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(pibFormat[3], "</span></span>\n                    <span class=\"simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc\">").concat(percentageFormat[3], "%\n                    </span>\n                  </div>\n                </div>\n                <div class=\"w-100 fl\">\n                  <span class=\"dib w-50 fl f7 black-text black50-txt pv2 tc\">Millones de \u20AC</span>\n                </div>\n              </div>")).style('left', "".concat(positionleftTooltip, "px")).style('top', "".concat(positionTopTooltip - 35, "px "));
     }).on('mouseout', function () {
       d3.select(this).attr('class', 'line').moveToFront();
+      d3.selectAll('.active-checkbox').attr('class', 'container-radio w-100 pa2 v-mid');
+      var element = d3.select(this).attr("id");
+      var elementSplit = element.split('-');
+      var firstOption = elementSplit[0] + '-' + elementSplit[1];
+      var secondOption = elementSplit[2] + '-' + elementSplit[3];
+      var thirdOption = elementSplit[4] + '-' + elementSplit[5];
+      document.getElementById(firstOption).checked = false;
+      document.getElementById(secondOption).checked = false;
+      document.getElementById(thirdOption).checked = false;
       tooltipSimulation.style('opacity', 0);
     });
 

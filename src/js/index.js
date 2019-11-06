@@ -587,6 +587,25 @@ const multipleLine = (csv) => {
           d3.select(this)
             .attr('class', 'highlighted')
 
+          const element = d3.select(this).attr("id")
+          const elementSplit = element.split('-');
+
+          const firstOption = elementSplit[0] + '-' + elementSplit[1]
+          const secondOption = elementSplit[2] + '-' + elementSplit[3]
+          const thirdOption = elementSplit[4] + '-' + elementSplit[5]
+
+          const firstRadio = document.getElementById(firstOption).parentNode
+          const secondRadio = document.getElementById(secondOption).parentNode
+          const thirdRadio = document.getElementById(thirdOption).parentNode
+
+          document.getElementById(firstOption).checked = true;
+          document.getElementById(secondOption).checked = true;
+          document.getElementById(thirdOption).checked = true;
+
+          firstRadio.classList.add('active-checkbox')
+          secondRadio.classList.add('active-checkbox')
+          thirdRadio.classList.add('active-checkbox')
+
           const formatValues = locale.format(',.0f')
           const positionleft = `${d3.event.pageX}`;
           const positionTop = `${d3.event.pageY}`;
@@ -698,6 +717,20 @@ const multipleLine = (csv) => {
           d3.select(this)
             .attr('class', 'line')
             .moveToFront()
+
+          d3.selectAll('.active-checkbox')
+            .attr('class', 'container-radio w-100 pa2 v-mid')
+
+          const element = d3.select(this).attr("id")
+          const elementSplit = element.split('-');
+
+          const firstOption = elementSplit[0] + '-' + elementSplit[1]
+          const secondOption = elementSplit[2] + '-' + elementSplit[3]
+          const thirdOption = elementSplit[4] + '-' + elementSplit[5]
+
+          document.getElementById(firstOption).checked = false;
+          document.getElementById(secondOption).checked = false;
+          document.getElementById(thirdOption).checked = false;
 
           tooltipSimulation
             .style('opacity', 0)
