@@ -10769,12 +10769,13 @@ html {
 #multiline-simulation-empleo .line,
 #multiline-simulation-empleo path {
   fill: none;
-  pointer-events: none;
+  /*pointer-events: none;*/
 }
 
 #multiline-simulation-empleo .prevision {
   stroke: var(--olive) !important;
   stroke-width: 5px;
+  pointer-events: none;
 }
 
 #simulation-view {

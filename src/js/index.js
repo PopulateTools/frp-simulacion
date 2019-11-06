@@ -565,6 +565,128 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
         .attr('d', line(d.values));
     });
 
+    d3.selectAll('.line')
+      .data(dataComb)
+      .on('mouseover', function(d) {
+          d3.select(this)
+            .attr('class', 'highlighted')
+
+          const formatValues = locale.format(',.0f')
+          const positionleft = `${d3.event.pageX}`;
+          const positionTop = `${d3.event.pageY}`;
+          const tooltipWidth = d3.select('.tooltip-simulation').node().getBoundingClientRect().width;
+          const tooltipHeight = d3.select('.tooltip-simulation').node().getBoundingClientRect().height;
+          const positionTopTooltip = positionTop - tooltipHeight
+          const positionleftTooltip = positionleft - (tooltipWidth / 2)
+
+          let pibFormat = []
+          let percentageFormat = []
+
+          for (let i = 0; i < d.values.length; i++) {
+           const element = d.values[i].simulacionpib
+           const valueToFixed = formatValues(element)
+           pibFormat.push(valueToFixed)
+          }
+
+          for (let i = 0; i < d.values.length; i++) {
+           const element = d.values[i].simulacionpercentage
+           let valueToFixed = Number(element).toFixed(2)
+           valueToFixed = (valueToFixed >= 0 ? '+' : '' ) + valueToFixed
+
+           percentageFormat.push(valueToFixed)
+          }
+
+          tooltipSimulation
+            .style('opacity', 1)
+            .html(
+              `<div class="w-20 fl">
+                <span class="f5 dib fw7 h2"></span>
+                <span class="db" style="height: 28px;"></span>
+                <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2018</span>
+                <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2019</span>
+                <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2020</span>
+                <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2021</span>
+                <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2022</span>
+              </div>
+              <div class="w-40 fl relative">
+                <span class="bd-dotted"></span>
+                <span class="f5 dib vam rect-before h2">Previsión</span>
+                <div class="w-100 h2">
+                  <span class="f7 dib w-50 fl olivedark-txt fw7">PIB</span>
+                  <span class="f7 dib w-50 fl olivedark-txt fw7">Crecimiento</span>
+                </div>
+                <div class="w-100 olive20-bgc fl">
+                  <span class="dib w-50 fl f7 black-text black-txt pv2 tc">1.169.572</span>
+                  <span class="dib w-50 fl f7 black-text black-txt pv2 tc"></span>
+                </div>
+                <div class="w-100 olive20-bgc fl">
+                  <span class="dib w-50 fl f7 black-text bb bt greydark-50-bd black-txt pv2 tc">1.195.302</span>
+                  <span class="fw8 dib w-50 fl f7 black-text bb bt greydark-50-bd black-txt pv2 tc">+2.2%</span>
+                </div>
+                <div class="w-100 olive20-bgc fl">
+                  <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">1.218.013</span>
+                  <span class="fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">+1.9%</span>
+                </div>
+                <div class="w-100 olive20-bgc fl">
+                  <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">1.239.937</span>
+                  <span class="fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">+1.8%</span>
+                </div>
+                <div class="w-100 olive20-bgc fl">
+                  <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">1.262.256</span>
+                  <span class="fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">+1.8%</span>
+                </div>
+                <div class="w-100 fl">
+                  <span class="dib w-50 fl f7 black-text black50-txt pv2 tc">Millones de €</span>
+                </div>
+              </div>
+              <div class="w-40 fl relative">
+                <span class="f5 dib vam rect-before-fluor h2 pl3">Simulacion</span>
+                <div class="w-100 h2">
+                  <span class="f7 dib w-50 fl olivedark-txt fw7 pl3">PIB</span>
+                  <span class="f7 dib w-50 fl olivedark-txt fw7">Crecimiento</span>
+                </div>
+                <div class="w-100 turquoise20-bgc fl bb greydark-50-bd">
+                  <span class="dib w-50 fl f7 black-text black-txt pv2 tc">1.169.572</span>
+                </div>
+                <div class="simulation-pib-data">
+                  <div class="simulation-pib-data-container w-100 turquoise20-bgc fl">
+                    <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${pibFormat[0]}</span>
+                    <span class="simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${percentageFormat[0]}%
+                    </span>
+                  </div>
+                  <div class="simulation-pib-data-container w-100 turquoise20-bgc fl">
+                    <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${pibFormat[1]}</span>
+                    <span class="simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${percentageFormat[1]}%
+                    </span>
+                  </div>
+                  <div class="simulation-pib-data-container w-100 turquoise20-bgc fl">
+                    <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${pibFormat[2]}</span></span>
+                    <span class="simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${percentageFormat[2]}%
+                    </span>
+                  </div>
+                  <div class="simulation-pib-data-container w-100 turquoise20-bgc fl">
+                    <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${pibFormat[3]}</span></span>
+                    <span class="simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${percentageFormat[3]}%
+                    </span>
+                  </div>
+                </div>
+                <div class="w-100 fl">
+                  <span class="dib w-50 fl f7 black-text black50-txt pv2 tc">Millones de €</span>
+                </div>
+              </div>`
+            )
+            .style('left', `${positionleftTooltip}px`)
+            .style('top', `${positionTopTooltip - 35}px `);
+      })
+      .on('mouseout', function() {
+          d3.select(this)
+            .attr('class', 'line')
+            .moveToFront()
+
+          tooltipSimulation
+            .style('opacity', 0)
+      })
+
     d3.selection.prototype.moveToFront = function() {
       return this.each(function() {
         this.parentNode.appendChild(this);
@@ -579,125 +701,6 @@ const multipleLine = (csv, scaleY1, scaleY2) => {
         }
       });
     };
-
-    d3.select('.prevision')
-      .moveToFront()
-
-    d3.select('.highlighted')
-      .data(dataComb)
-      .moveToFront()
-      .on('mouseover', (d) => {
-        const formatValues = locale.format(',.0f')
-        const positionleft = `${d3.event.pageX}`;
-        const positionTop = `${d3.event.pageY}`;
-        const tooltipWidth = d3.select('.tooltip-simulation').node().getBoundingClientRect().width;
-        const tooltipHeight = d3.select('.tooltip-simulation').node().getBoundingClientRect().height;
-        const positionTopTooltip = positionTop - tooltipHeight
-        const positionleftTooltip = positionleft - (tooltipWidth / 2)
-
-        let pibFormat = []
-        let percentageFormat = []
-
-        for (let i = 0; i < d.values.length; i++) {
-         const element = d.values[i].simulacionpib
-         const valueToFixed = formatValues(element)
-         pibFormat.push(valueToFixed)
-        }
-
-        for (let i = 0; i < d.values.length; i++) {
-         const element = d.values[i].simulacionpercentage
-         let valueToFixed = Number(element).toFixed(2)
-         valueToFixed = (valueToFixed >= 0 ? '+' : '' ) + valueToFixed
-
-         percentageFormat.push(valueToFixed)
-        }
-
-        tooltipSimulation
-          .style('opacity', 1)
-          .html(
-            `<div class="w-20 fl">
-              <span class="f5 dib fw7 h2"></span>
-              <span class="db" style="height: 28px;"></span>
-              <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2018</span>
-              <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2019</span>
-              <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2020</span>
-              <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2021</span>
-              <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2022</span>
-            </div>
-            <div class="w-40 fl relative">
-              <span class="bd-dotted"></span>
-              <span class="f5 dib vam rect-before h2">Previsión</span>
-              <div class="w-100 h2">
-                <span class="f7 dib w-50 fl olivedark-txt fw7">PIB</span>
-                <span class="f7 dib w-50 fl olivedark-txt fw7">Crecimiento</span>
-              </div>
-              <div class="w-100 olive20-bgc fl">
-                <span class="dib w-50 fl f7 black-text black-txt pv2 tc">1.169.572</span>
-                <span class="dib w-50 fl f7 black-text black-txt pv2 tc"></span>
-              </div>
-              <div class="w-100 olive20-bgc fl">
-                <span class="dib w-50 fl f7 black-text bb bt greydark-50-bd black-txt pv2 tc">1.195.302</span>
-                <span class="fw8 dib w-50 fl f7 black-text bb bt greydark-50-bd black-txt pv2 tc">+2.2%</span>
-              </div>
-              <div class="w-100 olive20-bgc fl">
-                <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">1.218.013</span>
-                <span class="fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">+1.9%</span>
-              </div>
-              <div class="w-100 olive20-bgc fl">
-                <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">1.239.937</span>
-                <span class="fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">+1.8%</span>
-              </div>
-              <div class="w-100 olive20-bgc fl">
-                <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">1.262.256</span>
-                <span class="fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">+1.8%</span>
-              </div>
-              <div class="w-100 fl">
-                <span class="dib w-50 fl f7 black-text black50-txt pv2 tc">Millones de €</span>
-              </div>
-            </div>
-            <div class="w-40 fl relative">
-              <span class="f5 dib vam rect-before-fluor h2 pl3">Simulacion</span>
-              <div class="w-100 h2">
-                <span class="f7 dib w-50 fl olivedark-txt fw7 pl3">PIB</span>
-                <span class="f7 dib w-50 fl olivedark-txt fw7">Crecimiento</span>
-              </div>
-              <div class="w-100 turquoise20-bgc fl bb greydark-50-bd">
-                <span class="dib w-50 fl f7 black-text black-txt pv2 tc">1.169.572</span>
-              </div>
-              <div class="simulation-pib-data">
-                <div class="simulation-pib-data-container w-100 turquoise20-bgc fl">
-                  <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${pibFormat[0]}</span>
-                  <span class="simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${percentageFormat[0]}%
-                  </span>
-                </div>
-                <div class="simulation-pib-data-container w-100 turquoise20-bgc fl">
-                  <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${pibFormat[1]}</span>
-                  <span class="simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${percentageFormat[1]}%
-                  </span>
-                </div>
-                <div class="simulation-pib-data-container w-100 turquoise20-bgc fl">
-                  <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${pibFormat[2]}</span></span>
-                  <span class="simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${percentageFormat[2]}%
-                  </span>
-                </div>
-                <div class="simulation-pib-data-container w-100 turquoise20-bgc fl">
-                  <span class="dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${pibFormat[3]}</span></span>
-                  <span class="simulation-percentage fw8 dib w-50 fl f7 black-text bb greydark-50-bd black-txt pv2 tc">${percentageFormat[3]}%
-                  </span>
-                </div>
-              </div>
-              <div class="w-100 fl">
-                <span class="dib w-50 fl f7 black-text black50-txt pv2 tc">Millones de €</span>
-              </div>
-            </div>`
-          )
-          .style('left', `${positionleftTooltip}px`)
-          .style('top', `${positionTopTooltip - 35}px `);
-      })
-      .on('mouseout', () => {
-        tooltipSimulation
-          .style('opacity', 0)
-      })
 
     drawAxes(g);
   };
