@@ -103,7 +103,7 @@ const locale = d3.formatDefaultLocale({
 });
 
 //Charts
-const barChart = (id, csv, legend, tableClass) => {
+const barChart = (id, csv, legend, tableClass, scaleMinY, scaleMaxY) => {
   const margin = { top: 32, right: 16, bottom: 16, left: 56 };
   const chart = d3.select(id);
   const svg = chart.select('svg');
@@ -145,19 +145,7 @@ const barChart = (id, csv, legend, tableClass) => {
       .domain(keys);
 
     const countY = d3.scaleLinear()
-      .domain([d3.min(dataDifNetAcu, d => {
-        if (d3.min(keys, key => d[key]) > 0) {
-          return 0
-        } else {
-          return d3.min(keys, key => d[key])
-        }
-      }), d3.max(dataDifNetAcu, d => {
-        if (d3.max(keys, key => d[key]) < 0) {
-          return 0
-        } else {
-          return d3.max(keys, key => d[key])
-        }
-      })]).nice()
+      .domain([scaleMinY, scaleMaxY])
 
 
     scales.count = { x0: countX, x1: countX1, y: countY };
@@ -210,7 +198,7 @@ const barChart = (id, csv, legend, tableClass) => {
 
   const updateChart = (dataz) => {
     w = chart.node().offsetWidth;
-    h = 260;
+    h = 230;
 
     width = w - margin.left - margin.right;
     height = h - margin.top - margin.bottom;
@@ -382,6 +370,7 @@ const barChart = (id, csv, legend, tableClass) => {
         arrayDifNetaAcumula = arrayDifNeta.map((value, index) => [years[index], arrayDifNeta[index], arrayDifAcumulada[index]])
 
         dataz = arrayDifNetaAcumula
+        console.log("dataz", dataz);
 
         setupElements();
         setupScales();
@@ -439,8 +428,11 @@ function checkValues() {
       d3.selectAll('.legend-top')
         .remove()
         .exit()
-      barChart(idPib, fileNamePib, legendText[0], tablePib)
-      barChart(idEmpleo, fileNameEmpleo, legendText[1], tableEmpleo)
+
+      const scalePib = [-30000, 30000]
+      const scaleEmpleo = [-600, 600]
+      barChart(idPib, fileNamePib, legendText[0], tablePib, scalePib[0], scalePib[1])
+      barChart(idEmpleo, fileNameEmpleo, legendText[1], tableEmpleo, scaleEmpleo[0], scaleEmpleo[1])
     }
 
 
@@ -750,6 +742,9 @@ const multipleLine = (csv) => {
         }
       });
     };
+
+    d3.select('.prevision')
+
 
     drawAxes(g);
 

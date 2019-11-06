@@ -100,7 +100,7 @@ var locale = d3.formatDefaultLocale({
   grouping: [3]
 }); //Charts
 
-var barChart = function barChart(id, csv, legend, tableClass) {
+var barChart = function barChart(id, csv, legend, tableClass, scaleMinY, scaleMaxY) {
   var margin = {
     top: 32,
     right: 16,
@@ -135,27 +135,7 @@ var barChart = function barChart(id, csv, legend, tableClass) {
       return year;
     })).paddingInner(0.3);
     var countX1 = d3.scaleBand().domain(keys);
-    var countY = d3.scaleLinear().domain([d3.min(dataDifNetAcu, function (d) {
-      if (d3.min(keys, function (key) {
-        return d[key];
-      }) > 0) {
-        return 0;
-      } else {
-        return d3.min(keys, function (key) {
-          return d[key];
-        });
-      }
-    }), d3.max(dataDifNetAcu, function (d) {
-      if (d3.max(keys, function (key) {
-        return d[key];
-      }) < 0) {
-        return 0;
-      } else {
-        return d3.max(keys, function (key) {
-          return d[key];
-        });
-      }
-    })]).nice();
+    var countY = d3.scaleLinear().domain([scaleMinY, scaleMaxY]);
     scales.count = {
       x0: countX,
       x1: countX1,
@@ -189,7 +169,7 @@ var barChart = function barChart(id, csv, legend, tableClass) {
 
   var updateChart = function updateChart(dataz) {
     w = chart.node().offsetWidth;
-    h = 260;
+    h = 230;
     width = w - margin.left - margin.right;
     height = h - margin.top - margin.bottom;
     svg.attr('width', w).attr('height', h);
@@ -324,6 +304,7 @@ var barChart = function barChart(id, csv, legend, tableClass) {
           return [years[index], arrayDifNeta[index], arrayDifAcumulada[index]];
         });
         dataz = arrayDifNetaAcumula;
+        console.log("dataz", dataz);
         setupElements();
         setupScales();
         updateChart(dataz);
@@ -378,8 +359,10 @@ function checkValues() {
 
       if (simulationView === false) {
         d3.selectAll('.legend-top').remove().exit();
-        barChart(idPib, fileNamePib, legendText[0], tablePib);
-        barChart(idEmpleo, fileNameEmpleo, legendText[1], tableEmpleo);
+        var scalePib = [-30000, 30000];
+        var scaleEmpleo = [-600, 600];
+        barChart(idPib, fileNamePib, legendText[0], tablePib, scalePib[0], scalePib[1]);
+        barChart(idEmpleo, fileNameEmpleo, legendText[1], tableEmpleo, scaleEmpleo[0], scaleEmpleo[1]);
       }
     })();
   }
@@ -553,6 +536,7 @@ var multipleLine = function multipleLine(csv) {
       });
     };
 
+    d3.select('.prevision');
     drawAxes(g);
   };
 
