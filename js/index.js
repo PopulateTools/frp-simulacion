@@ -26,6 +26,15 @@ document.getElementById('button-view').addEventListener('click', function () {
   }, 300);
   document.getElementById('simulation-view').style.opacity = '1';
   document.getElementById('back-view').style.opacity = '1';
+  var idInputs = ['pf-1', 'pf-2', 'pf-3', 'pf-4', 'idc-1', 'idc-2', 'idc-3', 'idc-4', 'vdc-1', 'vdc-2'];
+
+  for (var i = 0; i < idInputs.length; i++) {
+    var element = document.getElementById(idInputs[i]);
+    element.checked = false;
+    var parent = element.parentNode;
+    parent.classList.remove('active-checkbox');
+  }
+
   simulationView = true;
 });
 document.getElementById('back-view').addEventListener("click", function () {

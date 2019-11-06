@@ -16,6 +16,15 @@ document.getElementById('button-view').addEventListener('click', () => {
   document.getElementById('simulation-view').style.opacity = '1';
   document.getElementById('back-view').style.opacity = '1';
 
+  const idInputs = ['pf-1', 'pf-2', 'pf-3', 'pf-4', 'idc-1', 'idc-2', 'idc-3', 'idc-4', 'vdc-1', 'vdc-2']
+
+  for (let i = 0; i < idInputs.length; i++) {
+    const element = document.getElementById(idInputs[i])
+    element.checked = false
+    const parent = element.parentNode
+    parent.classList.remove('active-checkbox')
+  }
+
   simulationView = true
 });
 
