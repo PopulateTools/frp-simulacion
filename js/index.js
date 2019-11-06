@@ -23,6 +23,7 @@ document.getElementById('button-view').addEventListener('click', function () {
     document.getElementById('simulation-view').style.display = 'block';
     document.getElementById('back-view').style.display = 'block';
     multipleLine(pibCsv);
+    multipLeFired = true;
   }, 300);
   document.getElementById('simulation-view').style.opacity = '1';
   document.getElementById('back-view').style.opacity = '1';
@@ -109,6 +110,7 @@ var tableEmpleo = '.simulation-empleo-data';
 var legendText = ["Miles de M €", "Miles"];
 var simulationView = false;
 var valueFilter = 'pib';
+var multipLeFired = false;
 var locale = d3.formatDefaultLocale({
   decimal: ',',
   thousands: '.',
@@ -410,7 +412,10 @@ var multipleLine = function multipleLine(csv) {
   var scales = {};
   var dataz;
   var tooltipSimulation = chart.append('div').attr('class', 'tooltip-simulation').style('opacity', 0);
-  var legends = svg.append('text').attr('class', 'legend-top').attr("x", 0).attr("y", 20).text('Miles de M €');
+
+  if (multipLeFired === false) {
+    var legends = svg.append('text').attr('class', 'legend-top').attr("x", 0).attr("y", 20).text('Miles de M €');
+  }
 
   var setupScales = function setupScales() {
     var countX = d3.scaleTime().domain(d3.extent(dataz, function (d) {

@@ -12,6 +12,8 @@ document.getElementById('button-view').addEventListener('click', () => {
     document.getElementById('simulation-view').style.display = 'block';
     document.getElementById('back-view').style.display = 'block';
     multipleLine(pibCsv);
+
+    multipLeFired = true
   }, 300)
   document.getElementById('simulation-view').style.opacity = '1';
   document.getElementById('back-view').style.opacity = '1';
@@ -26,6 +28,7 @@ document.getElementById('button-view').addEventListener('click', () => {
   }
 
   simulationView = true
+
 });
 
 document.getElementById('back-view').addEventListener("click", () => {
@@ -110,6 +113,7 @@ const legendText = ["Miles de M €", "Miles"]
 
 let simulationView = false
 let valueFilter = 'pib'
+let multipLeFired = false
 
 const locale = d3.formatDefaultLocale({
   decimal: ',',
@@ -480,12 +484,14 @@ const multipleLine = (csv) => {
     .attr('class', 'tooltip-simulation')
     .style('opacity', 0);
 
-  const legends = svg
-    .append('text')
-    .attr('class', 'legend-top')
-    .attr("x", 0)
-    .attr("y", 20)
-    .text('Miles de M €');
+  if(multipLeFired === false) {
+    const legends = svg
+      .append('text')
+      .attr('class', 'legend-top')
+      .attr("x", 0)
+      .attr("y", 20)
+      .text('Miles de M €');
+  }
 
   const setupScales = () => {
     const countX = d3.scaleTime().domain(d3.extent(dataz, (d) => d.year));
