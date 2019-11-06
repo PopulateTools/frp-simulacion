@@ -526,10 +526,9 @@ const multipleLine = (csv) => {
 
     const radio1 = document.getElementById("radio-buttons-first")
     const radio2 = document.getElementById("radio-buttons-second")
-    const radio3 = document.getElementById("radio-buttons-third")
+    const radio3 = document.getElementById("radio-buttons-third").offsetHeight
 
     function getAbsoluteHeight(el) {
-      // Get the DOM Node if you pass in a string
       el = (typeof el === 'string') ? document.querySelector(el) : el;
 
       var styles = window.getComputedStyle(el);
@@ -540,7 +539,7 @@ const multipleLine = (csv) => {
     }
 
     const w = chart.node().offsetWidth;
-    const h = getAbsoluteHeight(radio1) + getAbsoluteHeight(radio2) + getAbsoluteHeight(radio3)
+    const h = getAbsoluteHeight(radio1) + getAbsoluteHeight(radio2) + radio3
 
     width = w - margin.left - margin.right;
     height = h - margin.top - margin.bottom;
@@ -700,7 +699,6 @@ const multipleLine = (csv) => {
             .attr('class', 'line')
             .moveToFront()
 
-
           tooltipSimulation
             .style('opacity', 0)
       })
@@ -721,6 +719,7 @@ const multipleLine = (csv) => {
     };
 
     drawAxes(g);
+
   };
 
   function radioUpdate() {
@@ -773,8 +772,6 @@ const multipleLine = (csv) => {
         console.log(error);
       } else {
          data = data.filter((d) => String(d.type).match(valueFilter));
-
-
         const countX = d3.scaleTime().domain(d3.extent(data, (d) => d.year));
 
         const countY = d3

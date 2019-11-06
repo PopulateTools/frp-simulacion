@@ -450,10 +450,9 @@ var multipleLine = function multipleLine(csv) {
   var updateChart = function updateChart(data) {
     var radio1 = document.getElementById("radio-buttons-first");
     var radio2 = document.getElementById("radio-buttons-second");
-    var radio3 = document.getElementById("radio-buttons-third");
+    var radio3 = document.getElementById("radio-buttons-third").offsetHeight;
 
     function getAbsoluteHeight(el) {
-      // Get the DOM Node if you pass in a string
       el = typeof el === 'string' ? document.querySelector(el) : el;
       var styles = window.getComputedStyle(el);
       var margin = parseFloat(styles['marginTop']) + parseFloat(styles['marginBottom']);
@@ -461,7 +460,7 @@ var multipleLine = function multipleLine(csv) {
     }
 
     var w = chart.node().offsetWidth;
-    var h = getAbsoluteHeight(radio1) + getAbsoluteHeight(radio2) + getAbsoluteHeight(radio3);
+    var h = getAbsoluteHeight(radio1) + getAbsoluteHeight(radio2) + radio3;
     width = w - margin.left - margin.right;
     height = h - margin.top - margin.bottom;
     svg.attr('width', w).attr('height', h);
