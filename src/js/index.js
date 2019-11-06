@@ -612,12 +612,14 @@ const multipleLine = (csv) => {
           thirdRadio.classList.add('active-checkbox')
 
           const formatValues = locale.format(',.0f')
+          const width = chart.node().offsetWidth;
           const positionleft = `${d3.event.pageX}`;
           const positionTop = `${d3.event.pageY}`;
           const tooltipWidth = d3.select('.tooltip-simulation').node().getBoundingClientRect().width;
           const tooltipHeight = d3.select('.tooltip-simulation').node().getBoundingClientRect().height;
           const positionTopTooltip = positionTop - tooltipHeight
           const positionleftTooltip = positionleft - (tooltipWidth / 2)
+          const positionright = width - (tooltipWidth / 8)
 
           let pibFormat = []
           let percentageFormat = []
@@ -715,12 +717,15 @@ const multipleLine = (csv) => {
                 </div>
               </div>`
             )
-            .style('left', `${positionleftTooltip}px`)
+            .style('left', positionleftTooltip > width ? `${positionright}px` : `${positionleftTooltip}px`)
             .style('top', `${positionTopTooltip - 35}px `);
       })
       .on('mouseout', function() {
           d3.select(this)
             .attr('class', 'line')
+            .moveToFront()
+
+          d3.select('.prevision')
             .moveToFront()
 
           d3.selectAll('.active-checkbox')
@@ -757,7 +762,7 @@ const multipleLine = (csv) => {
     };
 
     d3.select('.prevision')
-
+      .moveToFront()
 
     drawAxes(g);
 
