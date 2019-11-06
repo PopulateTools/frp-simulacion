@@ -17,6 +17,8 @@ document.getElementById('button-view').addEventListener('click', () => {
   }, 300)
   document.getElementById('simulation-view').style.opacity = '1';
   document.getElementById('back-view').style.opacity = '1';
+  document.getElementById('empleo-view').classList.remove('btn-view-active')
+  document.getElementById('pib-view').classList.add('btn-view-active')
 
   const idInputs = ['pf-1', 'pf-2', 'pf-3', 'pf-4', 'idc-1', 'idc-2', 'idc-3', 'idc-4', 'vdc-1', 'vdc-2']
 
@@ -472,7 +474,7 @@ function getWidth() {
 getWidth()
 
 const multipleLine = (csv) => {
-  const margin = { top: 24, right: 24, bottom: 32, left: 64 };
+  const margin = { top: 24, right: 24, bottom: 40, left: 64 };
   let width = 0;
   let height = 0;
   const chart = d3.select('#multiline-simulation-empleo');
@@ -522,7 +524,10 @@ const multipleLine = (csv) => {
   };
 
   const drawAxes = (g) => {
-    const axisX = d3.axisBottom(scales.count.x).tickFormat(d3.format('d'));
+    const axisX = d3
+    .axisBottom(scales.count.x)
+    .tickFormat(d3.format('d'))
+    .tickPadding(15);
 
     g.select('.axis-x')
       .attr('transform', `translate(0,${height})`)

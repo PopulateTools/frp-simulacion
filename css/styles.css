@@ -2124,8 +2124,16 @@ code,
   width: 40%;
 }
 
+.w-45 {
+  width: 45%;
+}
+
 .w-50 {
   width: 50%;
+}
+
+.w-55 {
+  width: 55%;
 }
 
 .w-60 {
@@ -10898,6 +10906,12 @@ html {
   display: none;
   transition: opacity .3s ease-in;
   opacity: 0;
+}
+
+button:hover {
+  background-color: rgba(0, 109, 99, .2);
+  background-color: var(--olive20);
+  transition: background-color .3s ease-in;
 }
 
 /*# sourceMappingURL=styles.css.map */
