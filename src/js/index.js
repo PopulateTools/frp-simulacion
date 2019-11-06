@@ -772,7 +772,20 @@ const multipleLine = (csv) => {
       if (error) {
         console.log(error);
       } else {
-        updateChart(data);
+         data = data.filter((d) => String(d.type).match(valueFilter));
+
+
+        const countX = d3.scaleTime().domain(d3.extent(data, (d) => d.year));
+
+        const countY = d3
+            .scaleLinear()
+            .domain([
+                d3.min(data, (d) => d.simulacionpib),
+                d3.max(data, (d) => d.simulacionpib)
+            ]).nice();
+
+        scales.count = { x: countX, y: countY };
+         updateChart(data);
       }
     });
   };

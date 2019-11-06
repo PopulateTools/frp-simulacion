@@ -576,6 +576,21 @@ var multipleLine = function multipleLine(csv) {
       if (error) {
         console.log(error);
       } else {
+        data = data.filter(function (d) {
+          return String(d.type).match(valueFilter);
+        });
+        var countX = d3.scaleTime().domain(d3.extent(data, function (d) {
+          return d.year;
+        }));
+        var countY = d3.scaleLinear().domain([d3.min(data, function (d) {
+          return d.simulacionpib;
+        }), d3.max(data, function (d) {
+          return d.simulacionpib;
+        })]).nice();
+        scales.count = {
+          x: countX,
+          y: countY
+        };
         updateChart(data);
       }
     });
