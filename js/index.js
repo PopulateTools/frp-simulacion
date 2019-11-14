@@ -707,3 +707,4 @@ var multipleLine = function multipleLine(csv) {
 };
 
 var pibCsv = 'simulation-pib-all';
+checkValues();

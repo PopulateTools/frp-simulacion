@@ -953,3 +953,5 @@ const multipleLine = (csv) => {
 };
 
 const pibCsv = 'simulation-pib-all'
+
+checkValues()
