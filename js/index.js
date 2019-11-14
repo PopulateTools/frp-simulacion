@@ -322,7 +322,6 @@ var barChart = function barChart(id, csv, legend, tableClass, scaleMinY, scaleMa
           return [years[index], arrayDifNeta[index], arrayDifAcumulada[index]];
         });
         dataz = arrayDifNetaAcumula;
-        console.log("dataz", dataz);
         setupElements();
         setupScales();
         updateChart(dataz);
