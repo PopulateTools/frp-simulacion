@@ -88,7 +88,8 @@ function getActive(name) {
 function tooltips(element, text) {
   new Tooltip(document.getElementById(element), {
     placement: "top",
-    title: text
+    title: text,
+    "trigger": "click"
   });
 } //Text radio buttons
 

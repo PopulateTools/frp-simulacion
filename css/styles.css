@@ -10690,7 +10690,7 @@ html {
 
 .info-circle-middle {
   position: absolute;
-  top: 0;
+  top: -3px;
   left: -24px;
 }
 
@@ -10731,6 +10731,7 @@ html {
   background: var(--white);
   width: 250px !important;
   border-radius: 4px;
+  line-height: 1.4;
   padding: .75rem;
   font-size: 14px;
   box-shadow: 1px 2px 3px 0 rgba(0, 0, 0, .4);
@@ -10740,14 +10741,12 @@ html {
   transform: translateY(-100%) scale(0);
   transform-origin: bottom left;
   z-index: 1;
-  top: -20px !important;
 }
 
 .tooltip-inner {
   font-weight: normal;
 }
 
-.tooltip:after,
 .tooltip-simulation:after {
   content: "";
   position: absolute;
@@ -10962,6 +10961,105 @@ html {
 
 .tooltip-bar-chart-year {
   margin-bottom: .25rem;
+}
+
+.popper .popper__arrow,
+.tooltip .tooltip-arrow {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    position: absolute;
+    margin: 5px;
+}
+
+.tooltip .tooltip-arrow,
+.popper .popper__arrow {
+    border-color: #fff;
+    border-color: var(--white);
+}
+.style5 .tooltip .tooltip-arrow {
+    border-color: #fff;
+    border-color: var(--white);
+}
+.popper[x-placement^="top"],
+.tooltip[x-placement^="top"] {
+    margin-bottom: 5px;
+    top: -10px !important;
+}
+
+.popper[x-placement^="top"] .popper__arrow,
+.tooltip[x-placement^="top"] .tooltip-arrow {
+    border-width: 3px 3px 0 3px;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    bottom: -5px;
+    left: calc(50% - 5px);
+    margin-top: 0;
+    margin-bottom: 0;
+    bottom: -15px;
+    left: 45%;
+    border: .5rem solid #4A4A4A;
+    border: .5rem solid var(--black);
+    border-color: transparent transparent #fff #fff;
+    border-color: transparent transparent var(--white) var(--white);
+    transform-origin: 0 0;
+    transform: rotate(-45deg);
+    box-shadow: -3px 3px 3px 0 rgba(0, 0, 0, .4);
+}
+.popper[x-placement^="bottom"],
+.tooltip[x-placement^="bottom"] {
+    margin-top: 5px;
+    top: 10px !important;
+}
+.tooltip[x-placement^="bottom"] .tooltip-arrow,
+.popper[x-placement^="bottom"] .popper__arrow {
+    border-width: 0 3px 3px 3px;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-top-color: transparent;
+    top: 3px;
+    left: calc(50% - 5px);
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 24px;
+    border: .5rem solid #4A4A4A;
+    border: .5rem solid var(--black);
+    border-color: transparent transparent #fff #fff;
+    border-color: transparent transparent var(--white) var(--white);
+    transform-origin: 0 0;
+    transform: rotate(135deg);
+    box-shadow: -3px 3px 3px 0 rgba(0, 0, 0, .4);
+}
+.tooltip[x-placement^="right"],
+.popper[x-placement^="right"] {
+    margin-left: 5px;
+}
+.popper[x-placement^="right"] .popper__arrow,
+.tooltip[x-placement^="right"] .tooltip-arrow {
+    border-width: 5px 5px 5px 0;
+    border-left-color: transparent;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    left: -5px;
+    top: calc(50% - 5px);
+    margin-left: 0;
+    margin-right: 0;
+}
+.popper[x-placement^="left"],
+.tooltip[x-placement^="left"] {
+    margin-right: 5px;
+}
+.popper[x-placement^="left"] .popper__arrow,
+.tooltip[x-placement^="left"] .tooltip-arrow {
+    border-width: 5px 0 5px 5px;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    right: -5px;
+    top: calc(50% - 5px);
+    margin-left: 0;
+    margin-right: 0;
 }
 
 /*# sourceMappingURL=styles.css.map */
