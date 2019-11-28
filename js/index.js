@@ -93,7 +93,7 @@ function tooltips(element, text) {
 } //Text radio buttons
 
 
-var tooltipInfo = [['tooltip-pf', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. '], ['tooltip-idc', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. '], ['tooltip-vdc', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. '], ['tooltip-empleo-diferencia', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. '], ['tooltip-pib-diferencia', 'La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. La velocidad de consolidación es la velocidad en la que wadus wadus wadus. ']]; //When dom loaded launch tooltips
+var tooltipInfo = [['tooltip-pf', 'Elija el instrumento fiscal para estimular la economía'], ['tooltip-idc', 'Elija el instrumento fiscal que utilizaría el gobierno para ajustar la ratio de deuda sobre PIB a su nivel inicial.'], ['tooltip-vdc', 'Elija el tiempo que el gobierno tardará en activar el instrumento de consolidación: (1) Rápida (el gobierno empieza a subir impuestos o reducir gasto transcurrido un año desde el estímulo fiscal); (2) Lenta (el gobierno empieza a subir impuestos o reducir gasto transcurridos cuatro años desde el estímulo fiscal).'], ['tooltip-empleo-diferencia', 'La barra verde oscura representa la diferencia, año a año, entre el nivel de PIB/Empleo simulado con la política y el nivel de PIB/Empleo previsto en el Programa de Estabilidad. La barra verde clara representa la diferencia acumulada hasta un año entre el PIB/Empleo simulado con la política y el PIB/Empleo previsto en el Programa de Estabilidad.'], ['tooltip-pib-diferencia', 'La barra verde oscura representa la diferencia, año a año, entre el nivel del PIB o el Empleo simulado con la política y el nivel del PIB o el Empleo previsto en el Programa de Estabilidad. La barra verde clara representa la diferencia acumulada hasta un año concreto entre el PIB o el Empleo simulado con la política fiscal y el PIB o el Empleo previsto en el Programa de Estabilidad.'], ['tooltip-pib-ca', 'Tasa de crecimiento anual de la predicción de PIB o del Empleo a partir del Programa de Estabilidad.'], ['tooltip-pib-vrp', 'Variación relativa (en %) entre el PIB o el Empleo simulado con la política fiscal y el PIB o el Empleo previsto en el Programa de Estabilidad.'], ['tooltip-ee-ca', 'Tasa de crecimiento anual de la predicción de PIB o del Empleo a partir del Programa de Estabilidad.'], ['tooltip-ee-vrp', 'Variación relativa (en %) entre el PIB o el Empleo simulado con la política fiscal y el PIB o el Empleo previsto en el Programa de Estabilidad.']]; //When dom loaded launch tooltips
 
 document.addEventListener('DOMContentLoaded', function () {
   var _arr = tooltipInfo;
@@ -136,6 +136,7 @@ var barChart = function barChart(id, csv, legend, tableClass, scaleMinY, scaleMa
   var dataDifNetAcu;
   var scales = {};
   var z = d3.scaleOrdinal().range(["#006D63", "#B8DF22"]);
+  var tooltipSimulationBarChart = chart.append('div').attr('class', 'tooltip-simulation-bar-chart').style('opacity', 0);
   var legends = svg.append('text').attr('class', 'legend-top').attr("x", 10).attr("y", 20).text(legend);
 
   var setupScales = function setupScales() {
@@ -218,6 +219,17 @@ var barChart = function barChart(id, csv, legend, tableClass, scaleMinY, scaleMa
           value: d[key]
         };
       });
+    });
+    chart.selectAll('.container-grouped').data(dataDifNetAcu).on('mouseover', function (d) {
+      var legend = "Miles de M €";
+
+      if (chart._groups[0][0].id === "empleo-chart") {
+        legend = "Miles";
+      }
+
+      tooltipSimulationBarChart.style('opacity', 1).html("\n                  <span class=\"tooltip-bar-chart-year\"><strong>A\xF1o:</strong> ".concat(d.year, "</span>\n                  <span class=\"tooltip-bar-chart-dif-neta\"><strong class=\"rect-before\">Diferencia neta:</strong> ").concat(d.neta, " ").concat(legend, "</span>\n                  <span class=\"tooltip-bar-chart-dif-acumulada\"><strong class=\"rect-before-fluor\">Acumulada:</strong> ").concat(d.acumulada, " ").concat(legend, "</span>\n            ")).style('left', "".concat(margin.left * 2, "px")).style('top', "".concat(margin.top, "px"));
+    }).on('mouseout', function () {
+      tooltipSimulationBarChart.style('opacity', 0);
     });
     rects.enter().append('rect').attr("width", scales.count.x1.bandwidth()).attr("x", function (_ref3) {
       var key = _ref3.key;
@@ -590,7 +602,6 @@ var multipleLine = function multipleLine(csv) {
       if (error) {
         console.log(error);
       } else {
-        console.log(filter);
         dataz = data.filter(function (d) {
           return String(d.type).match(valueFilter);
         });

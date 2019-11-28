@@ -10651,6 +10651,12 @@ html {
   height: 18px;
 }
 
+.info-circle-middle {
+  position: absolute;
+  top: 0;
+  left: -24px;
+}
+
 .bd-dotted {
   height: 100%;
   border-right: 1px dashed var(--greydark);
@@ -10681,17 +10687,21 @@ html {
 
 .tooltip {
   background: var(--white);
-  max-width: 200px;
+  width: 250px !important;
   border-radius: 4px;
   padding: .75rem;
   font-size: 14px;
   box-shadow: 1px 2px 3px 0 rgba(0, 0, 0, .4);
-  color: var(----blackTooltip);
+  color: var(--blackTooltip) !important;
   transition: transform .2s ease-out;
   transform: translateY(-100%) scale(0);
   transform-origin: bottom left;
   z-index: 1;
   top: -20px !important;
+}
+
+.tooltip-inner {
+  font-weight: normal;
 }
 
 .tooltip:after,
@@ -10708,6 +10718,11 @@ html {
   transform-origin: 0 0;
   transform: rotate(-45deg);
   box-shadow: -3px 3px 3px 0 rgba(0, 0, 0, .4);
+}
+
+.tooltip-simulation:after {
+  border-color: transparent transparent #F9F9F9 #F9F9F9;
+  bottom: -31px;
 }
 
 .active-checkbox label {
@@ -10830,7 +10845,8 @@ html {
   pointer-events: initial;
 }
 
-.tooltip-simulation {
+.tooltip-simulation,
+.tooltip-simulation-bar-chart {
   position: absolute;
   padding: .5rem;
   background-color: #F9F9F9;
@@ -10844,7 +10860,8 @@ html {
   transition: opacity .3s ease-in;
 }
 
-.tooltip-simulation:after {
+.tooltip-simulation:after.
+.tooltip-simulation-bar-chart:after {
   bottom: -30px;
   border-color: transparent transparent #F9F9F9 #F9F9F9;
 }
@@ -10858,4 +10875,34 @@ html {
 button:hover {
   background-color: var(--olive20);
   transition: background-color .3s ease-in;
+}
+
+
+html {
+  scroll-behavior: smooth;
+}
+
+.tooltip-simulation-bar-chart {
+  width: auto;
+  min-width: 200px;
+  padding: .25rem;
+  .rect-before,
+  .rect-before-fluor {
+    width: 12px;
+    height: 12px;
+  }
+  strong {
+    font-size: 12px;
+  }
+}
+
+.tooltip-bar-chart-year,
+.tooltip-bar-chart-dif-neta,
+.tooltip-bar-chart-dif-acumulada {
+  font-size: 12px;
+  display: block;
+}
+
+.tooltip-bar-chart-year {
+  margin-bottom: .25rem;
 }
