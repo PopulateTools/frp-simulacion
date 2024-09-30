@@ -7,11 +7,13 @@
   "author": "PopulateTools",
   "license": "MIT",
   "scripts": {
-    "build:d3": "rollup -c && uglifyjs d3.js -c -m -o js/d3.min.js",
+    "build:d3": "rollup -c",
     "serve": "gulp watching",
-    "build:release": "gulp build"
+    "build": "gulp build"
   },
   "dependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.4",
     "browser-sync": "^2.26.7",
     "d3-array": "^2.3.3",
     "d3-axis": "^1.0.12",
@@ -40,7 +42,7 @@
     "postcss-reporter": "^6.0.1",
     "rollup": "^1.26.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "tachyons": "4.10.0",
-    "uglify-es": "^3.3.9"
+    "rollup-plugin-uglify": "^6.0.4",
+    "tachyons": "4.10.0"
   }
 }
