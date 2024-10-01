@@ -11,7 +11,7 @@ document.getElementById('button-view').addEventListener('click', () => {
     document.getElementById('text-back').style.display = 'none';
     document.getElementById('simulation-view').style.display = 'block';
     document.getElementById('back-view').style.display = 'block';
-    multipleLine(pibCsv);
+    multipleLine();
 
     multipLeFired = true
   }, 300)
@@ -140,7 +140,7 @@ const barChart = (id, csv, legend, tableClass, scaleMinY, scaleMaxY) => {
   let h = 270;
   const durationTransition = 400;
   let dataz;
-  let dataDifNetAcu;
+
   const scales = {};
   const z = d3.scaleOrdinal()
     .range(["#006D63", "#B8DF22"]);
@@ -150,7 +150,8 @@ const barChart = (id, csv, legend, tableClass, scaleMinY, scaleMaxY) => {
     .attr('class', 'tooltip-simulation-bar-chart')
     .style('opacity', 0);
 
-  const legends = svg
+  // legends
+  svg
     .append('text')
     .attr('class', 'legend-top')
     .attr("x", 10)
@@ -327,9 +328,7 @@ const barChart = (id, csv, legend, tableClass, scaleMinY, scaleMaxY) => {
 
   const resize = () => {
     d3.csv(`csv/${csv}.csv`, type, (error, data) => {
-      if (error) {
-
-      } else {
+      if (!error) {
         let arrayDifNeta = []
         let arrayDifAcumulada = []
         let arrayDifNetaAcumula = []
@@ -362,9 +361,7 @@ const barChart = (id, csv, legend, tableClass, scaleMinY, scaleMaxY) => {
 
   const loadData = () => {
     d3.csv(`csv/${csv}.csv`, type, (error, data) => {
-      if (error) {
-
-      } else {
+      if (!error) {
         const keysSimulationPib = data.columns.slice(2, 3);
         const keysSimulationIncrease = data.columns.slice(3);
 
@@ -435,7 +432,7 @@ const barChart = (id, csv, legend, tableClass, scaleMinY, scaleMaxY) => {
     });
   };
 
-  function type(d, i, columns) {
+  function type(d, _, columns) {
     for (var i = 1, n = columns.length; i < n; ++i) d[columns[i]] = +d[columns[i]];
     return d;
   }
@@ -508,7 +505,7 @@ function getWidth() {
 
 getWidth()
 
-const multipleLine = (csv) => {
+const multipleLine = () => {
   const margin = { top: 24, right: 24, bottom: 40, left: 64 };
   let width = 0;
   let height = 0;
@@ -522,7 +519,7 @@ const multipleLine = (csv) => {
     .style('opacity', 0);
 
   if(multipLeFired === false) {
-    const legends = svg
+    svg
       .append('text')
       .attr('class', 'legend-top')
       .attr("x", 0)
@@ -848,7 +845,7 @@ const multipleLine = (csv) => {
   }
 
   function update(filter) {
-    d3.csv('csv/simulation-pib-all.csv', (error, data) => {
+    d3.csv('csv/simulation-all.csv', (error, data) => {
       if (error) {
         console.log(error);
       } else {
@@ -867,7 +864,7 @@ const multipleLine = (csv) => {
   }
 
   const resize = () => {
-    d3.csv('csv/simulation-pib-all.csv', (error, data) => {
+    d3.csv('csv/simulation-all.csv', (error, data) => {
       if (error) {
         console.log(error);
       } else {
@@ -888,7 +885,7 @@ const multipleLine = (csv) => {
   };
 
   const loadData = () => {
-    d3.csv('csv/simulation-pib-all.csv', (error, data) => {
+    d3.csv('csv/simulation-all.csv', (error, data) => {
       if (error) {
         console.log(error);
       } else {
@@ -908,7 +905,7 @@ const multipleLine = (csv) => {
 
   d3.select("#empleo-view")
     .on("click", function() {
-      d3.csv('csv/simulation-pib-all.csv', (error, data) => {
+      d3.csv('csv/simulation-all.csv', (error, data) => {
         if (error) {
           console.log(error);
         } else {
@@ -929,7 +926,7 @@ const multipleLine = (csv) => {
          d3.select('.legend-top')
           .remove()
 
-          const legends = svg
+          svg
             .append('text')
             .attr('class', 'legend-top')
             .attr("x", 0)
@@ -945,7 +942,7 @@ const multipleLine = (csv) => {
   d3.select("#pib-view")
     .on("click", function() {
 
-      d3.csv('csv/simulation-pib-all.csv', (error, data) => {
+      d3.csv('csv/simulation-all.csv', (error, data) => {
         if (error) {
           console.log(error);
         } else {
@@ -966,12 +963,12 @@ const multipleLine = (csv) => {
           d3.select('.legend-top')
            .remove()
 
-           const legends = svg
-             .append('text')
-             .attr('class', 'legend-top')
-             .attr("x", 0)
-             .attr("y", 20)
-              .text('Miles de M €')
+           svg
+            .append('text')
+            .attr('class', 'legend-top')
+            .attr("x", 0)
+            .attr("y", 20)
+            .text('Miles de M €')
 
           updateChart(data);
         }
@@ -983,7 +980,5 @@ const multipleLine = (csv) => {
   loadData();
   radioUpdate()
 };
-
-const pibCsv = 'simulation-pib-all'
 
 checkValues()
