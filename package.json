@@ -7,9 +7,8 @@
   "author": "PopulateTools",
   "license": "MIT",
   "scripts": {
-    "build:d3": "rollup -c",
     "serve": "gulp watching",
-    "build": "gulp build"
+    "build": "gulp build && rollup -c"
   },
   "dependencies": {
     "@babel/core": "^7.25.2",
