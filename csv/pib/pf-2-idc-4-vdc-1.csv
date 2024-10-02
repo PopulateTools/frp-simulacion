@@ -1,5 +1,5 @@
-year,prevision,simulacionpib,simulacionpercentage
-2019,1195302,1192362,-0.246
-2020,1218013,1213377,-0.3806
-2021,1239937,1232769,-0.5781
-2022,1262256,1252941,-0.738
+type,filter,year,prevision,simulacionpercentage,simulacion
+pib,pf-2-idc-4-vdc-1,2023,1240814.2,-0.246,1237762
+pib,pf-2-idc-4-vdc-1,2024,1270593.7,-0.3806,1265758
+pib,pf-2-idc-4-vdc-1,2025,1293464.4,-0.5781,1285987
+pib,pf-2-idc-4-vdc-1,2026,1315453.3,-0.738,1305745
