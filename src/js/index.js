@@ -288,8 +288,8 @@ const barChart = (id, csv, legend, tableClass, scaleMinY, scaleMaxY) => {
             .style('opacity', 1)
             .html(`
                   <span class="tooltip-bar-chart-year"><strong>Año:</strong> ${d.year}</span>
-                  <span class="tooltip-bar-chart-dif-neta"><strong class="rect-before">Diferencia neta:</strong> ${d.neta} ${legend}</span>
-                  <span class="tooltip-bar-chart-dif-acumulada"><strong class="rect-before-fluor">Acumulada:</strong> ${d.acumulada} ${legend}</span>
+                  <span class="tooltip-bar-chart-dif-neta"><strong class="rect-before">Diferencia neta:</strong> ${d.neta.toLocaleString()} ${legend}</span>
+                  <span class="tooltip-bar-chart-dif-acumulada"><strong class="rect-before-fluor">Acumulada:</strong> ${d.acumulada.toLocaleString()} ${legend}</span>
             `)
             .style('left', `${margin.left * 2}px`)
             .style('top', `${margin.top}px`);
@@ -329,30 +329,7 @@ const barChart = (id, csv, legend, tableClass, scaleMinY, scaleMaxY) => {
   const resize = () => {
     d3.csv(`csv/${csv}.csv`, type, (error, data) => {
       if (!error) {
-        let arrayDifNeta = []
-        let arrayDifAcumulada = []
-        let arrayDifNetaAcumula = []
-        const years = ["2019", "2020", "2021", "2022"]
-
-        for (let i = 0; i < data.length; i++) {
-          const difNeta = data[i].simulacion - data[i].prevision
-          arrayDifNeta.push(difNeta)
-        }
-
-        arrayDifAcumulada.push(arrayDifNeta[0])
-
-        const difAcumuladaValue2020 = arrayDifNeta[0] + arrayDifNeta[1]
-        arrayDifAcumulada.push(difAcumuladaValue2020)
-
-        const difAcumuladaValue2021 = difAcumuladaValue2020 + arrayDifNeta[2]
-        arrayDifAcumulada.push(difAcumuladaValue2021)
-
-        const difAcumuladaValue2022 = difAcumuladaValue2021 + arrayDifNeta[3]
-        arrayDifAcumulada.push(difAcumuladaValue2022)
-
-        arrayDifNetaAcumula = arrayDifNeta.map((value, index) => [years[index], arrayDifNeta[index], arrayDifAcumulada[index]])
-
-        dataz = arrayDifNetaAcumula
+        dataz = getArrayDifNetaAcumula(data)
         setupScales();
         updateChart(dataz);
       }
@@ -362,9 +339,6 @@ const barChart = (id, csv, legend, tableClass, scaleMinY, scaleMaxY) => {
   const loadData = () => {
     d3.csv(`csv/${csv}.csv`, type, (error, data) => {
       if (!error) {
-        const keysSimulationPib = data.columns.slice(2, 3);
-        const keysSimulationIncrease = data.columns.slice(3);
-
         const simulation = d3.selectAll(tableClass)
           .selectAll('div')
           .remove()
@@ -376,7 +350,7 @@ const barChart = (id, csv, legend, tableClass, scaleMinY, scaleMaxY) => {
 
         simulation
           .selectAll("span")
-          .data(d => keysSimulationPib.map(key => ({
+          .data(d => ["simulacion"].map(key => ({
             key,
             value: d[key]
           })))
@@ -389,7 +363,7 @@ const barChart = (id, csv, legend, tableClass, scaleMinY, scaleMaxY) => {
 
         simulation
           .selectAll(".simulation-percentage")
-          .data(d => keysSimulationIncrease.map(key => ({
+          .data(d => ["simulacionpercentage"].map(key => ({
             key,
             value: d[key].toFixed(2)
           })))
@@ -400,30 +374,7 @@ const barChart = (id, csv, legend, tableClass, scaleMinY, scaleMaxY) => {
           .duration(durationTransition)
           .text(({ value }) => value >= 0 ? `+${value}%` : `${value}%`)
 
-        let arrayDifNeta = []
-        let arrayDifAcumulada = []
-        let arrayDifNetaAcumula = []
-        const years = ["2019", "2020", "2021", "2022"]
-
-        for (let i = 0; i < data.length; i++) {
-          const difNeta = data[i].simulacion - data[i].prevision
-          arrayDifNeta.push(difNeta)
-        }
-
-        arrayDifAcumulada.push(arrayDifNeta[0])
-
-        const difAcumuladaValue2020 = arrayDifNeta[0] + arrayDifNeta[1]
-        arrayDifAcumulada.push(difAcumuladaValue2020)
-
-        const difAcumuladaValue2021 = difAcumuladaValue2020 + arrayDifNeta[2]
-        arrayDifAcumulada.push(difAcumuladaValue2021)
-
-        const difAcumuladaValue2022 = difAcumuladaValue2021 + arrayDifNeta[3]
-        arrayDifAcumulada.push(difAcumuladaValue2022)
-
-        arrayDifNetaAcumula = arrayDifNeta.map((value, index) => [years[index], arrayDifNeta[index], arrayDifAcumulada[index]])
-
-        dataz = arrayDifNetaAcumula
+        dataz = getArrayDifNetaAcumula(data)
 
         setupElements();
         setupScales();
@@ -431,6 +382,34 @@ const barChart = (id, csv, legend, tableClass, scaleMinY, scaleMaxY) => {
       }
     });
   };
+
+  function getArrayDifNetaAcumula(data) {
+    let arrayDifNeta = []
+    let arrayDifAcumulada = []
+    let arrayDifNetaAcumula = []
+
+    const years = data.map(x => x.year)
+
+    for (let i = 0; i < data.length; i++) {
+      const difNeta = data[i].simulacion - data[i].prevision
+      arrayDifNeta.push(difNeta)
+    }
+
+    arrayDifAcumulada.push(arrayDifNeta[0])
+
+    const difAcumuladaValue2020 = arrayDifNeta[0] + arrayDifNeta[1]
+    arrayDifAcumulada.push(difAcumuladaValue2020)
+
+    const difAcumuladaValue2021 = difAcumuladaValue2020 + arrayDifNeta[2]
+    arrayDifAcumulada.push(difAcumuladaValue2021)
+
+    const difAcumuladaValue2022 = difAcumuladaValue2021 + arrayDifNeta[3]
+    arrayDifAcumulada.push(difAcumuladaValue2022)
+
+    arrayDifNetaAcumula = arrayDifNeta.map((_, index) => [years[index], arrayDifNeta[index], arrayDifAcumulada[index]])
+
+    return arrayDifNetaAcumula
+  }
 
   function type(d, _, columns) {
     for (var i = 1, n = columns.length; i < n; ++i) d[columns[i]] = +d[columns[i]];
@@ -696,11 +675,11 @@ const multipleLine = () => {
               `<div class="w-20 fl">
                 <span class="f5 dib fw7 h2"></span>
                 <span class="db" style="height: 28px;"></span>
-                <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2018</span>
-                <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2019</span>
-                <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2020</span>
-                <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2021</span>
                 <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2022</span>
+                <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2023</span>
+                <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2024</span>
+                <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2025</span>
+                <span class="f7 black50-txt bb tr greydark-50-bd db pv2 pr3">2026</span>
               </div>
               <div class="w-40 fl relative">
                 <span class="bd-dotted"></span>
