@@ -62,3 +62,6 @@ typings/
 
 .DS_Store
 now.json
+
+# dist folder
+dist
