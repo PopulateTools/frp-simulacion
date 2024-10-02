@@ -14,10 +14,10 @@ yarn install
 yarn serve
 ```
 
-### Compiles and minifies for production
+### Compiles and minifies for production, and deploy to GithubPages
 
 ```
-yarn build
+yarn deploy
 ```
 
 # Data from FRP

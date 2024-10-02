@@ -7,10 +7,9 @@
   "author": "PopulateTools",
   "license": "MIT",
   "scripts": {
-    "postbuild": "rollup -c",
     "preserve": "rollup -c",
     "serve": "gulp watching",
-    "build": "gulp build",
+    "predeploy": "gulp build && rollup -c",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
