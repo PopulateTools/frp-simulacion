@@ -4,7 +4,7 @@ import { uglify } from "rollup-plugin-uglify";
 export default {
     input: 'src/js/custom-d3.js',
     output: {
-        file: 'dist/js/custom-d3.min.js',
+        file: 'src/js/custom-d3.umd.min.js',
         format: 'umd',
         name: 'd3'
     },

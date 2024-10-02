@@ -12,14 +12,18 @@ const notify = require('gulp-notify');
 const browsersync = require('browser-sync');
 const terser = require('gulp-terser');
 const babel = require('gulp-babel');
+const processhtml = require('gulp-processhtml');
 
 const paths = {
     js: 'src/js',
     css: 'src/css',
     images: 'src/img/*',
+    csv: 'src/csv',
+    html: 'src',
     buildCss: 'dist/css/',
     buildJs: 'dist/js/',
-    buildImages: 'dist/img/'
+    buildImages: 'dist/img/',
+    buildCsv: 'dist/csv/'
 };
 
 const watchpaths = {
@@ -27,14 +31,15 @@ const watchpaths = {
     css: [paths.css + '/**/*.css'],
     minifycss: [paths.buildCss + '/**/*.css'],
     images: [paths.images + '/**/*.*'],
-    html: ['/*.html']
+    csv: [paths.csv + '/**/*.*'],
+    html: [paths.html + '/**/*.html'],
 };
 
 // BrowserSync
 function browserSync(done) {
     browsersync.init({
         server: {
-            baseDir: './',
+            baseDir: './src',
             reloadDelay: 200
         },
         open: 'local',
@@ -141,21 +146,36 @@ function compress() {
         );
 }
 
-function watchFiles() {
-    watch(watchpaths.css, { interval: 300 }, series(css, browserSyncReload));
-    watch(
-        paths.images,
-        { interval: 300 },
-        series(images, browserSyncReload)
-    );
-    watch(watchpaths.js, { interval: 300 }, series(babelJS, browserSyncReload));
-    watch(
-        ['*.html', 'css/*.css', 'js/*.js', './*.csv', './*.json'],
-        browserSyncReload
-    );
+function html() {
+    return src(watchpaths.html)
+        .pipe(processhtml())
+        .pipe(dest('dist'))
+        .pipe(
+            notify({
+                message: '[HTML] Build in dist folder'
+            })
+        );
 }
 
-const build = series(css, images, minify, compress);
+function csv() {
+    return src(watchpaths.csv)
+        .pipe(dest(paths.buildCsv))
+        .pipe(
+            notify({
+                message: '[CSV] Moved to dist folder'
+            })
+        );
+}
+
+function watchFiles() {
+  watch(watchpaths.css, { interval: 300 }, series(css, browserSyncReload));
+  watch(paths.images, { interval: 300 }, series(images, browserSyncReload));
+  watch(watchpaths.js, { interval: 300 }, series(babelJS, browserSyncReload));
+  watch(watchpaths.html, { interval: 300 }, series(html, browserSyncReload));
+  watch(watchpaths.csv, browserSyncReload);
+}
+
+const build = series(css, images, minify, compress, html, csv);
 
 const watching = parallel(watchFiles, browserSync);
 
