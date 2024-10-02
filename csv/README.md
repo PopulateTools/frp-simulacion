@@ -1,6 +1,6 @@
 El fichero **simulation-all.csv** es de generación manual, a base de copiar los valores para cada simulación en la linea correspondiente. Te puedes ayudar con el modo columna del editor, para ir pegando en grupos de 4 (los años dados).
 
-Una vez tengamos **simulation-all.csv**, ejecuta en esta carpeta:
+Una vez tengamos **simulation-all.csv**, ejecuta estando en esta carpeta, los siguientes comandos:
 
 ```bash
 $ awk 'NR>1 {print > ($1 "/" $2 ".csv")}' FS=, simulation-all.csv
