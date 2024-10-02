@@ -17,9 +17,9 @@ const paths = {
     js: 'src/js',
     css: 'src/css',
     images: 'src/img/*',
-    buildCss: 'dist/css/',
-    buildJs: 'dist/js/',
-    buildImages: 'dist/img/'
+    buildCss: 'css/',
+    buildJs: 'js/',
+    buildImages: 'img/'
 };
 
 const watchpaths = {
@@ -123,9 +123,15 @@ function minify() {
         );
 }
 
-function images() {
+function imageminify() {
     return src(paths.images)
         .pipe(imagemin())
+        .pipe(dest(paths.buildImages));
+}
+
+function images() {
+    return src(paths.images)
+        .pipe(imageminify())
         .pipe(dest(paths.buildImages));
 }
 
@@ -155,7 +161,7 @@ function watchFiles() {
     );
 }
 
-const build = series(css, images, minify, compress);
+const build = series(minify, compress);
 
 const watching = parallel(watchFiles, browserSync);
 
@@ -166,6 +172,7 @@ module.exports = {
     browserSyncReload,
     css,
     minify,
+    imageminify,
     images,
     compress,
     watching,

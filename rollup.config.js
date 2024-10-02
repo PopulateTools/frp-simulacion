@@ -1,12 +1,11 @@
 import node from 'rollup-plugin-node-resolve';
-import { uglify } from "rollup-plugin-uglify";
 
 export default {
-    input: 'src/js/custom-d3.js',
+    input: 'index.js',
     output: {
-        file: 'dist/js/custom-d3.min.js',
+        file: 'd3.js',
         format: 'umd',
         name: 'd3'
     },
-    plugins: [node(), uglify()]
+    plugins: [node()]
 };
