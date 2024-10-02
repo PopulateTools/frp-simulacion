@@ -335,7 +335,7 @@ const barChart = (id, csv, legend, tableClass, scaleMinY, scaleMaxY) => {
         const years = ["2019", "2020", "2021", "2022"]
 
         for (let i = 0; i < data.length; i++) {
-          const difNeta = data[i].simulacionpib - data[i].prevision
+          const difNeta = data[i].simulacion - data[i].prevision
           arrayDifNeta.push(difNeta)
         }
 
@@ -406,7 +406,7 @@ const barChart = (id, csv, legend, tableClass, scaleMinY, scaleMaxY) => {
         const years = ["2019", "2020", "2021", "2022"]
 
         for (let i = 0; i < data.length; i++) {
-          const difNeta = data[i].simulacionpib - data[i].prevision
+          const difNeta = data[i].simulacion - data[i].prevision
           arrayDifNeta.push(difNeta)
         }
 
@@ -533,8 +533,8 @@ const multipleLine = () => {
     const countY = d3
         .scaleLinear()
         .domain([
-            d3.min(dataz, (d) => d.simulacionpib),
-            d3.max(dataz, (d) => d.simulacionpib)
+            d3.min(dataz, (d) => d.simulacion),
+            d3.max(dataz, (d) => d.simulacion)
         ]).nice();
 
     scales.count = { x: countX, y: countY };
@@ -621,7 +621,7 @@ const multipleLine = () => {
     const line = d3
       .line()
       .x((d) => scales.count.x(d.year))
-      .y((d) => scales.count.y(d.simulacionpib));
+      .y((d) => scales.count.y(d.simulacion));
 
     container
       .selectAll('.line')
@@ -677,7 +677,7 @@ const multipleLine = () => {
           let percentageFormat = []
 
           for (let i = 0; i < d.values.length; i++) {
-           const element = d.values[i].simulacionpib
+           const element = d.values[i].simulacion
            const valueToFixed = formatValues(element)
            pibFormat.push(valueToFixed)
           }
@@ -874,8 +874,8 @@ const multipleLine = () => {
         const countY = d3
             .scaleLinear()
             .domain([
-                d3.min(data, (d) => d.simulacionpib),
-                d3.max(data, (d) => d.simulacionpib)
+                d3.min(data, (d) => d.simulacion),
+                d3.max(data, (d) => d.simulacion)
             ]).nice();
 
         scales.count = { x: countX, y: countY };
@@ -917,8 +917,8 @@ const multipleLine = () => {
          const countY = d3
              .scaleLinear()
              .domain([
-                 d3.min(data, (d) => d.simulacionpib),
-                 d3.max(data, (d) => d.simulacionpib)
+                 d3.min(data, (d) => d.simulacion),
+                 d3.max(data, (d) => d.simulacion)
              ]).nice();
 
          scales.count = { x: countX, y: countY };
@@ -954,8 +954,8 @@ const multipleLine = () => {
           const countY = d3
               .scaleLinear()
               .domain([
-                  d3.min(data, (d) => d.simulacionpib),
-                  d3.max(data, (d) => d.simulacionpib)
+                  d3.min(data, (d) => d.simulacion),
+                  d3.max(data, (d) => d.simulacion)
               ]).nice();
 
           scales.count = { x: countX, y: countY };

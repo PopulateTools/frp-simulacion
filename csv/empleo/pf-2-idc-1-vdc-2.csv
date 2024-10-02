@@ -1,5 +1,5 @@
-year,prevision,simulacionpib,simulacionpercentage
-2019,20298,20292,-0.0289
-2020,20684,20729,0.2194
-2021,21056,21093,0.1742
-2022,21414,21401,-0.0599
+type,filter,year,prevision,simulacionpercentage,simulacion
+empleo,pf-2-idc-1-vdc-2,2019,19456.3,-0.0289,19451
+empleo,pf-2-idc-1-vdc-2,2020,19903.8,0.2194,19947
+empleo,pf-2-idc-1-vdc-2,2021,20222.2,0.1742,20257
+empleo,pf-2-idc-1-vdc-2,2022,20525.6,-0.0599,20513
