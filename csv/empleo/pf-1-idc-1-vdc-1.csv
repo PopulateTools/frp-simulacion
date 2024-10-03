@@ -1,0 +1,5 @@
+type,filter,year,prevision,simulacionpercentage,simulacion
+empleo,pf-1-idc-1-vdc-1,2023,19456.3,0.1906,19493
+empleo,pf-1-idc-1-vdc-1,2024,19903.8,-0.0858,19887
+empleo,pf-1-idc-1-vdc-1,2025,20222.2,-0.1367,20195
+empleo,pf-1-idc-1-vdc-1,2026,20525.6,-0.1154,20502
