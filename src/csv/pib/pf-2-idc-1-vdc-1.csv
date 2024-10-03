@@ -1,0 +1,5 @@
+type,filter,year,prevision,simulacionpercentage,simulacion
+pib,pf-2-idc-1-vdc-1,2023,1240814.2,-0.0566,1240112
+pib,pf-2-idc-1-vdc-1,2024,1270593.7,-0.2739,1267114
+pib,pf-2-idc-1-vdc-1,2025,1293464.4,-0.2477,1290261
+pib,pf-2-idc-1-vdc-1,2026,1315453.3,-0.2218,1312536
